@@ -1,6 +1,6 @@
 export const APP_ID = "what2study";
 export const KEY = "";
-export const SERVER_URL_= "http://localhost:1339/what2study/parse";
+export const SERVER_URL_= "http://localhost:1349/what2study/parse";
 export const SERVER_URL ="https://www.cpstech.de/what2study/parse";
 
 export const SERVER_URL_parsefunctions ="https://www.cpstech.de/functions";
