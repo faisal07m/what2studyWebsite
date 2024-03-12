@@ -29,6 +29,7 @@ import TagComponent from './TagComponent';
 import FilesListTable from './FilesListTable';
 import TextArea from 'antd/es/input/TextArea';
 import { getActiveChatbotID, getScriptTag } from '../types/JobOffers';
+import { SERVER_URL, SERVER_URL_parsefunctions } from '../config/parse';
 
 const Overview = () => {
 
@@ -287,7 +288,7 @@ const Overview = () => {
 
 
           const response = fetch(
-            "http://localhost:1339/what2study/parse/functions/uploadPythonFile",
+            SERVER_URL_parsefunctions+"/uploadPythonFile",
             {
               method: "POST",
               headers: {
@@ -386,7 +387,7 @@ const Overview = () => {
 
 
       fetch(
-        "http://localhost:1339/what2study/parse/functions/uploadPythonFile",
+        SERVER_URL_parsefunctions+"/uploadPythonFile",
         {
           method: "POST",
           headers: {

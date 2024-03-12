@@ -18,7 +18,7 @@ const FooterBar = () => {
                 <Footer style={{ backgroundColor: "#f9f7f7", fontSize: '13px', textAlign: 'right', display: 'flex', justifyContent: 'space-between',zIndex:99999 }}>
                 
                     <div style={{ color: 'grey', textAlign: 'left', display: 'inline-block' }} > © Copyright - What2Study</div>
-                    <a href="http://localhost:3000/what2study/Impressum/" className="onHover" style={{ color: 'grey', }}>Impressum</a>
+                    <a href="https://www.cpstech.de/what2study/Impressum/" className="onHover" style={{ color: 'grey', }}>Impressum</a>
                 </Footer > 
             </Layout >
     </Layout>

@@ -1,5 +1,6 @@
 import moment from 'moment'
 import Parse from 'parse'
+import { SERVER_URL, SERVER_URL_parsefunctions } from '../config/parse'
 
 export type JobOfferBlock = {
   id: string
@@ -93,7 +94,7 @@ export const generateJobs = async (
     console.log(formData)
 
     const response = await fetch(
-      "http://localhost:1339/what2study/parse/functions/scriptTag",
+      SERVER_URL_parsefunctions+"/scriptTag",
       {
         method: "POST",
         headers: {

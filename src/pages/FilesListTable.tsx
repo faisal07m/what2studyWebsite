@@ -13,6 +13,7 @@ import { Viewer } from "@react-pdf-viewer/core";
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import ReactPlayer from 'react-player'
 import Highlighter from 'react-highlight-words';
+import { SERVER_URL, SERVER_URL_parsefunctions } from '../config/parse';
 type loc = {
     id: string
 }
@@ -160,7 +161,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                 console.log(formData)
 
                 const response = fetch(
-                    "http://localhost:1339/what2study/parse/functions/deletePythonFile",
+                    SERVER_URL_parsefunctions+"/deletePythonFile",
                     {
                         method: "POST",
                         headers: {

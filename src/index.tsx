@@ -11,9 +11,7 @@ Parse.serverURL = SERVER_URL
 Parse.masterKey= "what2studyMaster"
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App />,
   document.getElementById('root')
 )
 

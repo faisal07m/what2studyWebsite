@@ -1315,10 +1315,10 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.6", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
-  version "7.23.8"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.23.8.tgz"
-  integrity sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.6", "@babel/runtime@^7.23.9", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+  version "7.24.0"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.24.0.tgz"
+  integrity sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -6503,6 +6503,13 @@ cross-fetch@^3.0.4:
   dependencies:
     node-fetch "^2.6.12"
 
+cross-fetch@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/cross-fetch/-/cross-fetch-4.0.0.tgz"
+  integrity sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==
+  dependencies:
+    node-fetch "^2.6.12"
+
 cross-spawn@^6.0.0:
   version "6.0.5"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-6.0.5.tgz"
@@ -9429,6 +9436,13 @@ html-minifier-terser@^6.0.2:
     relateurl "^0.2.7"
     terser "^5.10.0"
 
+html-parse-stringify@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz"
+  integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
+  dependencies:
+    void-elements "3.1.0"
+
 html-webpack-plugin@^5.5.0:
   version "5.6.0"
   resolved "https://registry.npmjs.org/html-webpack-plugin/-/html-webpack-plugin-5.6.0.tgz"
@@ -9577,6 +9591,27 @@ i@^0.3.7:
   version "0.3.7"
   resolved "https://registry.npmjs.org/i/-/i-0.3.7.tgz"
   integrity sha512-FYz4wlXgkQwIPqhzC5TdNMLSE5+GS1IIDJZY/1ZiEPCT2S3COUVZeT5OW4BmW4r5LHLQuOosSwsvnroG9GR59Q==
+
+i18next-browser-languagedetector@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/i18next-browser-languagedetector/-/i18next-browser-languagedetector-7.2.0.tgz"
+  integrity sha512-U00DbDtFIYD3wkWsr2aVGfXGAj2TgnELzOX9qv8bT0aJtvPV9CRO77h+vgmHFBMe7LAxdwvT/7VkCWGya6L3tA==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
+
+i18next-http-backend@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.npmjs.org/i18next-http-backend/-/i18next-http-backend-2.5.0.tgz"
+  integrity sha512-Z/aQsGZk1gSxt2/DztXk92DuDD20J+rNudT7ZCdTrNOiK8uQppfvdjq9+DFQfpAnFPn3VZS+KQIr1S/W1KxhpQ==
+  dependencies:
+    cross-fetch "4.0.0"
+
+i18next@^23.10.0:
+  version "23.10.1"
+  resolved "https://registry.npmjs.org/i18next/-/i18next-23.10.1.tgz"
+  integrity sha512-NDiIzFbcs3O9PXpfhkjyf7WdqFn5Vq6mhzhtkXzj51aOcNuPNcTwuYNuXCpHsanZGHlHKL35G7huoFeVic1hng==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
 
 iconv-lite@^0.6.2:
   version "0.6.3"
@@ -15542,6 +15577,14 @@ react-highlight-words@^0.20.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
+react-i18next@^14.1.0:
+  version "14.1.0"
+  resolved "https://registry.npmjs.org/react-i18next/-/react-i18next-14.1.0.tgz"
+  integrity sha512-3KwX6LHpbvGQ+sBEntjV4sYW3Zovjjl3fpoHbUwSgFHf0uRBcbeCBLR5al6ikncI5+W0EFb71QXZmfop+J6NrQ==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
+    html-parse-stringify "^3.0.1"
+
 react-icons@^4.10.1:
   version "4.12.0"
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-4.12.0.tgz"
@@ -15889,6 +15932,11 @@ react-transition-group@2.9.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
+
+react-uuid@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/react-uuid/-/react-uuid-2.0.0.tgz"
+  integrity sha512-FNUH/8WR/FEtx0Bu6gmt1eONfc413hhvrEXFWUSFGvznUhI4dYoVZA09p7JHoTpnM4WC2D/bG2YSxGKXF4oVLg==
 
 react@^16.2.0:
   version "16.14.0"
@@ -18594,7 +18642,7 @@ uuid@^8.3.2:
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uuid@^9.0.0:
+uuid@^9.0.1:
   version "9.0.1"
   resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
@@ -18691,6 +18739,11 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
+
+void-elements@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/void-elements/-/void-elements-3.1.0.tgz"
+  integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"
@@ -19008,10 +19061,10 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.4.tgz"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
-what2study-chatclient@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.npmjs.org/what2study-chatclient/-/what2study-chatclient-0.2.5.tgz"
-  integrity sha512-nLQEpE3HeB0VULdPiBQZKa5MareUQir6z8B9OUQUwzAlb6o+uq+taRL3JYHXQdMKVFisI3dYjUoq5R2hWBPzBA==
+what2study-chatclient@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.npmjs.org/what2study-chatclient/-/what2study-chatclient-0.2.7.tgz"
+  integrity sha512-E4tWamqO8pMiX4YIEgGKFEw80FmP+l6mE5heQ0egKEy5tRu9kTQ/QgEKqStF7aAlOrm5odFXpR323fO3DwWYLA==
   dependencies:
     "@testing-library/jest-dom" "^5.16.5"
     "@testing-library/react" "^13.4.0"
@@ -19021,15 +19074,20 @@ what2study-chatclient@^0.2.5:
     "@types/react" "^18.0.28"
     "@types/react-dom" "^18.0.11"
     bootstrap "^5.3.1"
+    i18next "^23.10.0"
+    i18next-browser-languagedetector "^7.2.0"
+    i18next-http-backend "^2.5.0"
     lodash "^4.17.21"
     prop-types "^15.8.1"
     react "^18.2.0"
     react-bootstrap "^2.8.0"
     react-dom "^18.2.0"
+    react-i18next "^14.1.0"
     react-icons "^4.10.1"
     react-scripts "5.0.1"
+    react-uuid "^2.0.0"
     typescript "^4.9.5"
-    uuid "^9.0.0"
+    uuid "^9.0.1"
     web-vitals "^2.1.4"
 
 whatwg-encoding@^1.0.5:
