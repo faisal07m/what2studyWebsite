@@ -693,7 +693,7 @@ const Overview = () => {
                                 setLoader(true)
 
                                 const response = fetch(
-                                  "https://www.cpstech.de/chatbotLLM/",
+                                  "https://www.cpstech.de/crawl/",
                                   {
                                     method: "POST",
                                     headers: {
