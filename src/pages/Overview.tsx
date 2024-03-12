@@ -693,7 +693,7 @@ const Overview = () => {
                                 setLoader(true)
 
                                 const response = fetch(
-                                  "http://127.0.0.1:5000/crawl",
+                                  "https://www.cpstech.de/chatbotLLM",
                                   {
                                     method: "POST",
                                     headers: {
