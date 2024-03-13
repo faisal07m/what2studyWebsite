@@ -3,7 +3,7 @@ import Parse from 'parse'
 import { useHistory } from 'react-router-dom'
 import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin } from 'antd'
 
-import { PlusOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
+import { InboxOutlined, PlusOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
 import { knowledgeBaseBlock, generateKnowledge, getKnowledgeBase } from '../types/knowledgeBase'
 import type { ConfigProviderProps, RadioChangeEvent } from 'antd';
@@ -29,7 +29,7 @@ import TagComponent from './TagComponent';
 import FilesListTable from './FilesListTable';
 import TextArea from 'antd/es/input/TextArea';
 import { getActiveChatbotID, getScriptTag } from '../types/JobOffers';
-import { SERVER_URL, SERVER_URL_parsefunctions } from '../config/parse';
+import { SERVER_URL, SERVER_URL_parsefunctions, ServerCrawl } from '../config/parse';
 
 const Overview = () => {
 
@@ -44,13 +44,11 @@ const Overview = () => {
   const [curUserId, setCurUserId] = useState<string>();
   console.log(curUser?.id)
 
-  const [activeChatbotID, setActiveChatID] = useState<any>()
+  const [activeChatbotID, setActiveChatID] = useState<any>("")
 
   var activeIDset=async ()=>{
-     var res = await getActiveChatbotID()
-     setActiveChatID(res)
-    console.log("i am here wiht active bot")
-    console.log(activeChatbotID)
+    let res = await getActiveChatbotID()
+    setActiveChatID(res)
   }
   useEffect(() => {
    activeIDset()
@@ -82,7 +80,6 @@ const Overview = () => {
   const [expires, setExpiry] = useState<string>(dayjs().year() + "/" + dayjs().month() + 1)
   const setScriptTagAsync = async () => {
     getScriptTag().then(function (val) {
-      console.log(/token=.*'/g.exec(val))
       var token = /token=.*'/g.exec(val)
       if (token) {
         setToken(token[0].slice(6, -1))
@@ -134,7 +131,6 @@ const Overview = () => {
     },
     onChange({ file, fileList }) {
       if (file.status !== 'uploading') {
-        console.log(file, fileList);
       }
       file.status = "done"
     },
@@ -170,7 +166,6 @@ const Overview = () => {
     },
     onChange({ file, fileList }) {
       if (file.status !== 'uploading') {
-        console.log(file, fileList);
       }
       file.status = "done"
     },
@@ -206,7 +201,6 @@ const Overview = () => {
     },
     onChange({ file, fileList }) {
       if (file.status !== 'uploading') {
-        console.log(file, fileList);
       }
       file.status = "done"
     },
@@ -265,7 +259,6 @@ const Overview = () => {
         setUrl(url)
         setUrlViewer(url)
         setFileName(fileName)
-        console.log("got here as well")
         generateKnowledge({
           name: fileName,
           user: currentUser?.id,
@@ -353,7 +346,6 @@ const Overview = () => {
       gallery.set(propertyName, responseFile);
 
       let response = await gallery.save();
-      console.log("got here")
       var url = response.attributes[propertyName]._url
       if (Parse.serverURL.includes("cpstech")) {
         url = url.replace("http:", "https:")
@@ -425,12 +417,12 @@ const Overview = () => {
               children: <>
                 {id == "1" ?
 
-                  <div style={{ background: "white", height: "250px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
+                  <div style={{ background: "white", height: "380px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
                     <Row>
                       <Col span={14} style={{ marginTop: "20px" }}>
                         <Upload {...props} maxCount={1} listType='picture'>
 
-                          <Button icon={<UploadOutlined />}>Hochladen</Button><span style={{ marginLeft: "10px" }}>Nur PDF-Dateien</span>
+                          <Button  style={{width:"450px", height:"150px", backgroundColor:"#fafafa", border:"dashed 0.3px"}} icon={<InboxOutlined style={{ fontSize: '350%', color:"#257dfe"}}/>}><br></br><span>Hochladen: Nur PDF-Dateien</span></Button>
                         </Upload>
                       </Col>
                       <Col span={3} >
@@ -499,12 +491,12 @@ const Overview = () => {
 
 
 
-                    <div style={{ background: "white", height: "250px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
+                    <div style={{ background: "white", height: "380px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
                       <Row>
                         <Col span={14} style={{ marginTop: "20px" }}>
                           <Upload {...propsText} maxCount={1} listType='text'>
-
-                            <Button icon={<UploadOutlined />}>Hochladen</Button><span style={{ marginLeft: "10px" }}>Nur Textdateien</span>
+                          <Button  style={{width:"450px", height:"150px", backgroundColor:"#fafafa", border:"dashed 0.3px"}} icon={<InboxOutlined style={{ fontSize: '350%', color:"#257dfe"}}/>}><br></br><span>Hochladen: Nur Textdateien</span></Button>
+                        
                           </Upload>
                         </Col>
                         <Col span={3} >
@@ -569,12 +561,12 @@ const Overview = () => {
                     </div> : id == "3" ?
 
 
-                      <div style={{ background: "white", height: "450px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
+                      <div style={{ background: "white", height: "550px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
                         <Row>
                           <Col span={14} style={{ marginTop: "20px" }}>
                             <Upload {...propsMedia} maxCount={1} listType='text'>
-
-                              <Button icon={<UploadOutlined />}>Hochladen</Button><span style={{ marginLeft: "10px" }}>Nur Bilder und Videos (jpg, png, mp4)</span>
+                            <Button  style={{width:"450px", height:"150px", backgroundColor:"#fafafa", border:"dashed 0.3px"}} icon={<InboxOutlined style={{ fontSize: '350%', color:"#257dfe"}}/>}><br></br><span>Hochladen: Nur Bilder und Videos (jpg, png, mp4)</span></Button>
+                        
                             </Upload>
                           </Col>
                           <Col span={3} >
@@ -693,7 +685,7 @@ const Overview = () => {
                                 setLoader(true)
 
                                 const response = fetch(
-                                  "https://www.cpstech.de/crawl/",
+                                  ServerCrawl,
                                   {
                                     method: "POST",
                                     headers: {
@@ -779,13 +771,13 @@ const Overview = () => {
 
 
       </fieldset>
-      <ChatClient
+      {activeChatbotID && <ChatClient
         objectId={activeChatbotID}
         userId={curUserId}
         universityId={curUserId}
         accessToken={token}
         chatbotId={activeChatbotID}
-      ></ChatClient>
+      ></ChatClient>}
     </PageContainer >
   )
 }

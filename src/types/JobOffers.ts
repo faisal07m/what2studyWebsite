@@ -44,7 +44,7 @@ export const blankBlock:  Partial<JobOfferBlock> = {
   user:"",
   behavior:[{id:1, leftValue: "Locker", rightValue:"Professionell", pointOnScale:0, given:"Formalität"},{id:2, leftValue: "Meinungsstark", rightValue:"Neutral", pointOnScale:0, given:"Meinung"},{id:3, leftValue: "Viele Emojis", rightValue:"Keine Emojis", pointOnScale:0, given:"Emotionen"},{id:4, leftValue: "Lange Antworten", rightValue:"Kurze Antworten", pointOnScale:0, given:"Länge"},{id:5, leftValue: "Bezugnehmend", rightValue:"Vorschlagend", pointOnScale:0, given:"Themen"},{id:6, leftValue: "Humorvoll", rightValue:"Seriös", pointOnScale:0, given:"Umgangston"}],
   name: "",
-  language: ""  ,
+  language: "de"  ,
   bubbleIcon:[],
   AudioNarration:true,
   Narrator:"male",

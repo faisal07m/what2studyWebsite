@@ -482,12 +482,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               <Select
                 style={{ width: "200px" }}
 
-                defaultValue={job.language || 'English'}
+                defaultValue={job.language || 'de'}
                 onChange={(value) => onjobChange({ ...job, language: value.toString() })}
               >
 
-                <Option value='English'>English</Option>
-                <Option value='German'>Deutsch</Option>
+                <Option value='en'>English</Option>
+                <Option value='de'>Deutsch</Option>
 
               </Select>
 
@@ -502,12 +502,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               <Select
                 style={{ width: "200px" }}
 
-                defaultValue={job.Narrator || 'Male'}
+                defaultValue={job.Narrator || 'Männlich'}
                 onChange={(value) => onjobChange({ ...job, Narrator: value.toString().toLowerCase() })}
               >
 
-                <Option value='Male'>Männlich</Option>
-                <Option value='Female'>Weiblich</Option>
+                <Option value='male'>Männlich</Option>
+                <Option value='female'>Weiblich</Option>
 
               </Select>
 
@@ -939,9 +939,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <p>Welche Informationen sollen angegeben werden, wenn der Chatbot den Hinweis gibt eine beliebige Frage zu stellen?</p>
             <br></br>
             <TextArea
-              defaultValue={job.randomQuestion || "Unsicher, welche Fragen man mir stellen kann? Ich stehe bei verschiedensten Themen zur Verfügung und versuche zu helfen. Unter anderem kann ich konkrete Informationen zu Studiengängen, Zulassungsvoraussetzungen, Campusleben oder Unterstützungsangeboten geben. Aber auch allgemeine Fragen rundum das Hochschulsystem beantworten. Hier sind einige Beispielfragen, die interessant sein könnten: \n\nWelche Studiengänge bietet die Universität an?\nWie lauten die Zulassungsvoraussetzungen für den Studiengang XYZ?\nKannst du mir mehr über das Campusleben berichten?\nWelche Unterstützungsangebote gibt es für Studierende?\nWie bewerbe ich mich für ein Studium an dieser Universität?"}
+              defaultValue={job.randomQuestion || "Unsicher, welche Fragen man mir stellen kann? Frag mich doch zu:\n\nWelche Studiengänge bietet die Universität an?\nWie lauten die Zulassungsvoraussetzungen für den Studiengang XYZ?\nWie bewerbe ich mich für ein Studium?"}
               style={{ marginTop: "-20px" }}
               onChange={(e) => {
+                console.log(e)
+
+                console.log(e.target.value)
                 onjobChange({ ...job, randomQuestion: e.target.value })
               }
               }
