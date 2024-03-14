@@ -490,7 +490,7 @@ const Overview = () => {
                             submitKnowledgeBase("pdf")
                             
                           }}>
-                            Hinzfügen
+                            Hinzufügen
                           </Button>
                         </Form.Item>
 
@@ -562,7 +562,7 @@ const Overview = () => {
 
                               submitKnowledgeBase("text")
                             }}>
-                              Hinzfügen
+                              Hinzufügen
                             </Button>
                           </Form.Item>
 
@@ -631,7 +631,7 @@ const Overview = () => {
 
                                 submitKnowledgeBase("media")
                               }}>
-                                Hinzfügen
+                                Hinzufügen
                               </Button>
                             </Form.Item>
 
@@ -721,7 +721,7 @@ const Overview = () => {
                                   })
                                   .catch(error => console.error(error));;
                               }}>
-                                Hinzfügen
+                                Hinzufügen
                               </Button>
                             </Form.Item>
 
