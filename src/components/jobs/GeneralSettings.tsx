@@ -1008,6 +1008,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       objectId= {id}
       userId={job.user}
       universityId= {job.user}
+      chatbotName={job.name}
+      dummyRequest={true}
       // accessToken={token}
       // chatbotId={id}
        chatbotBubbleIcons={job.selectedBubbleIcon}

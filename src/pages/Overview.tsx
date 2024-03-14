@@ -333,12 +333,10 @@ const Overview = () => {
         message: 'Beim Hochladen des Bildes ist ein Fehler aufgetreten.',
       })
     )
-    console.log(base64)
     var fileObjName = "url"
     var className = "URL"
     var propertyName = "url"
 
-    console.log(base64)
     const parseFile = new Parse.File(fileObjName, { base64: base64 as string });
     parseFile.save().then(async (responseFile) => {
       const Gallery = Parse.Object.extend(className);
@@ -356,9 +354,29 @@ const Overview = () => {
       }
       setUrl(url)
       setUrlViewer(url)
+     
+      if(urlCrawler.startsWith("https"))
+     { var tempFileNameArr = urlCrawler.split("https://")
+      var tempFileName}
+      else if(urlCrawler.startsWith("http"))
+     { var tempFileNameArr = urlCrawler.split("https://")
+      var tempFileName}
+      else{
+        var tempFileNameArr = urlCrawler.split("/")
+        var tempFileName
+      }
+
+      console.log(tempFileNameArr)
+      if(tempFileNameArr){
+        tempFileName=tempFileNameArr[1].replaceAll("/","_")
+      }
+
+      console.log(tempFileNameArr)
+      console.log(tempFileName)
       // setFileName(response.attributes[propertyName]._name)
       var res = await generateKnowledge({
-        name: response.attributes[propertyName]._name,
+        // name: response.attributes[propertyName]._name,
+        name: tempFileName,
         user: currentUser?.id,
         type: "url",
         priority: priority,
