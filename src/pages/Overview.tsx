@@ -76,7 +76,7 @@ const Overview = () => {
 
   const [token, setToken] = useState<any>()
   const [scriptTag, setScriptTag] = useState<any>()
-  const [expires, setExpiry] = useState<string>(dayjs().year() + "/" + dayjs().month() + 1)
+  const [expires, setExpiry] = useState<string>(dayjs().year() + "/" + "02")
   const setScriptTagAsync = async () => {
     getScriptTag().then(function (val) {
       var token = /token=.*'/g.exec(val)
@@ -93,7 +93,7 @@ const Overview = () => {
   const JSXelementTable = (id) => {
     return <Tabs
       defaultActiveKey={localStorage.getItem("tableID")||id}
-      activeKey={localStorage.getItem("tableID")||id}
+      // activeKey={localStorage.getItem("tableID")||id}
       type="card"
       size={size2}
       items={new Array(4).fill(null).map((_, i) => {
@@ -475,6 +475,7 @@ const Overview = () => {
                         <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
                           <DatePicker defaultValue={dayjs(expires, monthFormat)} format={monthFormat} picker="month" onChange={(e, s) => {
+                            console.log(s)
                             setExpiry(s)
                           }} />
 

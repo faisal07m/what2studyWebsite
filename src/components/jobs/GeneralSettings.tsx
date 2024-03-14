@@ -250,7 +250,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       obj = job.bubbleIcon.map((img, index) => {
         return <Col key={index} style={{ marginLeft: "15px" }} >
           {job.bubbleIcon ? <Image style={{ width: "100%" }} height={140} src={img} preview={false} onClick={(e) => {
-            onjobChange({ ...job, selectedBubbleIcon: img })
+            // onjobChange({ ...job, selectedBubbleIcon: img })
             setSelectedBubble(img)
           }} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
 
@@ -261,14 +261,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     onjobChange({ ...job })
     setJob(obj)
   }
-
+  
+  useEffect(()=>{
+    onjobChange({ ...job, selectedBubbleIcon: selectedBubble })
+         
+  },[selectedBubble])
   const imageElementProfile = async () => {
     let obj: JSX.Element[] = []
     if (job.profileImage != undefined) {
       obj = job.profileImage.map((img, index) => {
         return <Col key={index} style={{ marginLeft: "15px" }} >
           {job.profileImage ? <Image style={{ width: "100%" }} height={140} src={img} preview={false} onClick={(e) => {
-            onjobChange({ ...job, selectedProfileImage: img })
+            // onjobChange({ ...job, selectedProfileImage: img })
             setSelectedProfile(img)
 
           }} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
@@ -280,6 +284,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     onjobChange({ ...job })
     setProfileImages(obj)
   }
+
+  useEffect(()=>{
+    onjobChange({ ...job, selectedProfileImage: selectedProfile })
+         
+  },[selectedProfile])
 
   // After setting current user object 
   useEffect(() => {

@@ -100,6 +100,7 @@ const EditJobs = () => {
           if (job?.activeChatbot == true) {
             const query = new Parse.Query(chatbots)
             query.notEqualTo("objectId", temp.id)
+            query.equalTo("user", temp.attributes.user)
             query.find().then((res) => {
               if (res.length > 0) {
                 res.forEach(element => {
