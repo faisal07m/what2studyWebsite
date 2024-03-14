@@ -71,7 +71,6 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
   }, [changedState])
 
   useEffect(() => {
-    console.log(changecount)
     if (changecount > 3) {
       setChangedState(true)
 

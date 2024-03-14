@@ -183,6 +183,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   const [chatbotName, setChatbotName] = useState<string>(job.name)
 
+  const [language, setlang] = useState<string>(job.language)
+
   const [selectedProfile, setSelectedProfile] = useState<string>(job.selectedProfileImage)
   // Get current user object
   const currentUser = Parse.User.current()
@@ -483,7 +485,16 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                 style={{ width: "200px" }}
 
                 defaultValue={job.language || 'de'}
-                onChange={(value) => onjobChange({ ...job, language: value.toString() })}
+                onChange={(value) => 
+                  
+                  {
+
+                    onjobChange({ ...job, language: value.toString() })
+                    console.log(job.language)
+                    setlang(value.toString())
+                    console.log(value.toString())
+                  
+                  }}
               >
 
                 <Option value='en'>English</Option>
@@ -1010,6 +1021,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       universityId= {job.user}
       chatbotName={job.name}
       dummyRequest={true}
+      language={language}
       // accessToken={token}
       // chatbotId={id}
        chatbotBubbleIcons={job.selectedBubbleIcon}

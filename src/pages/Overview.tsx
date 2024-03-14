@@ -40,10 +40,7 @@ const Overview = () => {
   const [size, setSize] = useState<SizeType>('large');
   const [size2, setSize2] = useState<SizeType>('large');
   const curUser = Parse.User.current()
-
   const [curUserId, setCurUserId] = useState<string>();
-  console.log(curUser?.id)
-
   const [activeChatbotID, setActiveChatID] = useState<any>("")
 
   var activeIDset=async ()=>{
@@ -75,6 +72,8 @@ const Overview = () => {
 
   const [url, setUrl] = useState<string>("")
 
+  const [defaultActiveKey, setDefKey] = useState<string>("1")
+
   const [token, setToken] = useState<any>()
   const [scriptTag, setScriptTag] = useState<any>()
   const [expires, setExpiry] = useState<string>(dayjs().year() + "/" + dayjs().month() + 1)
@@ -91,9 +90,10 @@ const Overview = () => {
     setScriptTagAsync()
   }, [])
 
-  const JSXelementTable = () => {
+  const JSXelementTable = (id) => {
     return <Tabs
-      defaultActiveKey="1"
+      defaultActiveKey={localStorage.getItem("tableID")||id}
+      activeKey={localStorage.getItem("tableID")||id}
       type="card"
       size={size2}
       items={new Array(4).fill(null).map((_, i) => {
@@ -107,7 +107,13 @@ const Overview = () => {
     />
   }
 
-  const [tableJSX, setTableJSX] = useState<JSX.Element>(JSXelementTable())
+  const [tableJSX, setTableJSX] = useState<JSX.Element>(JSXelementTable(defaultActiveKey))
+  useEffect(()=>{
+  localStorage.setItem("tableID", defaultActiveKey)
+  setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
+  
+  },[defaultActiveKey])
+
   const monthFormat = 'YYYY/MM';
 
   const props: UploadProps = {
@@ -223,21 +229,25 @@ const Overview = () => {
       fileObjName = "pdfUpload"
       className = "PDF"
       propertyName = "pdf"
+      setDefKey("1")
     }
     else if (fileType == "text") {
       fileObjName = "textUpload"
       className = "TEXT"
       propertyName = "text"
+      setDefKey("2")
     }
     else if (fileType == "media") {
       fileObjName = "mediaUpload"
       className = "Media"
       propertyName = "media"
+      setDefKey("3")
     }
     else {
       fileObjName = "url"
       className = "URL"
       propertyName = "url"
+      setDefKey("4")
     }
     if (base64 != undefined) {
       const parseFile = new Parse.File(fileObjName, { base64: base64 as string });
@@ -247,7 +257,6 @@ const Overview = () => {
         gallery.set(propertyName, responseFile);
 
         let response = await gallery.save();
-        console.log("got here")
         var url = response.attributes[propertyName]._url
         if (Parse.serverURL.includes("cpstech")) {
           url = url.replace("http:", "https:")
@@ -270,7 +279,7 @@ const Overview = () => {
           fileUrl: url
         }).then(data => {
           setTableJSX(<></>)
-          setTableJSX(JSXelementTable)
+          setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
           setLoader(false)
           showNotification({
             title: 'Datei erfolgreich hochgeladen',
@@ -366,13 +375,10 @@ const Overview = () => {
         var tempFileName
       }
 
-      console.log(tempFileNameArr)
       if(tempFileNameArr){
         tempFileName=tempFileNameArr[1].replaceAll("/","_")
       }
-
-      console.log(tempFileNameArr)
-      console.log(tempFileName)
+      setDefKey("4")
       // setFileName(response.attributes[propertyName]._name)
       var res = await generateKnowledge({
         // name: response.attributes[propertyName]._name,
@@ -386,7 +392,7 @@ const Overview = () => {
         fileUrl: url
       })
       setTableJSX(<></>)
-      setTableJSX(JSXelementTable)
+      setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
       setLoader(false)
       showNotification({
         title: 'Datei erfolgreich hochgeladen',
@@ -469,8 +475,6 @@ const Overview = () => {
                         <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
                           <DatePicker defaultValue={dayjs(expires, monthFormat)} format={monthFormat} picker="month" onChange={(e, s) => {
-                            console.log(e)
-                            console.log(s)
                             setExpiry(s)
                           }} />
 
@@ -483,6 +487,7 @@ const Overview = () => {
                           <Button type="primary" icon={<SendOutlined />} onClick={(e) => {
                             setLoader(true)
                             submitKnowledgeBase("pdf")
+                            
                           }}>
                             Hinzfügen
                           </Button>
@@ -492,7 +497,6 @@ const Overview = () => {
                     </Row>
                     <Row style={{ marginTop: "70px" }}>
                       <TagComponent saveCallback={(tagsArr) => {
-                        console.log(tagsArr)
                         setTagsArray(tagsArr)
                       }} />
                     </Row>
@@ -565,7 +569,6 @@ const Overview = () => {
                       </Row>
                       <Row style={{ marginTop: "70px" }}>
                         <TagComponent saveCallback={(tagsArr) => {
-                          console.log(tagsArr)
                           setTagsArray(tagsArr)
                         }} />
                       </Row>
@@ -647,7 +650,6 @@ const Overview = () => {
                         </Row>
                         <Row style={{ marginTop: "70px" }}>
                           <TagComponent saveCallback={(tagsArr) => {
-                            console.log(tagsArr)
                             setTagsArray(tagsArr)
                           }} />
                         </Row>
@@ -752,16 +754,15 @@ const Overview = () => {
 
                           </Col>
                         </Row>
-                        <Row style={{ marginTop: "10px" }}>
+                        {/* <Row style={{ marginTop: "10px" }}>
                           <Form.Item name='Abschrift' label="Web-Crawler Konfiguration" style={{ marginTop: "10px" }}>
 
                             <Checkbox>Hierarchische Abfrage (n+1)</Checkbox>
                           </Form.Item>
 
-                        </Row>
+                        </Row> */}
                         <Row style={{ marginTop: "70px" }}>
                           <TagComponent saveCallback={(tagsArr) => {
-                            console.log(tagsArr)
                             setTagsArray(tagsArr)
                           }} />
                         </Row>

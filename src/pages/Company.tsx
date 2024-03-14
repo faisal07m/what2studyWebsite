@@ -50,7 +50,6 @@ const Company = () => {
   })
 
   useEffect(() => {
-    console.log(changecount)
     if (changecount >= 3) {
       setChangedState(true)
 
@@ -84,7 +83,6 @@ const Company = () => {
   const [tuesdayStart, tuesdayEnd] = tuesday.split(",") 
   const [wednesdayStart, wednesdayEnd] = wednesday.split(",") 
   const [thursdayStart, thursdayEnd] = thursday.split(",") 
-  console.log(friday)
   const [fridayStart, fridayEnd] = friday.split(",") 
 
  
