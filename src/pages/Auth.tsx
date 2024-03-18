@@ -279,7 +279,7 @@ setTokenLoading(true)
           
         </Form>
         <p
-        style={{ color: 'blue', marginTop: '25px', cursor: 'pointer', width:"fit-content" }}
+         style={{ display: "none",color: 'blue', marginTop: '25px', cursor: 'pointer', width:"fit-content" }}
         onClick={onPasswordForgot}
       >
         {passForgot == false && loginMode==true
@@ -287,7 +287,7 @@ setTokenLoading(true)
         }
       </p>
         <p
-        style={{ color: 'blue', marginTop: '25px', cursor: 'pointer', width:"fit-content" }}
+         style={{ display:"none", color: 'blue', marginTop: '25px', cursor: 'pointer', width:"fit-content" }}
         onClick={passForgot == false ?onChangeMode  : initAuthState}
       >
         {loginMode &&'Noch keinen Account? Jetzt registrieren!'}
