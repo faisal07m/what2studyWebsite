@@ -1,4 +1,4 @@
-import { Button, Menu } from 'antd'
+import { Button, Menu, Progress } from 'antd'
 import {
   BarChartOutlined,
   ShopOutlined,
@@ -11,17 +11,91 @@ import {
   ApiFilled,
   DashboardOutlined,
   TagOutlined,
-  ApiOutlined
+  ApiOutlined,
+  WarningOutlined,
+  WarningTwoTone
 } from '@ant-design/icons'
 import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../config/routes'
 import Parse from 'parse'
+import { useEffect, useState } from 'react'
 
 type MainMenuProps = {
   activeTab: string
 }
 const MainMenu = ({ activeTab }: MainMenuProps) => {
   const location = useLocation<Object>()
+
+  const [statusBar, setStatusBar] = useState<boolean>(false)
+
+  const [statusBarUpload, setStatusBarUpload] = useState<boolean>(false)
+  var embeddingStatus = Parse.Object.extend("embeddingStatus");
+  var q2 = new Parse.Query(embeddingStatus);
+  q2.subscribe().then(async function (sub) {
+      sub.on('update', function (message) {
+       
+         if(message.attributes.user ==Parse.User.current()?.id )
+         {
+          if(message.attributes.status == 0){
+            setStatusBar(false)
+            console.log("subscription")
+          }
+          else{
+            setStatusBar(true)
+          }
+        }
+      });   
+  });
+  var knowledgeBase = Parse.Object.extend("knowledgeBase");
+  var q3 = new Parse.Query(knowledgeBase);
+  q3.subscribe().then(async function (sub) {
+    sub.on('update', function (message) {
+     
+       if(message.attributes.user ==Parse.User.current()?.id )
+       {
+        if(message.attributes.learnStatus == false){
+          setStatusBarUpload(true)
+        }
+        else{
+          setStatusBarUpload(false)
+        }
+      }
+    });   
+    sub.on('create', function (message) {
+     
+      if(message.attributes.user ==Parse.User.current()?.id )
+      {
+       if(message.attributes.learnStatus == false){
+        setStatusBarUpload(true)
+       }
+       else{
+        setStatusBarUpload(false)
+       }
+     }
+   });   
+});
+
+  useEffect(()=>{
+    var knowledgeBase = Parse.Object.extend("knowledgeBase");
+    var q3 = new Parse.Query(knowledgeBase);
+    q3.equalTo("user", Parse.User.current()?.id)
+    q3.equalTo("learnStatus", false)
+    
+    q3.first().then((el)=>{
+      if(el)
+         { 
+          setStatusBarUpload(true)
+          setStatusBar(true)
+        }
+          else{
+            setStatusBarUpload(true)
+            setStatusBar(false)
+          }
+      
+    }
+    
+    )
+  },[])
   const func = async (e) => {
     if (location.state != undefined) {
 
@@ -53,6 +127,7 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
 
   const user = Parse.User.current()
   const role: 'admin' | 'company' | undefined = user?.attributes.role
+  
   return (
     < >
       <Menu style={{ position:"fixed", width:"200px", height:"inherit" }} onClick={() => { func({ e: Event }) }} defaultSelectedKeys={[activeTab]} mode='inline'>
@@ -74,7 +149,45 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='6' icon={<DashboardOutlined />}>
           <Link to={{ pathname: "/what2study/monitoring", state: { prevPath: location.pathname } }} >Monitoring</Link>
         </Menu.Item>
+        <Menu.Item key='7' icon={<DashboardOutlined />}>
+          <Link to={{ pathname: "/what2study/chatwindow", state: { prevPath: location.pathname } }} >Chatbot</Link>
+        </Menu.Item>
+        <div style={{marginTop:"440px", marginLeft:"35px"}}
+       >
+        { statusBarUpload == false ?( statusBar== false ? <Progress
+          type="circle"
+          percent={100}
+         
+          trailColor="rgba(0, 0, 0, 0.06)"
+          strokeColor={{
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          }}format={() => 'fertig'}
+        ></Progress> : <Progress
+        type="circle"
+        percent={63}
+       
+        trailColor="rgba(0, 0, 0, 0.06)"
+        strokeColor={{
+          '0%': '#108ee9',
+          '100%': '#87d068',
+        }}
+        format={() => 'läuft...'}
+      ></Progress>) :<Progress
+      type="circle"
+      percent={0}
+      size={130}
+      strokeWidth={6}
+      trailColor="rgb(238 218 196)"
+      strokeColor={{
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      }}
+      format={() => <><WarningTwoTone style={{fontSize:"40px"}} twoToneColor={"orange"}/> <br></br><p style={{fontSize:"18px", marginTop:"10px"}}>  Ausstehend</p></>}
+    ></Progress>}
+          <p style={{marginTop:"20px", marginLeft:"25p"}}>Chatbot-Lernstatus</p>
       
+        </div>
        </Menu>
     </>
   )

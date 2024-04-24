@@ -12,6 +12,10 @@ export type knowledgeBaseBlock = {
     tags: string[]
     transcript: string
     fileUrl: string
+    nPlus1:boolean
+    nestedLinks:string[]
+    jobStatus:boolean
+    learnStatus:boolean
 
 }
 
@@ -23,7 +27,11 @@ export const blankBlock: Partial<knowledgeBaseBlock> = {
     expires: "",
     tags: [],
     transcript: "",
-    fileUrl: ""
+    fileUrl: "",
+    nPlus1:false,
+    nestedLinks:[],
+    jobStatus:false,
+    learnStatus:false,
 }
 
 

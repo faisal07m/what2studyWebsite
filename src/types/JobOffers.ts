@@ -39,6 +39,8 @@ export type JobOfferBlock = {
   activeChatbot: boolean
   scriptTag:string
 
+  matriculationNumber:boolean
+
   }
 export const blankBlock:  Partial<JobOfferBlock> = {
   user:"",
@@ -69,9 +71,11 @@ export const blankBlock:  Partial<JobOfferBlock> = {
   uiHighLightGroupB:"",
   
   randomQuestion: "",
-  talkToaHuman: "",
+  talkToaHuman: "Wir freuen uns, dass Sie direkt mit uns in Kontakt treten möchten, gerne können Sie hierzu die angegebenen Optionen nutzen. \n\nBitte beachten Sie unsere Öffnungszeiten und gewähren Sie uns nach Möglichkeit Einblick in Ihren Chatverlauf, damit wir direkt sehen können, um welches Problem es sich handelt. Sollte gerade niemand verfügbar sein können wir uns auch auf Wunsch bei Ihnen melden.",
   randomQuestionEnabled: true,
   talkToaHumanEnabled: true,
+  matriculationNumber:true,
+
 
   activeChatbot: false,
   scriptTag:""
@@ -89,10 +93,7 @@ export const generateJobs = async (
   const job = new chatbots()
   try {
     const res = await job.save(initValues)
-    console.log(res)
     let formData = { user: curUser?.id , chatbotId:res.id}
-    console.log(formData)
-
     const response = await fetch(
       SERVER_URL_parsefunctions+"/scriptTag",
       {

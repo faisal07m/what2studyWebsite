@@ -1,13 +1,12 @@
 import PageContainer from '../components/layout/PageContainer'
 import Parse from 'parse'
 import { useHistory } from 'react-router-dom'
-import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin } from 'antd'
+import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin, Modal } from 'antd'
 
-import { InboxOutlined, PlusOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
+import { ApiTwoTone, CodeOutlined, HddTwoTone, InboxOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
 import { knowledgeBaseBlock, generateKnowledge, getKnowledgeBase } from '../types/knowledgeBase'
 import type { ConfigProviderProps, RadioChangeEvent } from 'antd';
-
 import ChatClient from "what2study-chatclient";
 import {
   CartesianGrid,
@@ -42,6 +41,53 @@ const Overview = () => {
   const curUser = Parse.User.current()
   const [curUserId, setCurUserId] = useState<string>();
   const [activeChatbotID, setActiveChatID] = useState<any>("")
+  const disable = { pointerEvent: "none",opacity: 0.7 }
+  const [mainDiv, setMainDiv] = useState<boolean>(true)
+  const enable = {  pointerEvent: "unset",opacity: 1}
+  
+    // Enable subscription to chart name change
+    var embeddingStatus = Parse.Object.extend("embeddingStatus");
+    var q2 = new Parse.Query(embeddingStatus);
+    q2.subscribe().then(async function (sub) {
+        sub.on('update', function (message) {
+         
+           if(message.attributes.user ==curUser?.id )
+           {
+            if(message.attributes.status == 0){
+              setMainDiv(true)
+              console.log("subscription")
+            }
+            else{
+              setMainDiv(false)
+            }
+          }
+        });   
+    });
+
+     // Enable subscription to chart name change
+     var knowledgeBase = Parse.Object.extend("knowledgeBase");
+     var q3 = new Parse.Query(knowledgeBase);
+     q3.subscribe().then(async function (sub) {
+         sub.on('update', function (message) {
+          
+            if(message.attributes.user ==curUser?.id )
+            {
+             if(message.attributes.jobStatus == true){
+              //  setMainDiv(true)
+              setLoader(false)
+              setTableJSX(<></>)
+              setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
+             
+               console.log("subscription success")
+             }
+             else{
+              //  setMainDiv(false)
+              setLoader(false)
+      
+             }
+           }
+         });   
+     });
 
   var activeIDset=async ()=>{
     let res = await getActiveChatbotID()
@@ -50,6 +96,10 @@ const Overview = () => {
   useEffect(() => {
    activeIDset()
    setCurUserId(curUser?.id)
+   var embeddingStatus = Parse.Object.extend("embeddingStatus");
+   var q2 = new Parse.Query(embeddingStatus);
+   q2.equalTo("user", curUser?.id)
+   q2.first().then((e)=>{if(e && e.attributes.status==1){ setMainDiv(false)}})
   }, [])
   var currentUser = Parse.User.current()
   const [knowledgebases, setknowledgeBases] = useState<knowledgeBaseBlock[] | null>(null)
@@ -58,15 +108,19 @@ const Overview = () => {
 
   const [priority, setPriority] = useState<string>("")
 
+
   const [indexFileContent, setIndex] = useState<string>("")
 
   const [transcript, setTranscript] = useState<string>("")
 
   const [urlViewer, setUrlViewer] = useState<string>("https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js")
   const [loader, setLoader] = useState<any>(false)
+  const [nPLus1, setNPLus1] = useState<boolean>(false)
 
   const [urlCrawler, setUrlCrawler] = useState<string>("")
   const [tagsArray, setTagsArray] = useState<string[]>([])
+
+  const [nestedLinks, setNestedLinks] = useState<string[]>([])
 
   const [fileName, setFileName] = useState<string>("")
 
@@ -99,7 +153,7 @@ const Overview = () => {
       items={new Array(4).fill(null).map((_, i) => {
         const id = String(i + 1);
         return {
-          label: <>{id == "1" ? <>Dateien</> : id == "2" ? <>Text</> : id == "3" ? <>Medien</> : id == "4" ? <>URL</> : <></>}</>,
+          label: <>{id == "1" ? <>Dateien</> : id == "2" ? <>Text</> : id == "3" ? <>Medien</> : id == "4" ? <>URL Crawl Jobs</> : <></>}</>,
           key: id,
           children: <> <FilesListTable id={id}></FilesListTable></>,
         };
@@ -276,7 +330,11 @@ const Overview = () => {
           expires: expires,
           tags: tagsArray,
           transcript: transcript,
-          fileUrl: url
+          fileUrl: url,
+          jobStatus:false ,
+          nestedLinks:nestedLinks,
+          nPlus1: nPLus1,
+
         }).then(data => {
           setTableJSX(<></>)
           setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
@@ -286,7 +344,7 @@ const Overview = () => {
             message: 'Erfolg',
             type: 'success',
           })
-          let formData = { url: url, fileName: fileName, user: currentUser?.id, indexFile: "" }
+          let formData = { url: url, fileName: fileName, user: currentUser?.id, indexFile: "", type:fileType, transcript:transcript }
 
 
           const response = fetch(
@@ -330,40 +388,12 @@ const Overview = () => {
 
   }
 
-  const saveCrawlData = async (data) => {
-    setIndex(data["indexFileContent"])
-    var blob = new Blob([data["data"]], { type: 'text/plain' });
-    var file = new File([blob], "urlfile", { type: "text/plain" });
-    setFileName("urlFile")
-    const base64 = await toBase64(file).catch((err) =>
-      showNotification({
-        type: 'error',
-        title: 'Fehler beim Hochladen',
-        message: 'Beim Hochladen des Bildes ist ein Fehler aufgetreten.',
-      })
-    )
+
+  const saveCrawlData = async (url) => {
     var fileObjName = "url"
     var className = "URL"
     var propertyName = "url"
 
-    const parseFile = new Parse.File(fileObjName, { base64: base64 as string });
-    parseFile.save().then(async (responseFile) => {
-      const Gallery = Parse.Object.extend(className);
-      const gallery = new Gallery();
-      gallery.set(propertyName, responseFile);
-
-      let response = await gallery.save();
-      var url = response.attributes[propertyName]._url
-      if (Parse.serverURL.includes("cpstech")) {
-        url = url.replace("http:", "https:")
-
-      }
-      else if (Parse.serverURL.includes("localhost")) {
-        url = url.replace("https:", "http:")
-      }
-      setUrl(url)
-      setUrlViewer(url)
-     
       if(urlCrawler.startsWith("https"))
      { var tempFileNameArr = urlCrawler.split("https://")
       var tempFileName}
@@ -389,7 +419,10 @@ const Overview = () => {
         expires: expires,
         tags: tagsArray,
         transcript: transcript,
-        fileUrl: url
+        fileUrl: url,
+        nestedLinks:[],
+        nPlus1: nPLus1,
+        jobStatus:false ,
       })
       setTableJSX(<></>)
       setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
@@ -399,33 +432,72 @@ const Overview = () => {
         message: 'Erfolg',
         type: 'success',
       })
-      let formData = { url: url, fileName: response.attributes[propertyName]._name, user: currentUser?.id, indexFile: data["indexFileContent"] }
+      let formData = { url: urlCrawler, allowDeepCrawl:nPLus1?"1":"0", userId: curUser?.id, jobId:res }
+      
 
-
-      fetch(
-        SERVER_URL_parsefunctions+"/uploadPythonFile",
+      const response = fetch(
+        ServerCrawl,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Parse-Application-Id": "what2study",
-            "X-Parse-Master-Key": "what2studyMaster",
           },
           body: JSON.stringify(formData),
         }
-      );
-    }).catch((e) => {
-      showNotification({
-        type: 'error',
-        title: 'Bitte überprüfen Sie den Dateinamen. Entfernen Sie Zahlen wie (1)* am Ende des Dateinamens, falls vorhanden.',
-        message: '',
-      })
-    })
+      ).then(response => response.json())
+        .then(data => {
+         
+        })
+        .catch(error => console.error(error));;
+
   }
+
+    const [open, setOpen] = useState(false);
+
+    const showModal = () => {
+      setOpen(true);
+    };
+    const handleOk = () => {
+      let formData = {  user: currentUser?.id }
+          setMainDiv(false)
+          showNotification({
+            title: 'Training initiiert',
+            message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
+            type: 'info',
+          })
+
+          const response = fetch(
+            SERVER_URL_parsefunctions+"/startEmbeddings",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Parse-Application-Id": "what2study",
+                "X-Parse-Master-Key": "what2studyMaster",
+              },
+              body: JSON.stringify(formData),
+            }
+          );
+      setOpen(false);
+    };
+
+    const handleCancel = () => {
+      setOpen(false);
+    };
 
   return (
     <PageContainer pageId='1'
       title='Wissensdatenbank'>
+        <div style={mainDiv == false ? disable:enable}>
+        <Row style={{justifyContent:"right"}}>
+       {mainDiv == true && <Button  
+           onClick={(e)=>{
+            showModal()
+          
+        }} style={{ boxShadow : "0 0 15px #ff0000ab",height:"70px", lineHeight:"30px"}} icon={<ApiTwoTone style={{ fontSize: '250%', color:"#257dfe"}}/>}>Training des Chatbots starten</Button>}
+                      
+        </Row>
+       {mainDiv ?   <div>
       <fieldset style={{ width: "100%" }}>
         <legend>Neues Wissen hinzufügen</legend>
         <Tabs
@@ -461,10 +533,10 @@ const Overview = () => {
                             }}
                           >
 
-                            <Option value='Hight'>Hoch</Option>
-                            <Option value='Medium'>Mittel</Option>
+                            <Option value='Hoch'>Hoch</Option>
+                            <Option value='Mittel'>Mittel</Option>
 
-                            <Option value='Low'>Niedrig</Option>
+                            <Option value='Niedrig'>Niedrig</Option>
 
                           </Select>
 
@@ -534,10 +606,10 @@ const Overview = () => {
                               }}
                             >
 
-                              <Option value='Hight'>Hoch</Option>
-                              <Option value='Medium'>Mittel</Option>
+                              <Option value='Hoch'>Hoch</Option>
+                              <Option value='Mittel'>Mittel</Option>
 
-                              <Option value='Low'>Niedrig</Option>
+                              <Option value='Niedrig'>Niedrig</Option>
 
                             </Select>
 
@@ -603,10 +675,10 @@ const Overview = () => {
                                 }}
                               >
 
-                                <Option value='Hight'>Hoch</Option>
-                                <Option value='Medium'>Mittel</Option>
+                                <Option value='Hoch'>Hoch</Option>
+                                <Option value='Mittel'>Mittel</Option>
 
-                                <Option value='Low'>Niedrig</Option>
+                                <Option value='Niedrig'>Niedrig</Option>
 
                               </Select>
 
@@ -678,10 +750,10 @@ const Overview = () => {
                                 }}
                               >
 
-                                <Option value='Hight'>Hoch</Option>
-                                <Option value='Medium'>Mittel</Option>
+                                <Option value='Hoch'>Hoch</Option>
+                                <Option value='Mittel'>Mittel</Option>
 
-                                <Option value='Low'>Niedrig</Option>
+                                <Option value='Niedrig'>Niedrig</Option>
 
                               </Select>
 
@@ -702,25 +774,8 @@ const Overview = () => {
                             <Form.Item name='' style={{ marginTop: "10px" }}>
 
                               <Button type="primary" icon={<SendOutlined />} onClick={(e) => {
-                                let formData = { url: urlCrawler }
-                                setLoader(true)
-
-                                const response = fetch(
-                                  ServerCrawl,
-                                  {
-                                    method: "POST",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(formData),
-                                  }
-                                ).then(response => response.json())
-                                  .then(data => {
-                                    saveCrawlData(data)
-
-                                  })
-                                  .catch(error => console.error(error));;
-                              }}>
+                                saveCrawlData(url)
+                                }}>
                                 Hinzufügen
                               </Button>
                             </Form.Item>
@@ -755,13 +810,17 @@ const Overview = () => {
 
                           </Col>
                         </Row>
-                        {/* <Row style={{ marginTop: "10px" }}>
+                        <Row style={{ marginTop: "10px" }}>
                           <Form.Item name='Abschrift' label="Web-Crawler Konfiguration" style={{ marginTop: "10px" }}>
 
-                            <Checkbox>Hierarchische Abfrage (n+1)</Checkbox>
+                            <Checkbox defaultChecked={nPLus1} onChange={(e)=>{
+                            console.log(e.target.checked)
+                            setNPLus1(e.target.checked)
+                            
+                            }}>Hierarchische Abfrage (n+1)</Checkbox>
                           </Form.Item>
 
-                        </Row> */}
+                        </Row>
                         <Row style={{ marginTop: "70px" }}>
                           <TagComponent saveCallback={(tagsArr) => {
                             setTagsArray(tagsArr)
@@ -791,13 +850,56 @@ const Overview = () => {
 
 
       </fieldset>
-      {activeChatbotID && <ChatClient
+
+      {activeChatbotID && 
+     <> <div style={{
+        position: "fixed",
+        bottom: 0,
+        right: 0
+    }}>
+    <div className='speech-bubble'>Klick mich</div>
+    </div>
+      <ChatClient
         objectId={activeChatbotID}
         userId={curUserId}
         universityId={curUserId}
         accessToken={token}
         chatbotId={activeChatbotID}
-      ></ChatClient>}
+      ></ChatClient></>}
+      </div>:
+      <div>
+      <Row style={{justifyContent:"center"}}><video width="300" height="250" autoPlay loop >
+      <source src="https://cpstech.de/chatanimation" type="video/mp4"/>
+     </video></Row>
+     <Row>
+
+      <h3 style={{marginBlock:"40px", width:"600px", marginLeft:"30%"}}>Das Training des Chatbots kann je nach Größe und Anzahl der Dateien stark variieren (von einigen Sekunden bis zu einer Stunde). <br></br><br></br>
+
+Da das Training serverseitig abläuft, können Sie den Tab schließen, zu einem anderen Tab wechseln oder sich von der Plattform abmelden. Das Training wird dadurch nicht unterbrochen.<br></br><br></br>
+
+Beachten Sie, dass Sie und die Benutzer auch während eines laufenden Trainingsprozesses mit dem Chatbot interagieren können (basierend auf der vorherigen Wissensdatenbank).</h3><br></br>
+     </Row>
+     </div>
+     }
+      </div>
+      <Modal
+        open={open}
+        title="Traningsprozess starten "
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Starten"
+        cancelText="Abbrechen"
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <OkBtn />
+          </>
+        )}
+      >
+        <h3 style={{marginBlock:"40px", marginLeft:"50px", marginRight:"50PX"}}>Bevor Sie den Trainingsprozess starten, vergewissern Sie sich, dass Sie alle relevanten Dateien und URLs unter "Aktuelle Wissensdatenbank" über den Button "Hinzufügen" aufgenommen haben. <br></br><br></br>
+
+        Der Trainingsprozess kann nicht gestoppt werden und kann mehrere Minuten dauern.</h3>
+      </Modal>
     </PageContainer >
   )
 }

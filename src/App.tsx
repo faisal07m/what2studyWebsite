@@ -13,6 +13,7 @@ import Impressum from './pages/Impressum'
 import 'antd/dist/reset.css';
 import Intents from './pages/Intent'
 import Monitoring from './pages/Monitoring'
+import Chatbot from './pages/Chatbot'
 
 function App() {
   const currentUser = Parse.User.current()
@@ -44,6 +45,9 @@ function App() {
           </Route>
           <Route path='/what2study/monitoring'>
             <Monitoring />
+           </Route>
+           <Route path='/what2study/chatwindow'>
+            <Chatbot />
            </Route>
            <Route path='/what2study/Impressum'>
            <Impressum />

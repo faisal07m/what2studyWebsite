@@ -34,6 +34,7 @@ import { SliderMarks } from 'antd/lib/slider'
 import { getCurrentUser, UserType } from '../../types/user'
 import TextArea from 'antd/es/input/TextArea'
 import ChatClient from "what2study-chatclient";
+import { SERVER_URL_parsefunctions } from '../../config/parse'
 
 
 library.add(faCaretDown);
@@ -412,12 +413,32 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       onjobChange({ ...job, activeChatbot: true })
 
     }
+    console.log(Parse.User.current()?.id)
+    console.log(job.id)
+    if(job.scriptTag =="" || job.scriptTag == undefined){
+      let formData = { user: Parse.User.current()?.id , chatbotId:job.id}
+      fetch(
+        SERVER_URL_parsefunctions+"/scriptTag",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Parse-Application-Id": "what2study",
+            "X-Parse-Master-Key": "what2studyMaster",
+          },
+          body: JSON.stringify(formData),
+        }
+        
+      ).then(async (response) =>{
+      const data = await response.json();
+      console.log(data.result.scriptTag)
+      onjobChange({ ...job, scriptTag: data.result.scriptTag })
+      });
+    }
   }
-
   const onUnpublish = () => {
     onjobChange({ ...job, activeChatbot: false })
   }
-
 
   const optionsUnterrischt = [
     {
@@ -996,6 +1017,24 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Row>
 
+        <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
+          <Col span={12}>
+           
+          </Col>
+          <Col span={12}>
+          <br></br>
+          
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Eingabe der Matrikelnummer zulassen </label>
+            <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.matriculationNumber} onChange={(e) => {
+              onjobChange({ ...job, matriculationNumber: !job.matriculationNumber })
+            }}></Checkbox>
+            <p> Durch Aktivieren dieses Werts kann der Benutzer seine Matrikelnummer bei der Kontaktaufnahme über die Funktion „Sprich mit uns“ mitteilen </p>
+            <br></br>
+          
+          </Col>
+
+        </Row>
+
       </fieldset>
 
 
@@ -1024,6 +1063,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           </Col>
 
       </Row>
+      <div style={{
+          position: "fixed",
+          bottom: 0,
+          right: 0
+      }}>
+      <div className='speech-bubble'>Klick mich</div>
+      </div>
       <ChatClient 
       objectId= {id}
       userId={job.user}
@@ -1033,6 +1079,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       language={language}
       // accessToken={token}
       // chatbotId={id}
+      matriculationNumber={job.matriculationNumber}
        chatbotBubbleIcons={job.selectedBubbleIcon}
        chatbotProfileImage={job.selectedProfileImage}
        chatbotLook={
@@ -1074,13 +1121,6 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Button key="back" onClick={handleCancel}>
             Schließen
           </Button>,
-          // <Button
-          //   key="link"
-          //   type="primary"
-          //   onClick={handleOk}
-          // >
-          //   In Zwischenablage kopieren
-          // </Button>,
         ]}
       >
         <h4>Kopieren Sie das folgende Skript und fügen Sie es in Ihre HTML-Seite ein, um den Chat-Client in Ihre Website zu integrieren.</h4>
@@ -1094,58 +1134,3 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 }
 
 export default GeneralSettings
-
-
-
-
-// chatbotBubbleIcons: "https://static-00.iconduck.com/assets.00/chat-icon-1024x1024-o88plv3x.png",
-//     chatbotProfileImage: "https://openclipart.org/image/2000px/307415",
-//     defaultSettings: {
-//         chatbotLanguage: "English",
-//         audioNarration: true,
-//         narrator: "John",
-//     },
-//     chatboxBehaviour: {
-//         formality: 0,
-//         opinion: 0,
-//         emotion: 0,
-//         length: 0,
-//         topics: 0,
-//         tone: 0,
-//         chatbotBehaviourName: "",
-//     },
-//     chatbotReplies: {
-//         randomQuestions: true,
-//         showRandomQuestionsMessage: "",
-//     },
-//     chatbotContact: {
-//         talkToHuman: true,
-//         showTalkToHumanMessage: "Connecting to a human...",
-//     },
-//     chatbotLook: {
-//         chatbotHeader: {
-//             chatbotHeaderBackgroundColor: "#0c8de9",
-//             chatbotHeaderIconFontColor: "#ffffff",
-//         },
-//         chatbotBackground: {
-//             chatbotBackgroundColor: "#ffffff",
-//         },
-//         textBoxUser: {
-//             textBoxUserColor: "#0c8de9",
-//             textBoxUserFontColor: "#ffffff",
-//             textBoxFontStyle: "bold",
-//         },
-//         textBoxChatbotReply: {
-//             textBoxChatbotReplyColor: "#e0e0e0",
-//             textBoxChatbotReplyFontColor: "#000000",
-//             textBoxChatboxReplyFontStyle: "normal",
-//         },
-//         UIGroupA: {
-//             UIGroupAUIBackground: "rgb(100, 100, 100)",
-//             UIGroupAUIHighlight: "rgb(200, 200, 200)",
-//         },
-//         UIGroupB: {
-//             UIGroupBUIBackground: "rgb(50, 50, 50)",
-//             UIGroupBUIHighlight: "rgb(150, 150, 150)",
-//         },
-

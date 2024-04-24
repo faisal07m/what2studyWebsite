@@ -15,7 +15,7 @@ export type UserType = {
   wednesday:string
   thursday:string
   friday:string
-  
+  openAIKey:string
 }
 
 type RegisterProps = {
@@ -28,7 +28,6 @@ type RegisterProps = {
 export const register = async (props: RegisterProps) => {
   const user = new Parse.User()
   const { email, password, name, role } = props
-
   user.set('username', String(email).toLowerCase())
   user.set('password', password)
   user.set('name', name)
@@ -44,8 +43,7 @@ export const register = async (props: RegisterProps) => {
   user.set('wednesday', '09:00,17:00')
   user.set('thursday', '09:00,17:00')
   user.set('friday', '09:00,17:00')
-
-  
+  user.set('openAIKey', '')
 
   if (role !== 'admin') {
     const userACL = new Parse.ACL()
@@ -76,7 +74,7 @@ export const login = async (email: string, password: string) => {
 export const adminUpdateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday } = user
+  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday,openAIKey } = user
   const query = new Parse.Query(Parse.User)
   query.equalTo('username', username)
   const userToUpdate = await query.first()
@@ -94,6 +92,7 @@ export const adminUpdateUser = async (user: UserType) => {
   userToUpdate.set('wednesday', wednesday)
   userToUpdate.set('thursday', thursday)
   userToUpdate.set('friday', friday)
+  userToUpdate.set('openAIKey', openAIKey)
 
   try {
     userToUpdate.save()
@@ -111,7 +110,7 @@ export const curUser = Parse.Object.extend('_User')
 export const updateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday } = user
+  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday,openAIKey } = user
   curUser.set('name', name)
   curUser.set('username', username)
   curUser.set('Telefonnummer', Telefonnummer)
@@ -126,6 +125,7 @@ export const updateUser = async (user: UserType) => {
   curUser.set('wednesday', wednesday)
   curUser.set('thursday', thursday)
   curUser.set('friday', friday)
+  curUser.set('openAIKey', openAIKey)
 
 
   try {

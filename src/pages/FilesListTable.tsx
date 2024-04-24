@@ -1,9 +1,9 @@
 
 import { Link, useHistory } from 'react-router-dom'
-import { Tag, InputRef, theme, Input, Space, TableProps, Table, Button, Modal, TableColumnType, Image } from 'antd'
+import { Tag, InputRef, theme, Input, Space, TableProps, Table, Button, Modal, TableColumnType, Image, Row, Form } from 'antd'
 
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { DeleteOutlined, EyeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, CheckCircleTwoTone, CiCircleFilled, CloseCircleFilled, CloseCircleTwoTone, DeleteOutlined, EyeOutlined, KeyOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
 import { deleteKnowledgeItem, getAllKnowledgeBaseWithType, knowledgeBaseBlock } from '../types/knowledgeBase';
 import { showNotification } from '../helpers/notification';
@@ -14,6 +14,7 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import ReactPlayer from 'react-player'
 import Highlighter from 'react-highlight-words';
 import { SERVER_URL, SERVER_URL_parsefunctions } from '../config/parse';
+import TextArea from 'antd/es/input/TextArea';
 type loc = {
     id: string
 }
@@ -30,8 +31,12 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         itemId: string,
         fileName: string,
         user: string,
-        url: string
-
+        url: string,
+        nestedLinks:string[],
+        nPlus1:boolean,
+        jobStatus:boolean,
+        type:string,
+        learnStatus:boolean
     }
 
 
@@ -49,6 +54,10 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
     const [mediaUrl, setMediaUrl] = useState<string>("")
 
+
+    const [nestedLinks, setNestedLinks] = useState<JSX.Element>()
+
+    const [nestedLinksArr, setNestedLinksArr] = useState<string[]>([])
 
     const [fileTextJSX, setFileTextJSX] = useState<JSX.Element>(<></>)
     const [knowledgeBase, setKnowledgeBase] = useState<knowledgeBaseBlock[] | any>()
@@ -156,10 +165,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         if (index !== -1 && index != undefined) {
             if (data) {
                 const objArr = data[index]
-
-                let formData = { url: objArr.url, fileName: objArr.fileName, user: objArr.user }
-                console.log(formData)
-
+                let formData = { url: objArr.url, fileName: objArr.url.split("/").pop(), user: objArr.user, nameWOS: objArr.fileName }
                 const response = fetch(
                     SERVER_URL_parsefunctions+"/deletePythonFile",
                     {
@@ -231,10 +237,23 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             ),
         },
         {
-            title: 'Aktionen',
+            title: 'Status erfahren',
+            key: 'learnStatus',
+            dataIndex: 'learnStatus',
+            render: (_, { learnStatus }) => (
+                <>
+                    { learnStatus ? <p style={{marginLeft:"40px", marginTop:"15px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginLeft:"40px",marginTop:"15px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
+                    }
+                </>
+            ),
+        },
+        {
+            title: '',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
+                     { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /> Crawl Status</p>: <p style={{marginTop:"13px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /> Crawl Status</p>
+                    )}
                     <Button type="primary" icon={<EyeOutlined />} onClick={() => {
 
                         if (id == "2") {
@@ -252,6 +271,22 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                         setModal1Open(true)
 
                     }}>Anzeigen</Button>
+                    {record.nPlus1 && record.nestedLinks.length>0 && 
+                    
+                    <Button type="primary" icon={<KeyOutlined />} onClick={() => {
+                        // var html = <p> + record.nestedLinks.join("</p><p>") + "</p>;
+                        var items=  record.nestedLinks.map((value, i) => {
+                            return  <li><a>{value}</a></li>
+                            
+                          })
+                       
+                        setNestedLinks(<ul>{items}</ul>)
+                        setNestedLinksArr(record.nestedLinks)
+                        setModal1Open(true)
+
+                    }}>Links ansehen</Button>
+                    }
+                   
                     <Button danger icon={<DeleteOutlined />}
                         onClick={(e) => {
                             updateData(record)
@@ -300,6 +335,11 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                             url: element.attributes.fileUrl,
                             fileName: element.attributes.name,
                             user: element.attributes.user,
+                            nestedLinks: element.attributes.nestedLinks,
+                            jobStatus:element.attributes.jobStatus,
+                            nPlus1:element.attributes.nPlus1,
+                            type:element.attributes.type,
+                            learnStatus: element.attributes.learnStatus
                         },
                     )
                     count = count + 1
@@ -336,8 +376,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
     }
     return (
         <>
-            {/* {tableElement} */}
-            <Table rowKey="Name" columns={columns} dataSource={data} />
+         <Table rowKey="Name" columns={columns} dataSource={data} />
             <Modal
                 title="Dateibetrachter"
                 style={{ top: 20 }}
@@ -354,7 +393,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                     {fileText.length > 0 ? fileTextJSX : id == "1" ? <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                         <Viewer fileUrl={urlViewer} />
                     </Worker> : <></>}
-                    {mediaUrl != "" && (mediaUrl.endsWith("jpg") || mediaUrl.endsWith("png") || mediaUrl.endsWith("jpeg")) ? <>
+                    {mediaUrl != "" && nestedLinksArr.length==0 && (mediaUrl.endsWith("jpg") || mediaUrl.endsWith("png") || mediaUrl.endsWith("jpeg")) ? <>
                         <Image
                             width="80%"
                             height="60%"
@@ -362,13 +401,15 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                         />
 
 
-                    </> : <ReactPlayer
+                    </> : nestedLinksArr.length==0 ? <ReactPlayer
                         className='react-player fixed-bottom'
                         url={mediaUrl}
                         width='60%'
                         controls={true}
 
-                    />}
+                    /> : 
+           
+                nestedLinks}
 
 
                 </div>
