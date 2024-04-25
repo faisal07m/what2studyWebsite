@@ -40,7 +40,7 @@ const Chatbot = () => {
                  {activeChatbotID ?
                 <div style={{ height: "700px", width: "60%", position: "relative" }}>
 
-                 {/* <div className='speech-bubble'>Klick mich</div> */}
+                 <div className='speech-bubble'>Klick mich</div>
                     <div style={{
                         position: "absolute", bottom: 0,
                         right: 0
