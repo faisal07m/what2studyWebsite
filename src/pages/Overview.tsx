@@ -853,13 +853,13 @@ const Overview = () => {
 
       {activeChatbotID && 
      <>
-      <div style={{
+      {/* <div style={{
         position: "fixed",
         bottom: 0,
         right: 0
     }}>
     <div className='speech-bubble'>Klick mich</div>
-    </div>
+    </div> */}
       <ChatClient
         objectId={activeChatbotID}
         userId={curUserId}
