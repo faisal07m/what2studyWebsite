@@ -340,18 +340,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   useEffect(() => {
     if (filterArr) {
       var obj = filterArr.map((object, index) => {
-        return <Row gutter={28} >
+        return <Row gutter={24} >
           <Col span={2} >
 
-            <label>{filterArr[index].given}</label>
+            <label style={{fontWeight:"bold"}}>{filterArr[index].given}: </label>
           </Col>
-          <Col span={22} style={{marginTop:"10px"}}>
-            <Row gutter={26}>
-              <Col span={6} style={{ marginTop: "16px" , alignContent:"right"}}
+          <Col span={15} >
+            <Row gutter={24}>
+              <Col span={8} style={{textAlign:"right"}}
               >
                 {filterArr[index].leftValue}
               </Col>
-              <Col span={10} >
+              <Col span={8} >
+                <div style={{marginTop:"-5px"}}>
                 <Slider
                   min={1}
                   max={6}
@@ -364,8 +365,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                   }}
                   defaultValue={object.pointOnScale}
                   step={1}
-                /></Col>
-              <Col span={6} style={{ marginTop: "16px" }}
+                /> </div>
+                
+                </Col>
+               <Col span={8} 
               >
                 {filterArr[index].rightValue}</Col>
             </Row>
@@ -483,7 +486,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             </Space>
           </Col>
         </Row><br></br>
-        <Row gutter={26}>
+        <Row gutter={24}>
           <Col span={10} >
             <Form.Item tooltip="Wie wird Ihr Chatbot genannt? Geben Sie einen Namen für Ihren Chatbot an" style={{ marginTop: "10px", fontWeight: "bold" }}
               label={<p style={{ fontSize: "22px" }}>Name des Chatbots</p>} name='name' rules={[
@@ -558,9 +561,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
           </Col>
 
-          <Col span={11} >
+          <Col span={14} >
             <label style={{ fontWeight: "bold", fontSize: "22px" }}>Verhalten des Chatbots</label>
-
+            <br></br>
+            <br></br>
             {filterJSX}
           </Col>
 

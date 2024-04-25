@@ -852,7 +852,8 @@ const Overview = () => {
       </fieldset>
 
       {activeChatbotID && 
-     <> <div style={{
+     <>
+      <div style={{
         position: "fixed",
         bottom: 0,
         right: 0

@@ -152,7 +152,7 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='7' icon={<DashboardOutlined />}>
           <Link to={{ pathname: "/what2study/chatwindow", state: { prevPath: location.pathname } }} >Chatbot</Link>
         </Menu.Item>
-        <div style={{marginTop:"440px", marginLeft:"35px"}}
+        <div style={{left: "0", position: "absolute",  bottom: "0", marginBottom: "135px", marginLeft: "35px"}}
        >
         { statusBarUpload == false ?( statusBar== false ? <Progress
           type="circle"

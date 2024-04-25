@@ -78,8 +78,8 @@ const Monitoring = () => {
             indexLabel: "{label}: {y}%",
             startAngle: -90,
             dataPoints: [
-                { y: disliked, label: "Disliked" },
-                { y: liked, label: "Liked" }
+                { y: disliked==0? -1 : disliked, label: "Disliked" },
+                { y: liked==0? -1 : liked, label: "Liked" }
             ]
         }]
     }

@@ -382,13 +382,17 @@ const Company = () => {
                       setAttributes({ ...attributes, AllowKontaktTele: !attributes.AllowKontaktTele })
                   }}>Telefon</Checkbox>
              
-              </Row></Col>
-              <Col span={6}>
+              </Row>
+              </Col>
+              <Col span={10}>
               <h1 style={{ fontSize:"large"}}> Offene Sprechstunde</h1>
                 
-              <Row  >
-                <label style={{ marginBlock: "5px" }} > Montag</label>
-                <TimePicker.RangePicker style={{ marginLeft: "40px" }}
+              <Row >
+                <Col span={4}>
+                <label  >   Montag
+              </label>
+              </Col>
+                <TimePicker.RangePicker
                 defaultValue={[dayjs(mondayStart, format), dayjs(mondayEnd, format)]}
                 onChange={(e, s) => {
                     setAttributes({ ...attributes, monday: s[0]+","+s[1] })
@@ -398,8 +402,11 @@ const Company = () => {
                />
                </Row>
                <Row  >
-                <label style={{ marginBlock: "5px" }} > Dienstag</label>
-                <TimePicker.RangePicker style={{ marginLeft: "32px" }}
+               <Col span={4}>
+               
+                <label  > Dienstag</label>
+                </Col>
+                <TimePicker.RangePicker 
                 defaultValue={[dayjs(tuesdayStart, format), dayjs(tuesdayEnd, format)]}
                 onChange={(e, s) => {
                     setAttributes({ ...attributes, tuesday: s[0]+","+s[1] })
@@ -409,8 +416,11 @@ const Company = () => {
                />
                </Row>
                <Row  >
-                <label style={{ marginBlock: "5px" }} > Mittwoch</label>
-                <TimePicker.RangePicker style={{ marginLeft: "30px" }}
+               <Col span={4}>
+               
+                <label > Mittwoch</label>
+                </Col>
+                <TimePicker.RangePicker 
                 defaultValue={[dayjs(wednesdayStart, format), dayjs(wednesdayEnd, format)]}
                 onChange={(e, s) => {
                     setAttributes({ ...attributes, wednesday: s[0]+","+s[1] })
@@ -420,8 +430,11 @@ const Company = () => {
                />
                </Row>
                <Row  >
-                <label style={{ marginBlock: "5px" }} > Donnerstag</label>
-                <TimePicker.RangePicker style={{ marginLeft: "15px" }}
+               <Col span={4}>
+               
+                <label  > Donnerstag</label>
+                </Col>
+                <TimePicker.RangePicker 
                 defaultValue={[dayjs(thursdayStart, format), dayjs(thursdayEnd, format)]}
                 onChange={(e, s) => {
                     setAttributes({ ...attributes, thursday: s[0]+","+s[1] })
@@ -431,8 +444,11 @@ const Company = () => {
                />
                </Row>
                <Row  >
-                <label style={{ marginBlock: "5px" }} > Freitag</label>
-                <TimePicker.RangePicker style={{ marginLeft: "45px" }}
+               <Col span={4}>
+               
+                <label > Freitag</label>
+                </Col>
+                <TimePicker.RangePicker 
                 defaultValue={[dayjs(fridayStart, format), dayjs(fridayEnd, format)]}
                 onChange={(e,s) => {
                     setAttributes({ ...attributes, friday: s[0]+","+s[1] })

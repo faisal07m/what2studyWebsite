@@ -37,23 +37,25 @@ const Chatbot = () => {
                 pageId='7'
                 button
             >
+                 {activeChatbotID ?
                 <div style={{ height: "700px", width: "60%", position: "relative" }}>
 
-                <div className='speech-bubble'>Klick mich</div>
+                 <div className='speech-bubble'>Klick mich</div>
                     <div style={{
                         position: "absolute", bottom: 0,
                         right: 0
                     }}>
-                        {activeChatbotID && <ChatClient
+                        <ChatClient
                             objectId={activeChatbotID}
                             userId={Parse.User.current()?.id}
                             universityId={Parse.User.current()?.id}
                             accessToken={token}
                             chatbotId={activeChatbotID}
                             testRequest={true}
-                        ></ChatClient>}
+                        ></ChatClient>
                     </div>
-                </div>
+                </div>:<h2> Um einen Chatbot zunächst zu testen, müssen Sie einen Chatbot veröffentlichen</h2>}
+                
             </PageContainer>
         </div>
 
