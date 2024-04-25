@@ -82,13 +82,13 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
     q3.equalTo("learnStatus", false)
     
     q3.first().then((el)=>{
-      if(el)
+      if(el != undefined)
          { 
           setStatusBarUpload(true)
-          setStatusBar(true)
         }
           else{
-            setStatusBarUpload(true)
+            setStatusBarUpload(false)
+            
             setStatusBar(false)
           }
       
