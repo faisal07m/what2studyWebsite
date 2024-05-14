@@ -237,12 +237,12 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             ),
         },
         {
-            title: 'Status erfahren',
+            title: 'Status',
             key: 'learnStatus',
             dataIndex: 'learnStatus',
             render: (_, { learnStatus }) => (
                 <>
-                    { learnStatus ? <p style={{marginLeft:"40px", marginTop:"15px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginLeft:"40px",marginTop:"15px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
+                    { learnStatus ? <p style={{marginLeft:"20px", marginTop:"15px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginLeft:"40px",marginTop:"15px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
                     }
                 </>
             ),
