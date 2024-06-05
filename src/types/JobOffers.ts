@@ -41,10 +41,13 @@ export type JobOfferBlock = {
 
   matriculationNumber:boolean
 
+  defaultPrompt:string
+  customPrompt:string
+
   }
 export const blankBlock:  Partial<JobOfferBlock> = {
   user:"",
-  behavior:[{id:1, leftValue: "Locker", rightValue:"Professionell", pointOnScale:0, given:"Formalität"},{id:2, leftValue: "Meinungsstark", rightValue:"Neutral", pointOnScale:0, given:"Meinung"},{id:3, leftValue: "Viele Emojis", rightValue:"Keine Emojis", pointOnScale:0, given:"Emotionen"},{id:4, leftValue: "Lange Antworten", rightValue:"Kurze Antworten", pointOnScale:0, given:"Länge"},{id:5, leftValue: "Bezugnehmend", rightValue:"Vorschlagend", pointOnScale:0, given:"Themen"},{id:6, leftValue: "Humorvoll", rightValue:"Seriös", pointOnScale:0, given:"Umgangston"}],
+  behavior:[{id:1, leftValue: "Locker", rightValue:"Professionell", pointOnScale:3, given:"Formalität"},{id:2, leftValue: "Meinungsstark", rightValue:"Neutral", pointOnScale:3, given:"Meinung"},{id:3, leftValue: "Viele Emojis", rightValue:"Keine Emojis", pointOnScale:3, given:"Emotionen"},{id:4, leftValue: "Lange Antworten", rightValue:"Kurze Antworten", pointOnScale:3, given:"Länge"},{id:5, leftValue: "Bezugnehmend", rightValue:"Vorschlagend", pointOnScale:3, given:"Themen"},{id:6, leftValue: "Humorvoll", rightValue:"Seriös", pointOnScale:3, given:"Umgangston"}],
   name: "",
   language: "de"  ,
   bubbleIcon:[],
@@ -78,7 +81,9 @@ export const blankBlock:  Partial<JobOfferBlock> = {
 
 
   activeChatbot: false,
-  scriptTag:""
+  scriptTag:"",
+  defaultPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).',
+  customPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).'
 }
 
 

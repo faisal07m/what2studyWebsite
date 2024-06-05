@@ -37,6 +37,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         jobStatus:boolean,
         type:string,
         learnStatus:boolean
+        url_org:string
     }
 
 
@@ -197,13 +198,20 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         {
             title: 'Name der Datei',
             dataIndex: 'name',
+            width:"400px",
             key: 'name',
             ...getColumnSearchProps('name'),
-            render: (_, record) => <a href={record.url} download={record.fileName}>{record.fileName}</a>,
+            render: (_, record) => <div style={{width:"400px"}}><p>{record.url_org}</p>  <a href={record.url} download={record.fileName}>{id == "4"?"Crawled Datendatei":"Datei"}  </a></div>,
         },
+        // {
+        //     title: 'URL',
+        //     dataIndex: 'url_org',
+        //     key: 'url_org',
+        // },
         {
             title: 'Hochgeladen am',
             dataIndex: 'hochgeladen',
+            width:"150px",
             key: 'hochgeladen',
         },
         {
@@ -223,10 +231,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             render: (_, { tags }) => (
                 <>
                     {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
+                        let color = 'geekblue' ;
                         return (
                             <Tag color={color} key={tag}>
                                 {tag.toUpperCase()}
@@ -242,7 +247,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             dataIndex: 'learnStatus',
             render: (_, { learnStatus }) => (
                 <>
-                    { learnStatus ? <p style={{marginLeft:"20px", marginTop:"15px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginLeft:"40px",marginTop:"15px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
+                    { learnStatus ? <p style={{marginLeft:"20px", marginTop:"15px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginLeft:"20px",marginTop:"15px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
                     }
                 </>
             ),
@@ -323,10 +328,12 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             if (KB != undefined && KB != null && Array.isArray(KB)) {
                 var count = 1
                 KB.forEach(element => {
+                    var file_name =  element.attributes.name.replaceAll("/", "_")
                     data.push(
                         {
                             key: count.toString(),
-                            name: element.attributes.name,
+                            name: file_name,
+                            url_org: element.attributes.name,
                             hochgeladen: element.createdAt.getDate() + "/" + element.createdAt.getMonth() + "/" + element.createdAt.getFullYear(),
                             priority: element.attributes.priority,
                             expiry: element.attributes.expires,
@@ -375,7 +382,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             });
     }
     return (
-        <>
+        <div>
          <Table rowKey="Name" columns={columns} dataSource={data} />
             <Modal
                 title="Dateibetrachter"
@@ -414,7 +421,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
                 </div>
             </Modal>
-        </>
+        </div>
     )
 
 }

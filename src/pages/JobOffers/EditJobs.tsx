@@ -46,30 +46,45 @@ const EditJobs = () => {
     const query = new Parse.Query(chatbots)
     query
       .get(id)
-      .then(async (res) => {
-        var images = [] as any
-        var imagesBase64ToRemove = [] as any
-        var imageList = [...res.attributes.bubbleIcon]
-        for (const imageBase64 of imageList) {
-          var response = await simp(imageBase64)
-          if (response != false) {
-            images.push(response?.attributes?.bilds?._url)
-            imagesBase64ToRemove.push(imageBase64)
-          }
-          else { console.log("false is returned") }
+      .then(async (response) => {
+        console.log("checking defaults")
+        console.log(response.attributes.defaultPrompt)
+        let changeOfPrompt = 0
+        if(response.attributes.defaultPrompt == undefined){
+          response.set("defaultPrompt",  'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).')
+          changeOfPrompt = changeOfPrompt + 1
         }
-        imagesBase64ToRemove.forEach(img => {
-          imageList.indexOf(img) !== -1 && imageList.splice(imageList.indexOf(img), 1)
-        });
-
-        imagesBase64ToRemove.forEach(img => {
-          res.attributes.bubbleIcon.indexOf(img) !== -1 && res.attributes.bubbleIcon.splice(res.attributes.bubbleIcon.indexOf(img), 1)
-        });
-        images.forEach(img => {
-          res.attributes.bubbleIcon.push(img)
-        });
-        setJob(res.attributes as JobOfferBlock)
-        setParseRef(res)
+        if(response.attributes.customPrompt == undefined){
+          response.set("customPrompt", 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).' )
+          changeOfPrompt = changeOfPrompt + 1
+     
+        }
+        response.save().then(async (res)=>{
+          var images = [] as any
+          var imagesBase64ToRemove = [] as any
+          var imageList = [...res.attributes.bubbleIcon]
+          for (const imageBase64 of imageList) {
+            var response = await simp(imageBase64)
+            if (response != false) {
+              images.push(response?.attributes?.bilds?._url)
+              imagesBase64ToRemove.push(imageBase64)
+            }
+            else { console.log("false is returned") }
+          }
+          imagesBase64ToRemove.forEach(img => {
+            imageList.indexOf(img) !== -1 && imageList.splice(imageList.indexOf(img), 1)
+          });
+  
+          imagesBase64ToRemove.forEach(img => {
+            res.attributes.bubbleIcon.indexOf(img) !== -1 && res.attributes.bubbleIcon.splice(res.attributes.bubbleIcon.indexOf(img), 1)
+          });
+          images.forEach(img => {
+            res.attributes.bubbleIcon.push(img)
+          });
+          setJob(res.attributes as JobOfferBlock)
+          setParseRef(res)
+        })
+        
       })
       .catch(() => {
         setError(true)

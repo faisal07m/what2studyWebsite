@@ -44,6 +44,8 @@ export const register = async (props: RegisterProps) => {
   user.set('thursday', '09:00,17:00')
   user.set('friday', '09:00,17:00')
   user.set('openAIKey', '')
+ 
+
 
   if (role !== 'admin') {
     const userACL = new Parse.ACL()
@@ -115,7 +117,6 @@ export const updateUser = async (user: UserType) => {
   curUser.set('username', username)
   curUser.set('Telefonnummer', Telefonnummer)
   curUser.set('logo', logo)
-
   curUser.set('website', website)
   curUser.set('kontaktEmail', kontaktEmail)
   curUser.set('AllowKontaktEmail', AllowKontaktEmail)

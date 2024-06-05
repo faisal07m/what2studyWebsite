@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import PageContainer from '../components/layout/PageContainer'
 import {
   ConsoleSqlOutlined,
-  DeleteTwoTone, InfoCircleOutlined, MinusCircleFilled, PlusCircleFilled, QuestionCircleOutlined
+  DeleteTwoTone, InboxOutlined, InfoCircleOutlined, MinusCircleFilled, PlusCircleFilled, QuestionCircleOutlined
 } from '@ant-design/icons'
 import Parse from 'parse'
 import { getCurrentUser, updateUser, UserType } from '../types/user'
@@ -11,7 +11,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { toBase64 } from '../helpers/toBase64'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { Form, Input, Row, Col, Image, Skeleton, Checkbox} from 'antd'
+import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Upload, Button, UploadProps } from 'antd'
 import dayjs from "dayjs";
 import { TimePicker } from "antd";
 
@@ -21,7 +21,7 @@ const Company = () => {
   const location = useLocation()
   const [logoBase64, setLogoBase64] = useState<any | null>()
   const [logoBase64Kontakt, setLogoBase64Kontakt] = useState<any | null>()
-  const requiredField=<p style={{color:"red",fontSize:"large", marginBottom:""}}>* <span style={{fontSize:"small", color:"#ae9c9c"}}>Dieser Wert ist erforderlich</span></p>
+  const requiredField = <p style={{ color: "red", fontSize: "large", marginBottom: "" }}>* <span style={{ fontSize: "small", color: "#ae9c9c" }}>Dieser Wert ist erforderlich</span></p>
   const [companyLatLng, setCompanyLatLng] = useState<{ lat: number, lng: number }>({ lat: 0, lng: 0 })
   const company = getCurrentUser()
   const history = useHistory()
@@ -29,7 +29,7 @@ const Company = () => {
   const [attributes, setAttributes] = useState({
     ...(company?.attributes as UserType),
   })
-  const format="HH:mm"
+  const format = "HH:mm"
   const [changedState, setChangedState] = useState<boolean>(false)
   const [changecount, setchangecount] = useState<number>(0)
   const [errorsVal, setErrorsVal] = useState<{
@@ -50,6 +50,8 @@ const Company = () => {
   })
 
   useEffect(() => {
+
+    localStorage.setItem("identity", "platform_")
     if (changecount >= 3) {
       setChangedState(true)
 
@@ -57,7 +59,34 @@ const Company = () => {
     }
     setchangecount(changecount + 1)
   }, [attributes])
+  const propsProfile: UploadProps = {
+    accept: "image/jpeg, image/png, image/jpg",
+    customRequest: async (componentsData) => {
+      return true
+    },
 
+    async beforeUpload(file) {
+      if (file) {
+        handleImageUpload(file, 'logo')
+      }
+
+      return true
+    },
+    onChange({ file, fileList }) {
+      if (file.status !== 'uploading') {
+      }
+      file.status = "done"
+    },
+    defaultFileList: [
+      // {
+      //   uid: '1',
+      //   name: 'xxx.png',
+      //   status: 'uploading',
+      //   url: 'http://www.baidu.com/xxx.png',
+      //   percent: 33,
+      // },
+    ],
+  };
 
 
   const [disableAusbildungButton, setDisableAusbildungButton] = useState<boolean>(false)
@@ -74,18 +103,18 @@ const Company = () => {
     }
   }, [logoBase64])
 
-  var { name, username, website,  Telefonnummer, logo, AllowKontaktEmail, AllowKontaktTele, monday,tuesday,wednesday,thursday,friday } = attributes
+  var { name, username, website, Telefonnummer, logo, AllowKontaktEmail, AllowKontaktTele, monday, tuesday, wednesday, thursday, friday } = attributes
   const [tempPhone, setTempPhone] = useState<any>(attributes.Telefonnummer)
   const [anzeigname, setAnzeigname] = useState<string>()
   const [linkTreeUrl, setlinkTreeUrl] = useState<string>()
   const [errorsValChanged, setErrorCounter] = useState<number>(0)
-  const [mondayStart, mondayEnd] = monday.split(",") 
-  const [tuesdayStart, tuesdayEnd] = tuesday.split(",") 
-  const [wednesdayStart, wednesdayEnd] = wednesday.split(",") 
-  const [thursdayStart, thursdayEnd] = thursday.split(",") 
-  const [fridayStart, fridayEnd] = friday.split(",") 
+  const [mondayStart, mondayEnd] = monday.split(",")
+  const [tuesdayStart, tuesdayEnd] = tuesday.split(",")
+  const [wednesdayStart, wednesdayEnd] = wednesday.split(",")
+  const [thursdayStart, thursdayEnd] = thursday.split(",")
+  const [fridayStart, fridayEnd] = friday.split(",")
 
- 
+
 
   const onSave = async () => {
     const {
@@ -103,23 +132,6 @@ const Company = () => {
       errorVal.name = true
       setErrorsVal(errorVal)
     }
-    // if (telephone.trim() === '') errors.push('Die job muss einen Title besitzen')
-
-   
-    if(!isValidUrl(website)){
-      errors.push('wronge website link')
-      var errorVal = errorsVal
-      errorVal.website = true
-      setErrorsVal(errorVal)
-    }
-    // if (website.trim() === '' || website.trim() === 'https://') {
-    //   errors.push('wronge website link')
-    //   var errorVal = errorsVal
-    //   errorVal.website = true
-    //   setErrorsVal(errorVal)
-    // }
-   
-
     // if (!location) errors.push('Die job benötigt einen Standort')
     if (errors.length !== 0) {
       setErrorCounter(errorsValChanged + 1)
@@ -178,7 +190,7 @@ const Company = () => {
     return response
   }
   const handleImageUpload = async (e, caller) => {
-    const base64 = await toBase64(e.target.files[0]).catch((err) =>
+    const base64 = await toBase64(e).catch((err) =>
       showNotification({
         type: 'error',
         title: 'Fehler beim Hochladen',
@@ -186,15 +198,15 @@ const Company = () => {
       })
     )
     var response = await imageBaseToUrl(base64 as string)
-    var url =response.attributes.bilds._url
-        if (Parse.serverURL.includes("cpstech")) {
-          url = url.replace("http:", "https:")
+    var url = response.attributes.bilds._url
+    if (Parse.serverURL.includes("cpstech")) {
+      url = url.replace("http:", "https:")
 
-        }
-        else if(Parse.serverURL.includes("localhost")) {
-          url = url.replace("https:", "http:")
-        }
-  
+    }
+    else if (Parse.serverURL.includes("localhost")) {
+      url = url.replace("https:", "http:")
+    }
+
     if (caller == "logo") { setLogoBase64(url) }
     else {
       setLogoBase64Kontakt(url)
@@ -208,7 +220,7 @@ const Company = () => {
     setLogoBase64(null)
 
   };
-  
+
 
   if (!company) return null
   // handle input change for linktree anzeig name
@@ -217,9 +229,9 @@ const Company = () => {
   };
   // handle input change for link tree url
   const handleLinkTreeURL = (e: { target: { name: any; value: any } }, index: number) => {
-    var val:string = e.target.value
-    if(!val.includes("https://")){
-      val = "https://"+val
+    var val: string = e.target.value
+    if (!val.includes("https://")) {
+      val = "https://" + val
     }
     // if(!isValidUrl(val)){
     //   showNotification({
@@ -233,16 +245,16 @@ const Company = () => {
     // }
   };
 
-  
-  const isValidUrl = urlString=> {
-    var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
-    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-  return !!urlPattern.test(urlString);
-}
+
+  const isValidUrl = urlString => {
+    var urlPattern = new RegExp('^(https?:\\/\\/)?' + // validate protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // validate domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // validate OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // validate port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // validate query string
+      '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
+    return !!urlPattern.test(urlString);
+  }
   return (
     <div>
       <PageContainer
@@ -257,31 +269,65 @@ const Company = () => {
 
           <fieldset className="fieldsetCustom">
             <legend>Allgemeine Informationen:</legend>
-           
+
             <Row gutter={24} style={{ marginTop: '10px' }}>
               <Col span={8}>
                 <Form.Item label={'Name der Organisation'} name='companyName' rules={[
 
-            
+
                 ]}>
                   <Input
                     style={errorsVal.name ? errorCss : errorCssInvert}
 
                     defaultValue={name}
-                    onChange={(e) =>
-                      {setAttributes({ ...attributes, name: e.target.value })
-                      var errorVal= errorsVal
+                    onChange={(e) => {
+                      setAttributes({ ...attributes, name: e.target.value })
+                      var errorVal = errorsVal
                       errorVal.name = false
                       setErrorsVal(errorVal)
-                
+
                     }
                     }
                   />
                   {requiredField}
                 </Form.Item>
+                <Row gutter={24} >
+                  <Col>
+                    <label > E-Mail-Adresse</label>
+                    <Input
+                      style={{ marginTop: "5px" }}
+                      disabled={true}
+                      // placeholder="+4917 777 77777 89"
+                      value={attributes.username}
+                    ></Input>
+                  </Col>
+                </Row>
               </Col>
-              <Col span={11}>
-                <Form.Item label='URL' name='anzeigeURL'  
+              <Col span={8}></Col>
+              <Col span={4}>
+                <Form.Item id="imageContainerProfile" tooltip='Profilbild hochladen' >
+                  {logo ? <Image style={{ width: "100%", height: "100%" }} src={logo} /> : logoBase64 ? <Image style={{ width: "300px", height: "300px" }} src={logoBase64} /> :
+                    <Upload {...propsProfile} maxCount={1} showUploadList={false}>
+                      <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Hochladen: jpeg/png Datei</span>
+
+                      </Button>
+
+                    </Upload>
+
+
+                  }
+
+                </Form.Item>
+                {logo &&
+                  <button style={{ fontSize: "15px", marginLeft: "60px" }} onClick={() => removeImage()}>Löschen<DeleteTwoTone style={{ marginTop: "2px", fontSize: "24px" }}></DeleteTwoTone></button>
+                }
+
+
+              </Col>
+            </Row>
+
+
+            {/* <Form.Item label='URL' name='anzeigeURL'  
                    >
                     <Input
                     style={errorsVal.website ? errorCss : errorCssInvert}
@@ -314,44 +360,34 @@ const Company = () => {
                       <p style={errorsVal.website ? {color:'red', border:'solid', borderTopStyle:'outset'} : errorCssInvert}></p>
             
                   {requiredField}
-                </Form.Item>
-              </Col>
-            </Row>
-           
+                </Form.Item> */}
 
-            <Row gutter={24} >
-              <Col>
-                <label > E-Mail-Adresse</label>
-                <Input
-                  style={{ marginTop: "5px" }}
-                  disabled={true}
-                  // placeholder="+4917 777 77777 89"
-                  value={attributes.username}
-                ></Input>
-              </Col>
-            </Row>
+
+
+
+
           </fieldset>
 
           <fieldset className="fieldsetCustom">
             <legend>Kontaktinformationen</legend>
             <Row>
               <Col span={10}>
-            <Row  >
-                <label style={{ marginBlock: "5px" }} > E-Mail-Adresse</label>
-                <Input
-               
-                  style={{ marginLeft: '10px', width:"200px" }}
-                  // placeholder="+4917 777 77777 89"
-                  defaultValue={attributes.kontaktEmail}
-                  onChange={(e) => {
-                    if (e) {
-                      setAttributes({ ...attributes, kontaktEmail: e.target.value })
-                    }
-                  }}
-                ></Input>
-             
-            </Row>
-              <Row style={{ marginTop: '30px' }}>
+                <Row  >
+                  <label style={{ marginBlock: "5px" }} > E-Mail-Adresse</label>
+                  <Input
+
+                    style={{ marginLeft: '10px', width: "200px" }}
+                    // placeholder="+4917 777 77777 89"
+                    defaultValue={attributes.kontaktEmail}
+                    onChange={(e) => {
+                      if (e) {
+                        setAttributes({ ...attributes, kontaktEmail: e.target.value })
+                      }
+                    }}
+                  ></Input>
+
+                </Row>
+                <Row style={{ marginTop: '30px' }}>
                   <label style={{ marginBlock: "5px" }}> Telefonnummer</label>
                   <PhoneInput
                     style={{ marginLeft: '10px' }}
@@ -370,21 +406,21 @@ const Company = () => {
                       }
                     }
                     } />
-              </Row>
-             
-            <Row style={{ marginTop: '30px' }}>
-                <label >Kontaktaufnahme erlauben per</label>
-                
-                <Checkbox  style={{ marginLeft: '10px' }} checked={attributes.AllowKontaktEmail}  onChange={(e) => {
-                      setAttributes({ ...attributes, AllowKontaktEmail: !attributes.AllowKontaktEmail })
+                </Row>
+
+                <Row style={{ marginTop: '30px' }}>
+                  <label >Kontaktaufnahme erlauben per</label>
+
+                  <Checkbox style={{ marginLeft: '10px' }} checked={attributes.AllowKontaktEmail} onChange={(e) => {
+                    setAttributes({ ...attributes, AllowKontaktEmail: !attributes.AllowKontaktEmail })
                   }}>E-Mail</Checkbox>
-                   <Checkbox  checked={attributes.AllowKontaktTele}  onChange={(e) => {
-                      setAttributes({ ...attributes, AllowKontaktTele: !attributes.AllowKontaktTele })
+                  <Checkbox checked={attributes.AllowKontaktTele} onChange={(e) => {
+                    setAttributes({ ...attributes, AllowKontaktTele: !attributes.AllowKontaktTele })
                   }}>Telefon</Checkbox>
-             
-              </Row>
+
+                </Row>
               </Col>
-              <Col span={10}>
+              {/* <Col span={10}>
               <h1 style={{ fontSize:"large"}}> Offene Sprechstunde</h1>
                 
               <Row >
@@ -458,81 +494,28 @@ const Company = () => {
                />
                </Row>
 
-              </Col>
-              </Row>
-          </fieldset>
-
-
-          <fieldset className="fieldsetCustom">
-            <legend>Logo der Organisation</legend>
-
-            <Row gutter={24} style={{ marginTop: '10px' }}>
-
-              <Col span={12}>
-
-                <Form.Item id="companyLogo" name='logo' label={"Unterstützte Formate: jpeg/png"} rules={[
-
-
-                  // {
-                  //   required: true,
-                  //   message: "Bitte geben Sie den Firmennamen ein"
-                  // }
-
-
-                ]}>
-                  <Row gutter={24}>
-                    <Col span={12}>
-                      <div style={{ width: "450px", padding: "10px" }}>
-                        {/* {imgHTML} */}
-                        {logo ? <Image style={{ width: "100%", height: "100%" }} src={logo} /> : logoBase64 ? <Image style={{ width: "300px", height: "300px" }} src={logoBase64} /> :
-
-                          <button style={{ height: "fit-content", border: "none", cursor: "pointer" }}> <input
-                            type='file'
-                            accept='image/png, image/jpeg'
-
-                            onChange={(e) => {
-                              if (e.target.files) {
-                                if (e.target.files?.length > 0) {
-                                  handleImageUpload(e, 'logo')
-                                }
-                              }
-                            }
-                            }
-                            style={{ color: "#efefef", marginLeft: "-8px",marginRight: "-8px",marginTop: "-2px", marginBottom: '-90px', height: '145px', position: "relative", width: '134px', background: "transparent", border: "none !important", fontSize: "16px", cursor: "pointer" }}
-                          >
-                          </input>
-                          <Skeleton.Image  style={{marginTop:"-20px"}}/>
-                          </button>
-                        }
-                        {/* <div className="VideoInput_footer">{source || "Nothing selectd"}</div> */}
-                      </div>
-
-                    </Col>
-                  </Row>
-
-
-                  {logo &&
-                    <Row style={{ marginLeft: '5px' }}><button style={{ fontSize: "15px" }} onClick={() => removeImage()}>Löschen<DeleteTwoTone style={{ marginTop: "2px", fontSize: "24px" }}></DeleteTwoTone></button></Row>
-                  }
-                </Form.Item>
-              </Col>
+              </Col> */}
             </Row>
           </fieldset>
+
+
+
           <Row gutter={24} style={{ marginLeft: "2px" }}
           >
-            <button
-              className="ant-btn ant-btn-primary"
+            <Button
               onClick={onSave}
+              type='primary'
+         
             >
               <span> Speichern</span>
-            </button>
+            </Button>
           </Row>
-          
+
         </Form>
-        
+
       </PageContainer>
     </div>
-    
+
   )
 }
 

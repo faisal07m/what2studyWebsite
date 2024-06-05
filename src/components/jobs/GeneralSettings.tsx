@@ -12,13 +12,16 @@ import {
   Checkbox,
   Slider,
   ColorPicker,
-  Modal
+  Modal,
+  UploadProps,
+  Upload
 } from 'antd'
 import {
   GlobalOutlined,
   DeleteTwoTone,
   SoundTwoTone,
-  DownOutlined
+  DownOutlined,
+  InboxOutlined
 } from '@ant-design/icons'
 import { JobOfferBlock } from '../../types/JobOffers'
 import { toBase64 } from '../../helpers/toBase64'
@@ -79,7 +82,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   const [filterArr, setFilterArr] = useState<any>(job.behavior)
 
   const [scriptTag, setScriptTag] = useState<any>(job.scriptTag)
-  const [token, setToken]= useState<any>()
+  const [token, setToken] = useState<any>()
   const [filterArrChangeCounter, setFilterCounter] = useState<number>(0)
   const [filterJSX, setFilterJSX] = useState<JSX.Element>()
   const [jobObj, setJob] = useState<any[] | null>()
@@ -89,7 +92,88 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   const location = useLocation()
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const [customPromptT, setcustomPromptT] = useState<string>(job.customPrompt);
+ 
+
+  const area =(customPromptT)=>{
+    console.log(customPromptT)
+    return <>
+     <TextArea
+              defaultValue={customPromptT}
+              key={customPromptT}
+              style={{ marginTop: "-20px" }}
+              onChange={(e) => {
+                onjobChange({ ...job, customPrompt: e.target.value })
+              }
+              }
+
+              autoSize={{ minRows: 12, maxRows: 15 }}
+            />
+  </>
+  }
+  const propsProfile: UploadProps = {
+    accept: "image/jpeg, image/png, image/jpg",
+    customRequest: async (componentsData) => {
+      return true
+    },
+
+    async beforeUpload(file) {
+      if (file) {
+          handleImageUpload(file, 'profile', '')
+      }
+      
+      return true
+    },
+    onChange({ file, fileList }) {
+      if (file.status !== 'uploading') {
+      }
+      file.status = "done"
+    },
+    defaultFileList: [
+      // {
+      //   uid: '1',
+      //   name: 'xxx.png',
+      //   status: 'uploading',
+      //   url: 'http://www.baidu.com/xxx.png',
+      //   percent: 33,
+      // },
+    ],
+  };
+  const props: UploadProps = {
+    accept: "image/jpeg, image/png, image/jpg",
+    customRequest: async (componentsData) => {
+      return true
+    },
+
+    async beforeUpload(file) {
+      if (file) {
+          handleImageUpload(file, '', '')
+      }
+      
+      return true
+    },
+    onChange({ file, fileList }) {
+      if (file.status !== 'uploading') {
+      }
+      file.status = "done"
+    },
+    defaultFileList: [
+      // {
+      //   uid: '1',
+      //   name: 'xxx.png',
+      //   status: 'uploading',
+      //   url: 'http://www.baidu.com/xxx.png',
+      //   percent: 33,
+      // },
+    ],
+  };
+  useEffect(() => {
+    setPromptTextArea(area(customPromptT))
+  }, [customPromptT])
+  const [promptTextArea, setPromptTextArea] = useState<JSX.Element>(area(customPromptT));
   
+
   const showModal = () => {
     setOpen(true);
   };
@@ -249,55 +333,54 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     let obj: JSX.Element[] = []
     if (job.bubbleIcon != undefined) {
       obj = job.bubbleIcon.map((img, index) => {
-        return <Col key={index} style={{ marginLeft: "15px" }} >
-          {job.bubbleIcon ? <Image style={{ width: "100%" }} height={140} src={img} preview={false} onClick={(e) => {
+        return <Col key={index} style={{ marginLeft: "25px" , marginTop:"15px"}} span={1}>
+          {job.bubbleIcon ? <Image style={{ width: "100%" }} height="90%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedBubbleIcon: img })
             setSelectedBubble(img)
-          }} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
+          }} /> : <Skeleton.Image style={{ width: "100%", height:"100%" ,marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '40%' }}><DeleteTwoTone style={{ fontSize: "25px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row>
+          <Row style={{ marginLeft: '35%'}}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row>
         </Col>
       })
     }
     onjobChange({ ...job })
     setJob(obj)
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     onjobChange({ ...job, selectedBubbleIcon: selectedBubble })
-         
-  },[selectedBubble])
+
+  }, [selectedBubble])
   const imageElementProfile = async () => {
     let obj: JSX.Element[] = []
     if (job.profileImage != undefined) {
       obj = job.profileImage.map((img, index) => {
-        return <Col key={index} style={{ marginLeft: "15px" }} >
-          {job.profileImage ? <Image style={{ width: "100%" }} height={140} src={img} preview={false} onClick={(e) => {
+        return <Col key={index} style={{ marginLeft: "25px", marginTop:"15px" }} span={1} >
+          {job.profileImage ? <Image style={{ width: "100%"}}height="90%"  src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedProfileImage: img })
             setSelectedProfile(img)
 
-          }} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
+          }} /> : <Skeleton.Image style={{ width: "100%", height:"100%" ,marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '40%' }}><DeleteTwoTone style={{ fontSize: "25px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row>
-        </Col>
+          <Row style={{ marginLeft: '35%'}}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row>
+          </Col>
       })
     }
     onjobChange({ ...job })
     setProfileImages(obj)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     onjobChange({ ...job, selectedProfileImage: selectedProfile })
-         
-  },[selectedProfile])
+
+  }, [selectedProfile])
 
   // After setting current user object 
   useEffect(() => {
     console.log(/token=.*'/g.exec(job.scriptTag))
     var token = /token=.*'/g.exec(job.scriptTag)
-    if(token)
-    {
-    setToken(token[0].slice(6,-1))
+    if (token) {
+      setToken(token[0].slice(6, -1))
     }
 
     imageElement()
@@ -339,38 +422,64 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   useEffect(() => {
     if (filterArr) {
+       var filter_FF = [{1:"very informal", 2:"informal", 3: "business casual ", 4: "casual professional" ,5: "professional" ,6: "very professional/formal"},
+      {1:"You do not have an own opinion. Be neutral and do not judge in anyway", 2:"You do not have an own opinion. Be neutral", 3: "Be neutral", 4: "feel free to have an own opinion, but be neutral" ,5: "feel free to have an own opinion and maybe judge (politely)" ,6: "feel free to have an own opinion and judge as you want" },
+
+     {1:"no emojies", 2:"none or sometimes one emoji", 3: "sometimes one or two emojies", 4: "one or two emojies" ,5: "some emojies" ,6: "a lot of emojies"  },
+      {1:"very short", 2:"short", 3: "variable, but if doubt rather short", 4: "variable, but if doubt rather detailed" ,5: "detailed" ,6: "very detailed"},
+    
+     {1:"very much on the specific subject of the asked question", 2:"on the specific subject of the asked question", 3: "maybe sometimes with an additional related information", 4: "sometimes with a few related information, tips or questions" ,5: "with some related additional information, tips or questions" ,6: "with a lot of related additional information, tips or questions" },
+      {1:"very funny", 2:"mostly funny", 3: "casually humorous", 4: "neutral" ,5: "mildly serious" ,6: "very serious"  }]
+      
       var obj = filterArr.map((object, index) => {
+        
         return <Row gutter={24} >
           <Col span={2} >
 
-            <label style={{fontWeight:"bold"}}>{filterArr[index].given}: </label>
+            <label style={{ fontWeight: "bold" }}>{filterArr[index].given}: </label>
           </Col>
           <Col span={15} >
             <Row gutter={24}>
-              <Col span={8} style={{textAlign:"right"}}
+              <Col span={8} style={{ textAlign: "right" }}
               >
-                {filterArr[index].leftValue}
+                {index == 1 || index == 2 || index == 3 ? filterArr[index].rightValue :filterArr[index].leftValue }
               </Col>
               <Col span={8} >
-                <div style={{marginTop:"-5px"}}>
-                <Slider
-                  min={1}
-                  max={6}
-                  marks={marks}
-                  // trackStyle={{ backgroundColor: "rgb(245 245 245)" }}
-                  //disabled={!filterArr[index].given}
-                  onChange={(e) => {
-                    var filterArray = filterArr
-                    addBhavior(filterArray, index, e)
-                  }}
-                  defaultValue={object.pointOnScale}
-                  step={1}
-                /> </div>
-                
-                </Col>
-               <Col span={8} 
+                <div style={{ marginTop: "-5px" }}>
+                  <Slider
+                    min={1}
+                    max={6}
+                    marks={marks}
+                    // trackStyle={{ backgroundColor: "rgb(245 245 245)" }}
+                    //disabled={!filterArr[index].given}
+                    tooltip={
+                      {  autoAdjustOverflow:true,
+                     formatter:()=> {
+                      if ( object.pointOnScale == 0){
+                        return filter_FF[index][1]
+                      }
+                      else{
+                        return  filter_FF[index][object.pointOnScale]
+                      }
+                     
+                    }
+                     }} 
+                    onChange={(e) => {
+                      var filterArray = filterArr
+                      addBhavior(filterArray, index, e)
+                    }}
+                    defaultValue={object.pointOnScale}
+                    // value={object.pointOnScale}
+                    key={object.pointOnScale}
+                    step={1}
+                  /> </div>
+
+              </Col>
+              <Col span={8}
               >
-                {filterArr[index].rightValue}</Col>
+                      {index == 1 || index == 2 || index == 3 ? filterArr[index].leftValue :filterArr[index].rightValue }
+               </Col>
+          
             </Row>
           </Col>
 
@@ -418,10 +527,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     }
     console.log(Parse.User.current()?.id)
     console.log(job.id)
-    if(job.scriptTag =="" || job.scriptTag == undefined){
-      let formData = { user: Parse.User.current()?.id , chatbotId:job.id}
+    if (job.scriptTag == "" || job.scriptTag == undefined) {
+      let formData = { user: Parse.User.current()?.id, chatbotId: job.id }
       fetch(
-        SERVER_URL_parsefunctions+"/scriptTag",
+        SERVER_URL_parsefunctions + "/scriptTag",
         {
           method: "POST",
           headers: {
@@ -431,11 +540,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           },
           body: JSON.stringify(formData),
         }
-        
-      ).then(async (response) =>{
-      const data = await response.json();
-      console.log(data.result.scriptTag)
-      onjobChange({ ...job, scriptTag: data.result.scriptTag })
+
+      ).then(async (response) => {
+        const data = await response.json();
+        console.log(data.result.scriptTag)
+        onjobChange({ ...job, scriptTag: data.result.scriptTag })
       });
     }
   }
@@ -518,16 +627,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                 style={{ width: "200px" }}
 
                 defaultValue={job.language || 'de'}
-                onChange={(value) => 
-                  
-                  {
+                onChange={(value) => {
 
-                    onjobChange({ ...job, language: value.toString() })
-                    console.log(job.language)
-                    setlang(value.toString())
-                    console.log(value.toString())
-                  
-                  }}
+                  onjobChange({ ...job, language: value.toString() })
+                  setlang(value.toString())
+               
+                }}
               >
 
                 <Option value='en'>English</Option>
@@ -536,6 +641,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               </Select>
 
             </Form.Item>
+
+          </Col>
+
+          <Col span={14} >
+            <label style={{ fontWeight: "bold", fontSize: "22px" }}>Verhalten des Chatbots</label>
+            <br></br>
+            <br></br>
+            {filterJSX}
+          </Col>
+
+        </Row>
+        <Row gutter={24} >
+          <Col span={10}>
             <label> Sprachausgabe</label><br></br>
 
             <SoundTwoTone style={{ fontSize: "large" }} /> <Checkbox checked={job.AudioNarration} style={{ marginTop: "3px", marginLeft: "10PX" }} onChange={(e) => {
@@ -556,19 +674,25 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               </Select>
 
             </Form.Item>
-
-
-
           </Col>
+          <Col span={12}>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Chatbot Prompt</label>
+            
+            <p>Hier können Sie die Eingabeaufforderung(Prompt) für Ihren Chatbot bearbeiten. Ihr Chatbot wird diese Aufforderung anpassen, um Antworten zu generieren.</p>
+            <Button onClick={ (e)=>{
+          // setToDefaultPrompt(job.defaultPrompt)
+             setcustomPromptT(job.defaultPrompt)
 
-          <Col span={14} >
-            <label style={{ fontWeight: "bold", fontSize: "22px" }}>Verhalten des Chatbots</label>
+              onjobChange({ ...job, customPrompt: job.defaultPrompt })
+            }}>
+              Reset to Default Prompt
+            </Button>
             <br></br>
             <br></br>
-            {filterJSX}
-          </Col>
-
-        </Row>
+            <br></br>
+           
+           {promptTextArea}
+          </Col></Row>
 
         {/* <Row> <Col span={5} >
           <Form.Item label='Empfohlener Bildungsabschluss' name='ErforderlicherBildungsabschluss'>
@@ -628,32 +752,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         </Row>
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon</label>
         <Row gutter={24} style={{ marginTop: "25px" }}>
-          <Col span={3}>
-            {selectedBubble ? <Image style={{ height: "100%", width: "100%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
+          <Col span={2}>
+            {selectedBubble ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ width: "100%", height:"100%",marginTop: "-20px" }} />}
           </Col>
           <Col span={20}>
-            <Form.Item id="imageContainerJobs" tooltip='Hochladen des Sprechblasen-Symbols für den Chatbot' label=' Unterstützte Formate: jpeg/png' name='image'>
+            <Form.Item id="imageContainerJobs" tooltip='Hochladen des Sprechblasen-Symbols für den Chatbot'>
               <Row id="imageContainerJob">
+              <Upload {...props} maxCount={1} showUploadList={false}>
 
-                <button style={{ marginLeft: "15px", border: "none", height: "fit-content" }}> <input
-                  type='file'
-                  accept='image/png, image/jpeg'
-
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      if (e.target.files?.length > 0) {
-                        handleImageUpload(e.target.files[0], '', '')
-                      }
-                    }
-                  }
-
-                  }
-                  style={{ color: "#efefef", marginLeft: "-8px", marginRight: "-8px", marginTop: "-2px", height:"145px",marginBottom: '-90px', position: "relative", width: '134px', background: "rgb(245 245 245)", border: "none !important", fontSize: "16px", cursor: "pointer" }}
-                >
-                </input>
-                </button>
-
-
+              <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Hochladen: jpeg/png Datei</span>
+              
+                 </Button>
+                </Upload>
+             
               </Row>
               <Row>{jobObj}</Row>
 
@@ -790,12 +901,25 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               style={{ width: "200px" }}
 
               defaultValue={job.fontstyleUser || 'Inter'}
-              onChange={(value) => onjobChange({ ...job, fontstyleUser: value.toString() })}
+              onChange={(value) => {
+                onjobChange({ ...job, fontstyleUser: value.toString() }) 
+              console.log(value.toString())
+            }}
             >
 
               <Option value='Inter'>Inter</Option>
               <Option value='Poppins'>Poppins</Option>
               <Option value='Roboto'>Roboto</Option>
+
+              <Option value='Tinos'>Times New Roman</Option>
+
+              <Option value='Fira Sans Condensed'>Calibri</Option>
+
+              <Option value='Arimo'>Arial</Option>
+
+              <Option value='IBM Plex Sans'>Helvetica</Option>
+
+              <Option value='Open Sans'>Open Sans</Option>
 
             </Select>
 
@@ -886,9 +1010,20 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               defaultValue={job.fontstyleChatbotReply || 'Inter'}
               onChange={(value) => onjobChange({ ...job, fontstyleChatbotReply: value.toString() })}
             >
-              <Option value='Inter'>Inter</Option>
+             <Option value='Inter'>Inter</Option>
               <Option value='Poppins'>Poppins</Option>
               <Option value='Roboto'>Roboto</Option>
+
+              <Option value='Tinos'>Times New Roman</Option>
+
+              <Option value='Fira Sans Condensed'>Calibri</Option>
+
+              <Option value='Arimo'>Arial</Option>
+
+              <Option value='IBM Plex Sans'>Helvetica</Option>
+
+              <Option value='Open Sans'>Open Sans</Option>
+
 
             </Select>
           </Col>
@@ -932,30 +1067,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Profilbild</label>
         <Row gutter={24} style={{ marginTop: "25px" }}>
-          <Col span={3}>
-            {selectedProfile ? <Image style={{ height: "100%", width: "100%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ marginTop: "-20px" }} />}
+          <Col span={2}>
+            {selectedProfile ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ width: "100%", height:"100%",marginTop: "-20px" }} />}
           </Col>
           <Col span={20}>
-            <Form.Item id="imageContainerProfile" tooltip='Profilbild hochladen' label='Unterstützte Formate: jpeg/png' name='image2'>
+            <Form.Item id="imageContainerProfile" tooltip='Profilbild hochladen' >
               <Row id="imageContainerProfile">
 
-                <button style={{ marginLeft: "15px", border: "none", height: "fit-content" }}> <input
-                  type='file'
-                  accept='image/png, image/jpeg'
+              <Upload {...propsProfile} maxCount={1} showUploadList={false}>
 
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      if (e.target.files?.length > 0) {
-                        handleImageUpload(e.target.files[0], 'profile', '')
-                      }
-                    }
-                  }
+              <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Hochladen: jpeg/png Datei</span>
 
-                  }
-                  style={{ color: "#efefef", marginLeft: "-8px", marginRight: "-8px", marginTop: "-2px", height:"145px", marginBottom: '-90px', position: "relative", width: '134px', background: "rgb(245 245 245)", border: "none !important", fontSize: "16px", cursor: "pointer" }}
-                >
-                </input>
-                </button>
+                </Button>
+                </Upload>
 
 
               </Row>
@@ -1000,11 +1124,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
           </Col>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>Sprich mit uns  </label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Weiterer Klärungsbedarf  </label>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.talkToaHumanEnabled} onChange={(e) => {
               onjobChange({ ...job, talkToaHumanEnabled: !job.talkToaHumanEnabled })
             }}></Checkbox>
-            <p>Welche Informationen sollten bereitgestellt werden bei der Option "Sprich mit uns"?</p>
+            <p>Welche Informationen sollten bereitgestellt werden bei der Option "Weiterer Klärungsbedarf"?</p>
             <br></br>
             <TextArea
               defaultValue={job.talkToaHuman || "Wir freuen uns, dass Sie direkt mit uns in Kontakt treten möchten, gerne können Sie hierzu die angegebenen Optionen nutzen. \n\nBitte beachten Sie unsere Öffnungszeiten und gewähren Sie uns nach Möglichkeit Einblick in Ihren Chatverlauf, damit wir direkt sehen können, um welches Problem es sich handelt. Sollte gerade niemand verfügbar sein können wir uns auch auf Wunsch bei Ihnen melden."}
@@ -1023,18 +1147,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={12}>
-           
+
           </Col>
           <Col span={12}>
-          <br></br>
-          
+            <br></br>
+
             <label style={{ fontWeight: "bold", fontSize: "large" }}>Eingabe der Matrikelnummer zulassen </label>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.matriculationNumber} onChange={(e) => {
               onjobChange({ ...job, matriculationNumber: !job.matriculationNumber })
             }}></Checkbox>
             <p> Durch Aktivieren dieses Werts kann der Benutzer seine Matrikelnummer bei der Kontaktaufnahme über die Funktion „Sprich mit uns“ mitteilen </p>
             <br></br>
-          
+
           </Col>
 
         </Row>
@@ -1059,61 +1183,62 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Col>
         <Col>
-            <h3>Chatbot-Integration</h3>
+          <h3>Chatbot-Integration</h3>
 
-            <Button type="default" onClick={showModal}>
-             Klick mich!
-            </Button>
-          </Col>
+          <Button type="default" onClick={showModal}>
+            Klick mich!
+          </Button>
+        </Col>
 
       </Row>
       <div style={{
-          position: "fixed",
-          bottom: 0,
-          right: 0
+        position: "fixed",
+        bottom: 0,
+        right: 0
       }}>
-      <div className='speech-bubble'>Klick mich</div>
+        <div className='speech-bubble'>Klick mich</div>
       </div>
-      <ChatClient 
-      objectId= {id}
-      userId={job.user}
-      universityId= {job.user}
-      chatbotName={job.name}
-      dummyRequest={true}
-      language={language}
-      // accessToken={token}
-      // chatbotId={id}
-      matriculationNumber={job.matriculationNumber}
-       chatbotBubbleIcons={job.selectedBubbleIcon}
-       chatbotProfileImage={job.selectedProfileImage}
-       chatbotLook={
-        {chatbotHeader: {
-          chatbotHeaderBackgroundColor: job.headerColor,
-          chatbotHeaderIconFontColor: job.headerIconFontColor,
-        },
-        chatbotBackground: {
-          chatbotBackgroundColor: job.chatbotBackgroundColor,
-        },
-        textBoxUser: {
-          textBoxUserColor:job.textBoxColorUser,
-          textBoxUserFontColor: job.fontColorUser,
-          textBoxFontStyle: job.fontstyleUser,
-        },
-        textBoxChatbotReply: {
-          textBoxChatbotReplyColor: job.textBoxColorChatbotReply,
-          textBoxChatbotReplyFontColor: job.fontColorChatbotReply,
-          textBoxChatboxReplyFontStyle: job.fontstyleChatbotReply,
-        },
-        UIGroupA: {
-          UIGroupAUIBackground: job.uiBackgroundGroupA,
-          UIGroupAUIHighlight: job.uiHighLightGroupA,
-        },
-        UIGroupB: {
-          UIGroupBUIBackground: job.uiBackgroundGroupB,
-          UIGroupBUIHighlight: job.uiHighLightGroupB,
-        },
-        chatbotLookName: job.name,
-      }}
+      <ChatClient
+        objectId={id}
+        userId={job.user}
+        universityId={job.user}
+        chatbotName={job.name}
+        dummyRequest={true}
+        language={language}
+        // accessToken={token}
+        // chatbotId={id}
+        matriculationNumber={job.matriculationNumber}
+        chatbotBubbleIcons={job.selectedBubbleIcon}
+        chatbotProfileImage={job.selectedProfileImage}
+        chatbotLook={
+          {
+            chatbotHeader: {
+              chatbotHeaderBackgroundColor: job.headerColor,
+              chatbotHeaderIconFontColor: job.headerIconFontColor,
+            },
+            chatbotBackground: {
+              chatbotBackgroundColor: job.chatbotBackgroundColor,
+            },
+            textBoxUser: {
+              textBoxUserColor: job.textBoxColorUser,
+              textBoxUserFontColor: job.fontColorUser,
+              textBoxFontStyle: job.fontstyleUser,
+            },
+            textBoxChatbotReply: {
+              textBoxChatbotReplyColor: job.textBoxColorChatbotReply,
+              textBoxChatbotReplyFontColor: job.fontColorChatbotReply,
+              textBoxChatboxReplyFontStyle: job.fontstyleChatbotReply,
+            },
+            UIGroupA: {
+              UIGroupAUIBackground: job.uiBackgroundGroupA,
+              UIGroupAUIHighlight: job.uiHighLightGroupA,
+            },
+            UIGroupB: {
+              UIGroupBUIBackground: job.uiBackgroundGroupB,
+              UIGroupBUIHighlight: job.uiHighLightGroupB,
+            },
+            chatbotLookName: job.name,
+          }}
       ></ChatClient>
       <Modal
         open={open}
@@ -1128,7 +1253,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         ]}
       >
         <h4>Kopieren Sie das folgende Skript und fügen Sie es in Ihre HTML-Seite ein, um den Chat-Client in Ihre Website zu integrieren.</h4>
-        <p style={{backgroundColor:"lightagrey", padding:"60px", fontFamily:"monospace"}}>{scriptTag}</p>
+        <p style={{ backgroundColor: "lightagrey", padding: "60px", fontFamily: "monospace" }}>{scriptTag}</p>
 
       </Modal>
     </Form>

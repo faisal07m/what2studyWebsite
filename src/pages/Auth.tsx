@@ -161,6 +161,7 @@ setTokenLoading(true)
     localStorage.removeItem("updatedObj");
     localStorage.removeItem("id");
     localStorage.removeItem("className");
+    localStorage.setItem("identity","platform_")
     setLoading(true)
     const { error } = await login(email, password)
     if (error) {

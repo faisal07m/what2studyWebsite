@@ -1,13 +1,14 @@
 
 import { useHistory } from 'react-router-dom'
-import { Tag, InputRef, theme, Input } from 'antd'
+import { Tag, InputRef, theme, Input, Radio } from 'antd'
 
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
-
+import React from 'react';
 type loc = {
     saveCallback: (tags: string[]) => void
+    
 }
 const TagComponent : React.FC<loc> = (props: loc)=> {
 const { token } = theme.useToken();
@@ -15,7 +16,9 @@ const { token } = theme.useToken();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<InputRef>(null);
-
+  
+ 
+ 
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -77,6 +80,7 @@ const { token } = theme.useToken();
     <>
       <div style={{ marginBottom: 16 }}>
         <TweenOneGroup
+        key={"tagsComp"}
           enter={{
             scale: 0.8,
             opacity: 0,
@@ -98,8 +102,8 @@ const { token } = theme.useToken();
         <Input
           ref={inputRef}
           type="text"
-          size="small"
-          style={{ width: 78 }}
+          size="large"
+          style={{ width: 250 }}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputConfirm}
