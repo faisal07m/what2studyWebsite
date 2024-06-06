@@ -1012,10 +1012,11 @@ useEffect(()=>{
 
                                   <Button type="primary" icon={<SendOutlined />} onClick={(e) => {
                                     console.log(urlCrawler)
-                                    fetch(urlCrawler, { mode: 'no-cors'})
+                                    fetch(urlCrawler,)
 
                                       .then(async (response) => {
-                                       
+                                       console.log("resp check")
+                                       console.log(response)
                                         if (!response.ok) {
                                           console.log(response)
                                           if(crawlURLUsername !="" && crawlURLPassword!=""){
@@ -1048,13 +1049,8 @@ useEffect(()=>{
                                         saveCrawlData(url,0) };
                                       })
                                       .catch((error) => {
-                                           
+                                        saveCrawlData(url,0)                                        
                                         console.log(error);
-                                        showNotification({
-                                          title: 'URL Crawlling gestoppt',
-                                          message: 'Bitte überprüfen Sie Ihre angegebene URL auf Fehler. Vergessen Sie nicht, den Benutzernamen und das Passwort einzugeben, wenn die URL passwortgeschützt ist.',
-                                          type: 'error',
-                                        })
                                       });
                                   }}>
                                     Hinzufügen
