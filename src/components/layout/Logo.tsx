@@ -191,7 +191,8 @@ const Logo = () => {
                     <>
                     {id=="1"?
                      <> <label>Modelltyp auswählen:</label><span> 
-                      <Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={localModelSelection == false ? true: false} onChange={(e) => {
+                      {/* localModelSelection == false ? true: */}
+                      <Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ true} onChange={(e) => {
                         setSwitchOPT1(e)
                         // setAttributes({ ...attributes, localModel: !e })
              

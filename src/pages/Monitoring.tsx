@@ -505,7 +505,8 @@ const Monitoring = () => {
 
                         {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
                         <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
-                        <Switch style={{ margin: 30 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
+                        <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
+                        <br></br>
                         <br></br>
 
                         {viewType == true ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
