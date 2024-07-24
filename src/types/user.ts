@@ -16,6 +16,7 @@ export type UserType = {
   thursday:string
   friday:string
   openAIKey:string
+  localModel:boolean
 }
 
 type RegisterProps = {
@@ -44,6 +45,7 @@ export const register = async (props: RegisterProps) => {
   user.set('thursday', '09:00,17:00')
   user.set('friday', '09:00,17:00')
   user.set('openAIKey', '')
+  user.set('localModel', true)
  
 
 
@@ -76,7 +78,7 @@ export const login = async (email: string, password: string) => {
 export const adminUpdateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday,openAIKey } = user
+  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday,openAIKey,localModel } = user
   const query = new Parse.Query(Parse.User)
   query.equalTo('username', username)
   const userToUpdate = await query.first()
@@ -95,6 +97,8 @@ export const adminUpdateUser = async (user: UserType) => {
   userToUpdate.set('thursday', thursday)
   userToUpdate.set('friday', friday)
   userToUpdate.set('openAIKey', openAIKey)
+  userToUpdate.set('localModel', localModel)
+  
 
   try {
     userToUpdate.save()
@@ -112,7 +116,7 @@ export const curUser = Parse.Object.extend('_User')
 export const updateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday,openAIKey } = user
+  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday,openAIKey,localModel } = user
   curUser.set('name', name)
   curUser.set('username', username)
   curUser.set('Telefonnummer', Telefonnummer)
@@ -127,6 +131,8 @@ export const updateUser = async (user: UserType) => {
   curUser.set('thursday', thursday)
   curUser.set('friday', friday)
   curUser.set('openAIKey', openAIKey)
+
+  curUser.set('localModel', localModel)
 
 
   try {

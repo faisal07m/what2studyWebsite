@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Tabs, Result, Row } from 'antd'
+import { Tabs, Result, Row, Button } from 'antd'
 import PageContainer from '../../components/layout/PageContainer'
 import { chatbots, JobOfferBlock } from '../../types/JobOffers'
 import GeneralSettings from '../../components/jobs/GeneralSettings'
@@ -194,13 +194,13 @@ const EditJobs = () => {
       />
       <Row gutter={24} style={{ marginTop: "10px", marginLeft: "1px" }}
       >
-        <button
-          className="ant-btn ant-btn-primary"
-          style={{ float: "right" }}
+        <Button
+          type="primary"
+          style={{ float: "right" , marginTop:"40px"}}
           onClick={onSave}
         >
           <span> Speichern</span>
-        </button>
+        </Button>
       </Row>
 
     </PageContainer>

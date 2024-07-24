@@ -51,6 +51,7 @@ const Overview = () => {
   const disable = { pointerEvent: "none", opacity: 0.7 }
   const [mainDiv, setMainDiv] = useState<boolean>(true)
 
+  const [crawlJobControl, setCrawlJobControl] = useState<boolean>(true)
   const [crawlURLStatus, set401] = useState<boolean>(true)
   const enable = { pointerEvent: "unset", opacity: 1 }
   const [fileList, setFileList] = useState<UploadFile[]>([]) // this will hold the files
@@ -82,18 +83,19 @@ const Overview = () => {
 
       if (message.attributes.user == curUser?.id) {
         if (message.attributes.jobStatus == true) {
-          //  setMainDiv(true)
+          setCrawlJobControl(true)
           setLoader(false)
           setTableJSX(<></>)
           setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
 
         }
         else {
-          //  setMainDiv(false)
+          setCrawlJobControl(false)
           setLoader(false)
 
         }
       }
+      
     });
     // sub.on('delete', function (message) {
     //   console.log("destroy")
@@ -436,6 +438,11 @@ useEffect(()=>{
   console.log(nPLus1)
   
 },[nPLus1])
+
+function isValidURL(string) {
+  var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  return (res !== null)
+};
   const saveCrawlData = async (url, status) => {
     var tempFileName
     var tempFileNameArr :any=[]
@@ -449,16 +456,20 @@ useEffect(()=>{
     else {
        tempFileNameArr = urlCrawler.split("/")
     }
-
+    console.log(tempFileNameArr)
     if (tempFileNameArr) {
       tempFileName = tempFileNameArr[1]
     }
-    
+    console.log(tempFileName)
+    console.log(tempFileNameArr)
+    var isValidURLCheck = isValidURL(urlCrawler)
+    if(isValidURLCheck)
+    {
     setDefKey("4")
     // setFileName(response.attributes[propertyName]._name)
     var res = await generateKnowledge({
       // name: response.attributes[propertyName]._name,
-      name: tempFileName,
+      name: urlCrawler,
       user: currentUser?.id,
       type: "url",
       priority: priority,
@@ -501,7 +512,17 @@ useEffect(()=>{
       .then(data => {
 
       })
-      .catch(error => console.error(error));;
+      .catch(error => console.error(error));
+    }
+    else{
+      setCrawlJobControl(true)
+                                        
+      showNotification({
+            title: 'URL Crawlling gestoppt',
+            message: 'Bitte überprüfen Sie Ihre angegebene URL auf Fehler. Vergessen Sie nicht, den Benutzernamen und das Passwort einzugeben, wenn die URL passwortgeschützt ist.',
+            type: 'error',
+          })
+    }
 
   }
 
@@ -586,8 +607,8 @@ useEffect(()=>{
                             <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                               <Select
                                 style={{ width: "100px" }}
-                                placeholder="Select"
-                                defaultValue={priority?priority:"Select"}
+                                placeholder="Auswählen"
+                                defaultValue={priority?priority:"Auswählen"}
                                 key={priority}
                                 onChange={(value) => {
                                   setPriority(value)
@@ -674,9 +695,9 @@ useEffect(()=>{
                               <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                 <Select
                                   style={{ width: "100px" }}
-                                  placeholder="Select"
+                                  placeholder="Auswählen"
                                   // defaultValue={priority}
-                                  defaultValue={priority?priority:"Select"}
+                                  defaultValue={priority?priority:"Auswählen"}
                                   key={priority}
                                 
                                   onChange={(value) => {
@@ -762,8 +783,8 @@ useEffect(()=>{
                                 <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                   <Select
                                     style={{ width: "100px" }}
-                                    placeholder="Select"
-                                    defaultValue={priority?priority:"Select"}
+                                    placeholder="Auswählen"
+                                    defaultValue={priority?priority:"Auswählen"}
                                     key={priority}
                                   // defaultValue={priority}
                                     onChange={(value) => {
@@ -854,8 +875,8 @@ useEffect(()=>{
                                 <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                   <Select
                                     style={{ width: "100px" }}
-                                    placeholder="Select"
-                                    defaultValue={priority?priority:"Select"}
+                                    placeholder="Auswählen"
+                                    defaultValue={priority?priority:"Auswählen"}
                                     key={priority}
                                   
                                     // defaultValue={priority}
@@ -953,7 +974,7 @@ useEffect(()=>{
                                     // addonBefore="http://"
                                     placeholder='university.de'
                                     id='crawlURLInput'
-                                    key={urlCrawler}
+                                    // key={urlCrawler}
                                     defaultValue={urlCrawler}
                                     onChange={(e) => {
                                       var val: string = e.target.value
@@ -972,14 +993,14 @@ useEffect(()=>{
                                 </Form.Item >
                                 <br></br>
                                 <p>Geben Sie Authentifizierungsdaten für passwortgeschützte URLs ein.</p>
-                                <Form.Item label='Username' name='usernameWebb' id='usernameWebb' style={{width:"300px"}}>
-                                  <Input id='usernamepasswrodwebcrawl'
+                                <Form.Item label='Benutzername' name='BenutzernameCRAWL' id='BenutzernameCrawl' style={{width:"300px"}}>
+                                  <Input id='usernamepasswrodwebcrawl' key="usernameCrawl"
                                     onChange={(e) => setCrawlUsername(e.target.value)} />
                                 </Form.Item>
 
-                                <Form.Item label='Passwort' name='passwordwebb' id='passwordwebb' style={{width:"300px"}}>
+                                <Form.Item label='Passwort' name='passwordCrawl' id='passworCrawl' style={{width:"300px"}}>
                                   <Input.Password
-                                    id='passwrodwebcrawl'
+                                    id='passwrodwebcrawl' key="passwordCrawl"
                                     onChange={(e) => setCrawlPass(e.target.value)}
                                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
 
@@ -1000,7 +1021,7 @@ useEffect(()=>{
                               </Form.Item>
                              
                             </Row>
-                            <p style={{fontWeight:"50", color:"orange", marginTop:"-20px"}}> Deep Crawl wird für passwortgeschützte URLs automatisch abgeschaltet</p>
+                            <p style={{fontWeight:"50", color:"orange", marginTop:"-20px"}}>Deep Crawl wird für passwortgeschützte URLs automatisch deaktiviert.</p>
                           
                             <Row style={{ marginTop: "70px" }}>
                               <TagComponent saveCallback={(tagsArr) => {
@@ -1010,11 +1031,15 @@ useEffect(()=>{
                             <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                                 <Form.Item name='' style={{ marginTop: "10px" }}>
 
-                                  <Button type="primary" icon={<SendOutlined />} onClick={(e) => {
+                                  {crawlJobControl==false ? <Button disabled>Hinzufügen</Button> :<Button type="primary" icon={<SendOutlined />} onClick={(e) => {
                                     console.log(urlCrawler)
+                                    setCrawlJobControl(false)
+                                    
                                     fetch(urlCrawler,)
 
                                       .then(async (response) => {
+                                        setCrawlJobControl(false)
+                                    
                                        console.log("resp check")
                                        console.log(response)
                                         if (!response.ok) {
@@ -1049,12 +1074,14 @@ useEffect(()=>{
                                         saveCrawlData(url,0) };
                                       })
                                       .catch((error) => {
-                                        saveCrawlData(url,0)                                        
+                                           
+                                            saveCrawlData(url,0)   
+                                                                            
                                         console.log(error);
                                       });
                                   }}>
                                     Hinzufügen
-                                  </Button>
+                                  </Button>}
                                 </Form.Item>
 
                           </Row>

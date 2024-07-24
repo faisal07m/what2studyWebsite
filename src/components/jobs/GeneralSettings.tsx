@@ -94,23 +94,23 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   const [open, setOpen] = useState(false);
 
   const [customPromptT, setcustomPromptT] = useState<string>(job.customPrompt);
- 
 
-  const area =(customPromptT)=>{
+
+  const area = (customPromptT) => {
     console.log(customPromptT)
     return <>
-     <TextArea
-              defaultValue={customPromptT}
-              key={customPromptT}
-              style={{ marginTop: "-20px" }}
-              onChange={(e) => {
-                onjobChange({ ...job, customPrompt: e.target.value })
-              }
-              }
+      <TextArea
+        defaultValue={customPromptT}
+        key={customPromptT}
+        style={{ marginTop: "-20px" }}
+        onChange={(e) => {
+          onjobChange({ ...job, customPrompt: e.target.value })
+        }
+        }
 
-              autoSize={{ minRows: 12, maxRows: 15 }}
-            />
-  </>
+        autoSize={{ minRows: 12, maxRows: 15 }}
+      />
+    </>
   }
   const propsProfile: UploadProps = {
     accept: "image/jpeg, image/png, image/jpg",
@@ -120,9 +120,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
     async beforeUpload(file) {
       if (file) {
-          handleImageUpload(file, 'profile', '')
+        handleImageUpload(file, 'profile', '')
       }
-      
+
       return true
     },
     onChange({ file, fileList }) {
@@ -148,9 +148,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
     async beforeUpload(file) {
       if (file) {
-          handleImageUpload(file, '', '')
+        handleImageUpload(file, '', '')
       }
-      
+
       return true
     },
     onChange({ file, fileList }) {
@@ -172,7 +172,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     setPromptTextArea(area(customPromptT))
   }, [customPromptT])
   const [promptTextArea, setPromptTextArea] = useState<JSX.Element>(area(customPromptT));
-  
+
 
   const showModal = () => {
     setOpen(true);
@@ -333,13 +333,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     let obj: JSX.Element[] = []
     if (job.bubbleIcon != undefined) {
       obj = job.bubbleIcon.map((img, index) => {
-        return <Col key={index} style={{ marginLeft: "25px" , marginTop:"15px"}} span={1}>
+        return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1}>
           {job.bubbleIcon ? <Image style={{ width: "100%" }} height="90%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedBubbleIcon: img })
             setSelectedBubble(img)
-          }} /> : <Skeleton.Image style={{ width: "100%", height:"100%" ,marginTop: "-20px" }} />}
+          }} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '35%'}}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row>
+          <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row>
         </Col>
       })
     }
@@ -355,15 +355,15 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     let obj: JSX.Element[] = []
     if (job.profileImage != undefined) {
       obj = job.profileImage.map((img, index) => {
-        return <Col key={index} style={{ marginLeft: "25px", marginTop:"15px" }} span={1} >
-          {job.profileImage ? <Image style={{ width: "100%"}}height="90%"  src={img} preview={false} onClick={(e) => {
+        return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1} >
+          {job.profileImage ? <Image style={{ width: "100%" }} height="90%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedProfileImage: img })
             setSelectedProfile(img)
 
-          }} /> : <Skeleton.Image style={{ width: "100%", height:"100%" ,marginTop: "-20px" }} />}
+          }} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '35%'}}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row>
-          </Col>
+          <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row>
+        </Col>
       })
     }
     onjobChange({ ...job })
@@ -422,17 +422,17 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   useEffect(() => {
     if (filterArr) {
-       var filter_FF = [{1:"very informal", 2:"informal", 3: "business casual ", 4: "casual professional" ,5: "professional" ,6: "very professional/formal"},
-      {1:"You do not have an own opinion. Be neutral and do not judge in anyway", 2:"You do not have an own opinion. Be neutral", 3: "Be neutral", 4: "feel free to have an own opinion, but be neutral" ,5: "feel free to have an own opinion and maybe judge (politely)" ,6: "feel free to have an own opinion and judge as you want" },
+      var filter_FF = [{ 1: "very informal", 2: "informal", 3: "business casual ", 4: "casual professional", 5: "professional", 6: "very professional/formal" },
+      { 1: "You do not have an own opinion. Be neutral and do not judge in anyway", 2: "You do not have an own opinion. Be neutral", 3: "Be neutral", 4: "feel free to have an own opinion, but be neutral", 5: "feel free to have an own opinion and maybe judge (politely)", 6: "feel free to have an own opinion and judge as you want" },
 
-     {1:"no emojies", 2:"none or sometimes one emoji", 3: "sometimes one or two emojies", 4: "one or two emojies" ,5: "some emojies" ,6: "a lot of emojies"  },
-      {1:"very short", 2:"short", 3: "variable, but if doubt rather short", 4: "variable, but if doubt rather detailed" ,5: "detailed" ,6: "very detailed"},
-    
-     {1:"very much on the specific subject of the asked question", 2:"on the specific subject of the asked question", 3: "maybe sometimes with an additional related information", 4: "sometimes with a few related information, tips or questions" ,5: "with some related additional information, tips or questions" ,6: "with a lot of related additional information, tips or questions" },
-      {1:"very funny", 2:"mostly funny", 3: "casually humorous", 4: "neutral" ,5: "mildly serious" ,6: "very serious"  }]
-      
+      { 1: "no emojies", 2: "none or sometimes one emoji", 3: "sometimes one or two emojies", 4: "one or two emojies", 5: "some emojies", 6: "a lot of emojies" },
+      { 1: "very short", 2: "short", 3: "variable, but if doubt rather short", 4: "variable, but if doubt rather detailed", 5: "detailed", 6: "very detailed" },
+
+      { 1: "very much on the specific subject of the asked question", 2: "on the specific subject of the asked question", 3: "maybe sometimes with an additional related information", 4: "sometimes with a few related information, tips or questions", 5: "with some related additional information, tips or questions", 6: "with a lot of related additional information, tips or questions" },
+      { 1: "very funny", 2: "mostly funny", 3: "casually humorous", 4: "neutral", 5: "mildly serious", 6: "very serious" }]
+
       var obj = filterArr.map((object, index) => {
-        
+
         return <Row gutter={24} >
           <Col span={2} >
 
@@ -442,7 +442,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <Row gutter={24}>
               <Col span={8} style={{ textAlign: "right" }}
               >
-                {index == 1 || index == 2 || index == 3 ? filterArr[index].rightValue :filterArr[index].leftValue }
+                {index == 1 || index == 2 || index == 3 ? filterArr[index].rightValue : filterArr[index].leftValue}
               </Col>
               <Col span={8} >
                 <div style={{ marginTop: "-5px" }}>
@@ -453,17 +453,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                     // trackStyle={{ backgroundColor: "rgb(245 245 245)" }}
                     //disabled={!filterArr[index].given}
                     tooltip={
-                      {  autoAdjustOverflow:true,
-                     formatter:()=> {
-                      if ( object.pointOnScale == 0){
-                        return filter_FF[index][1]
-                      }
-                      else{
-                        return  filter_FF[index][object.pointOnScale]
-                      }
-                     
-                    }
-                     }} 
+                      {
+                        autoAdjustOverflow: true,
+                        formatter: () => {
+                          if (object.pointOnScale == 0) {
+                            return filter_FF[index][1]
+                          }
+                          else {
+                            return filter_FF[index][object.pointOnScale]
+                          }
+
+                        }
+                      }}
                     onChange={(e) => {
                       var filterArray = filterArr
                       addBhavior(filterArray, index, e)
@@ -477,9 +478,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               </Col>
               <Col span={8}
               >
-                      {index == 1 || index == 2 || index == 3 ? filterArr[index].leftValue :filterArr[index].rightValue }
-               </Col>
-          
+                {index == 1 || index == 2 || index == 3 ? filterArr[index].leftValue : filterArr[index].rightValue}
+              </Col>
+
             </Row>
           </Col>
 
@@ -631,7 +632,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
                   onjobChange({ ...job, language: value.toString() })
                   setlang(value.toString())
-               
+
                 }}
               >
 
@@ -677,21 +678,21 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           </Col>
           <Col span={12}>
             <label style={{ fontWeight: "bold", fontSize: "large" }}>Chatbot Prompt</label>
-            
-            <p>Hier können Sie die Eingabeaufforderung(Prompt) für Ihren Chatbot bearbeiten. Ihr Chatbot wird diese Aufforderung anpassen, um Antworten zu generieren.</p>
-            <Button onClick={ (e)=>{
-          // setToDefaultPrompt(job.defaultPrompt)
-             setcustomPromptT(job.defaultPrompt)
+
+            <p>Bearbeiten Sie hier die Eingabeaufforderung (Prompt) für Ihren Chatbot. Ihr Chatbot nutzt diese Aufforderung, um passende Antworten zu erstellen</p>
+            <Button onClick={(e) => {
+              // setToDefaultPrompt(job.defaultPrompt)
+              setcustomPromptT(job.defaultPrompt)
 
               onjobChange({ ...job, customPrompt: job.defaultPrompt })
             }}>
-              Reset to Default Prompt
+              Auf Standard-Prompt zurücksetzen
             </Button>
             <br></br>
             <br></br>
             <br></br>
-           
-           {promptTextArea}
+
+            {promptTextArea}
           </Col></Row>
 
         {/* <Row> <Col span={5} >
@@ -753,18 +754,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon</label>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
-            {selectedBubble ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ width: "100%", height:"100%",marginTop: "-20px" }} />}
+            {selectedBubble ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
           </Col>
           <Col span={20}>
             <Form.Item id="imageContainerJobs" tooltip='Hochladen des Sprechblasen-Symbols für den Chatbot'>
               <Row id="imageContainerJob">
-              <Upload {...props} maxCount={1} showUploadList={false}>
+                <Upload {...props} maxCount={1} showUploadList={false}>
 
-              <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Hochladen: jpeg/png Datei</span>
-              
-                 </Button>
+                  <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
+
+                  </Button>
                 </Upload>
-             
+
               </Row>
               <Row>{jobObj}</Row>
 
@@ -798,287 +799,312 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <label style={{ fontWeight: "bold", fontSize: "23px" }}>Chatbot: Corporate Identity</label>
         <br></br>
         <br></br>
-        <label>Chatbot Kopfzeile </label>
-        <Row gutter={26} style={{ margin: "15px" }}>
-          <Col span={5} style={{ textAlign: "center" }}>
-            <label>Hintergrundfarbe</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.headerColor || "#0c8de9"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, headerColor: s.toString() })
-              }}
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
+        <Row gutter={26}>
+          <Col span={11}>
+            <label>Chatbot Kopfzeile </label>
+            <Row gutter={26} style={{ margin: "15px" }}>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Hintergrundfarbe</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.headerColor || "#0c8de9"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, headerColor: s.toString() })
                   }}
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Icon & Schriftfarbe</label> <br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.headerIconFontColor || "#ffffff"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, headerIconFontColor: s.toString() })
-              }}
+              </Col>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Icon & Schriftfarbe</label> <br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.headerIconFontColor || "#ffffff"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, headerIconFontColor: s.toString() })
+                  }}
 
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Col>
-          <Col span={4}></Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Chatbot Hintergrundfarbe</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.chatbotBackgroundColor || "#ffffff"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, chatbotBackgroundColor: s.toString() })
-              }}
+              </Col>
+              <Col span={4}></Col>
+            
 
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
+            </Row>
+            <label>Textfeld (Nutzer) </label>
+
+            <Row gutter={26} style={{ margin: "15px" }}>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Farbe</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.textBoxColorUser || "#e0e0e0"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, textBoxColorUser: s.toString() })
                   }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
                 />
-              )}
-            />
+              </Col>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Schriftfarbe</label> <br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.fontColorUser || "#000000"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, fontColorUser: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Schriftart</label><br></br>
+                <Select
+                  style={{ width: "200px" }}
+
+                  defaultValue={job.fontstyleUser || 'Inter'}
+                  onChange={(value) => {
+                    onjobChange({ ...job, fontstyleUser: value.toString() })
+                    console.log(value.toString())
+                  }}
+                >
+
+                  <Option value='Inter'>Inter</Option>
+                  <Option value='Poppins'>Poppins</Option>
+                  <Option value='Roboto'>Roboto</Option>
+
+                  <Option value='Tinos'>Times New Roman</Option>
+
+                  <Option value='Fira Sans Condensed'>Calibri</Option>
+
+                  <Option value='Arimo'>Arial</Option>
+
+                  <Option value='IBM Plex Sans'>Helvetica</Option>
+
+                  <Option value='Open Sans'>Open Sans</Option>
+
+                </Select>
+
+              </Col>
+
+            </Row>
+            <label>Textfeld (Chatbot)</label>
+
+            <Row gutter={26} style={{ margin: "15px" }}>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Farbe</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.textBoxColorChatbotReply || "#00ADDC"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, textBoxColorChatbotReply: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Schriftfarbe</label> <br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.fontColorChatbotReply || "#00ADDC"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, fontColorChatbotReply: s.toString() })
+                  }}
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+              <Col span={8} style={{ textAlign: "center" }}>
+                <label>Schriftart</label><br></br>
+                <Select
+                  style={{ width: "200px" }}
+
+                  defaultValue={job.fontstyleChatbotReply || 'Inter'}
+                  onChange={(value) => onjobChange({ ...job, fontstyleChatbotReply: value.toString() })}
+                >
+                  <Option value='Inter'>Inter</Option>
+                  <Option value='Poppins'>Poppins</Option>
+                  <Option value='Roboto'>Roboto</Option>
+
+                  <Option value='Tinos'>Times New Roman</Option>
+
+                  <Option value='Fira Sans Condensed'>Calibri</Option>
+
+                  <Option value='Arimo'>Arial</Option>
+
+                  <Option value='IBM Plex Sans'>Helvetica</Option>
+
+                  <Option value='Open Sans'>Open Sans</Option>
+
+
+                </Select>
+              </Col>
+
+            </Row>
+          </Col>
+
+          <Col span={13}>
+            <label>Weitere UI-Elemente </label>
+            <Row gutter={26} style={{ margin: "15px" }}>
+
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Hintergrundfarbe des Chats</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.chatbotBackgroundColor || "#ffffff"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, chatbotBackgroundColor: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+
+            </Row>
+            <label></label><br></br>
+
+            <Row gutter={26} style={{ margin: "15px" }}>
+
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Buttons (Hintergrund)</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.uiBackgroundGroupA || "rgb(100, 100, 100)"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, uiBackgroundGroupA: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Buttons (Highlight)</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.uiHighLightGroupA || "rgb(200, 200, 200)"}
+                  onChange={(e, s) => {
+                    console.log("hehehe")
+                    console.log(s)
+                    console.log(s.toString())
+                    onjobChange({ ...job, uiHighLightGroupA: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
+            <label></label><br></br>
+
+            <Row gutter={26} style={{ margin: "15px" }}>
+
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Weitere Schaltflächen (Hintergrund)</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.uiBackgroundGroupB || "rgb(50, 50, 50)"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, uiBackgroundGroupB: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Weitere Schaltflächen (Highlight)</label><br></br>
+                <ColorPicker
+                  size='large'
+                  defaultValue={job.uiHighLightGroupB || "rgb(150, 150, 150)"}
+                  onChange={(e, s) => {
+                    onjobChange({ ...job, uiHighLightGroupB: s.toString() })
+                  }}
+
+                  showText={() => (
+                    <DownOutlined
+                      style={{
+                        color: "rgba(0, 0, 0, 0.25)",
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
           </Col>
 
         </Row>
-        <label>Textbox Nutzer:in </label>
-
-        <Row gutter={26} style={{ margin: "15px" }}>
-          <Col span={5} style={{ textAlign: "center" }}>
-            <label>Farbe</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.textBoxColorUser || "#e0e0e0"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, textBoxColorUser: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Schriftfarbe</label> <br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.fontColorUser || "#000000"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, fontColorUser: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Schriftart</label><br></br>
-            <Select
-              style={{ width: "200px" }}
-
-              defaultValue={job.fontstyleUser || 'Inter'}
-              onChange={(value) => {
-                onjobChange({ ...job, fontstyleUser: value.toString() }) 
-              console.log(value.toString())
-            }}
-            >
-
-              <Option value='Inter'>Inter</Option>
-              <Option value='Poppins'>Poppins</Option>
-              <Option value='Roboto'>Roboto</Option>
-
-              <Option value='Tinos'>Times New Roman</Option>
-
-              <Option value='Fira Sans Condensed'>Calibri</Option>
-
-              <Option value='Arimo'>Arial</Option>
-
-              <Option value='IBM Plex Sans'>Helvetica</Option>
-
-              <Option value='Open Sans'>Open Sans</Option>
-
-            </Select>
-
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Group A UI Hintergrund</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.uiBackgroundGroupA || "rgb(100, 100, 100)"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, uiBackgroundGroupA: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Group A UI Hightlight</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.uiHighLightGroupA || "rgb(200, 200, 200)"}
-              onChange={(e, s) => {
-                console.log("hehehe")
-                console.log(s)
-                console.log(s.toString())
-                onjobChange({ ...job, uiHighLightGroupA: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-        </Row>
-        <label>Textbox Chatbotantwort</label>
-
-        <Row gutter={26} style={{ margin: "15px" }}>
-          <Col span={5} style={{ textAlign: "center" }}>
-            <label>Farbe</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.textBoxColorChatbotReply || "#00ADDC"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, textBoxColorChatbotReply: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Schriftfarbe</label> <br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.fontColorChatbotReply || "#00ADDC"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, fontColorChatbotReply: s.toString() })
-              }}
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Schriftart</label><br></br>
-            <Select
-              style={{ width: "200px" }}
-
-              defaultValue={job.fontstyleChatbotReply || 'Inter'}
-              onChange={(value) => onjobChange({ ...job, fontstyleChatbotReply: value.toString() })}
-            >
-             <Option value='Inter'>Inter</Option>
-              <Option value='Poppins'>Poppins</Option>
-              <Option value='Roboto'>Roboto</Option>
-
-              <Option value='Tinos'>Times New Roman</Option>
-
-              <Option value='Fira Sans Condensed'>Calibri</Option>
-
-              <Option value='Arimo'>Arial</Option>
-
-              <Option value='IBM Plex Sans'>Helvetica</Option>
-
-              <Option value='Open Sans'>Open Sans</Option>
-
-
-            </Select>
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Group B UI Hintergrund</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.uiBackgroundGroupB || "rgb(50, 50, 50)"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, uiBackgroundGroupB: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-          <Col span={4} style={{ textAlign: "center" }}>
-            <label>Group B UI Hightlight</label><br></br>
-            <ColorPicker
-              size='large'
-              defaultValue={job.uiHighLightGroupB || "rgb(150, 150, 150)"}
-              onChange={(e, s) => {
-                onjobChange({ ...job, uiHighLightGroupB: s.toString() })
-              }}
-
-              showText={() => (
-                <DownOutlined
-                  style={{
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                />
-              )}
-            />
-          </Col>
-        </Row>
-
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Profilbild</label>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
-            {selectedProfile ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ width: "100%", height:"100%",marginTop: "-20px" }} />}
+            {selectedProfile ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
           </Col>
           <Col span={20}>
             <Form.Item id="imageContainerProfile" tooltip='Profilbild hochladen' >
               <Row id="imageContainerProfile">
 
-              <Upload {...propsProfile} maxCount={1} showUploadList={false}>
+                <Upload {...propsProfile} maxCount={1} showUploadList={false}>
 
-              <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Hochladen: jpeg/png Datei</span>
+                  <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
 
-                </Button>
+                  </Button>
                 </Upload>
 
 
@@ -1156,12 +1182,101 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.matriculationNumber} onChange={(e) => {
               onjobChange({ ...job, matriculationNumber: !job.matriculationNumber })
             }}></Checkbox>
-            <p> Durch Aktivieren dieses Werts kann der Benutzer seine Matrikelnummer bei der Kontaktaufnahme über die Funktion „Sprich mit uns“ mitteilen </p>
+            <p> Aktivieren Sie diese Option, damit der Benutzer seine Matrikelnummer über die Funktion 'Weiterer Klärungsbedarf' mitteilen kann.</p>
             <br></br>
 
           </Col>
 
         </Row>
+
+      </fieldset>
+
+      <fieldset className="fieldsetCustom">
+        <legend>Chatbot-Intro</legend>
+        <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
+          <Col span={12}>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Kurzbeschreibung des Chatbots auf Deutsch</label>
+            <p>Wird im Intro des Chatbots angezeigt</p>
+            <TextArea
+              defaultValue={job.introScreenInfoDE}
+              key="introDE"
+
+              onChange={(e) => {
+                onjobChange({ ...job, introScreenInfoDE: e.target.value })
+              }
+              }
+
+              autoSize={{ minRows: 2, maxRows: 3 }}
+            />
+
+
+          </Col>
+          <Col span={12}>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Kurzbeschreibung des Chatbots auf Englisch</label>
+            <p>Wird im Intro des Chatbots angezeigt</p>
+            <TextArea
+              defaultValue={job.introScreenInfoEN}
+              key="introEN"
+
+              onChange={(e) => {
+                onjobChange({ ...job, introScreenInfoEN: e.target.value })
+              }
+              }
+
+              autoSize={{ minRows: 2, maxRows: 3 }}
+            />
+
+
+          </Col>
+
+
+        </Row>
+
+
+        <Row gutter={24} style={{ display: 'flex', alignItems: 'center', marginTop: "30px" }}>
+          <Col span={12}>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Willkommensnachricht auf Deutsch</label>
+            <p>Geben Sie die erste Nachricht ein, die vom Chatbot angezeigt werden soll</p>
+            <TextArea
+              defaultValue={job.welcomeMsgDE || ""}
+              key="welcomeDE"
+              onChange={(e) => {
+                onjobChange({ ...job, welcomeMsgDE: e.target.value })
+              }
+              }
+
+              autoSize={{ minRows: 2, maxRows: 4 }}
+            />
+
+
+          </Col>
+
+          <Col span={12}>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Willkommensnachricht auf Englisch</label>
+
+            <p>Geben Sie die erste Nachricht ein, die vom Chatbot angezeigt werden soll</p>
+            <br></br>
+            <TextArea
+              defaultValue={job.welcomeMsgEN || ""}
+              key="welcomeEN"
+              style={{ marginTop: "-20px" }}
+              onChange={(e) => {
+                console.log(e)
+
+                console.log(e.target.value)
+                onjobChange({ ...job, welcomeMsgEN: e.target.value })
+              }
+              }
+
+              autoSize={{ minRows: 2, maxRows: 4 }}
+            />
+
+
+          </Col>
+
+
+        </Row>
+
 
       </fieldset>
 
@@ -1185,7 +1300,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <Col>
           <h3>Chatbot-Integration</h3>
 
-          <Button type="default" onClick={showModal}>
+          <Button style={{ backgroundColor: "#598c70", color: "white" }} onClick={showModal}>
             Klick mich!
           </Button>
         </Col>

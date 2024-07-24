@@ -44,6 +44,12 @@ export type JobOfferBlock = {
   defaultPrompt:string
   customPrompt:string
 
+  welcomeMsgDE: string
+  introScreenInfoDE:string
+
+  welcomeMsgEN: string
+  introScreenInfoEN:string
+
   }
 export const blankBlock:  Partial<JobOfferBlock> = {
   user:"",
@@ -83,7 +89,11 @@ export const blankBlock:  Partial<JobOfferBlock> = {
   activeChatbot: false,
   scriptTag:"",
   defaultPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).',
-  customPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).'
+  customPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.\nIf the question is not related to the context, please answer with "I do not have it in my knowledge, please contact the student advisory service". \nYou should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs. Answer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).',
+  welcomeMsgDE:'Hallo, ich bin ein Chatbot der dir bei deinem Studium helfen soll! Bevor wir loslegen, ein paar wichtige Fakten.',
+  welcomeMsgEN:"Hello. It's nice to meet you! I am a chatbot built to help you with your studies! Before we get started, here are a few important facts.",
+  introScreenInfoDE:'Geben Sie die erste Nachricht ein, die vom Chatbot angezeigt werden soll',
+  introScreenInfoEN:'Welcome to the Student Advisory Service! How can I help you today?'
 }
 
 

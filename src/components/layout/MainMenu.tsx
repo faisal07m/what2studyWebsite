@@ -13,12 +13,14 @@ import {
   TagOutlined,
   ApiOutlined,
   WarningOutlined,
-  WarningTwoTone
+  WarningTwoTone,
+  WechatOutlined
 } from '@ant-design/icons'
 import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../config/routes'
 import Parse from 'parse'
 import { useEffect, useState } from 'react'
+import { UserType, getCurrentUser } from '../../types/user'
 
 type MainMenuProps = {
   activeTab: string
@@ -26,6 +28,10 @@ type MainMenuProps = {
 const MainMenu = ({ activeTab }: MainMenuProps) => {
   const location = useLocation<Object>()
 
+  const company = getCurrentUser()
+  const [attributes, setAttributes] = useState({
+    ...(company?.attributes as UserType),
+  })
   const [statusBar, setStatusBar] = useState<boolean>(false)
 
   const [statusBarUpload, setStatusBarUpload] = useState<boolean>(false)
@@ -95,6 +101,27 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
     }
     
     )
+
+    var embeddingStatus = Parse.Object.extend("embeddingStatus");
+    var q4 = new Parse.Query(embeddingStatus);
+    q4.equalTo("user", Parse.User.current()?.id)
+    q4.equalTo("status", 1)
+    
+    let result = q4.first().then((el)=>{
+      if(el){
+        setStatusBarUpload(true)
+      }
+      else{
+        setStatusBarUpload(false)
+        setStatusBar(false)
+      
+    
+      }
+      
+    }
+
+    
+    )
   },[])
   const func = async (e) => {
     if (location.state != undefined) {
@@ -149,11 +176,13 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='6' icon={<DashboardOutlined />}>
           <Link to={{ pathname: "/what2study/monitoring", state: { prevPath: location.pathname } }} >Monitoring</Link>
         </Menu.Item>
-        <Menu.Item key='7' icon={<DashboardOutlined />}>
+        <Menu.Item key='7' icon={<WechatOutlined/>}>
           <Link to={{ pathname: "/what2study/chatwindow", state: { prevPath: location.pathname } }} >Chatbot</Link>
         </Menu.Item>
         <div style={{left: "0", position: "absolute",  bottom: "0", marginBottom: "135px", marginLeft: "35px"}}
        >
+         {/* {(attributes.localModel == false && attributes.openAIKey=="" )? <p>enter openAI key</p>:<></>} */}
+
         { statusBarUpload == false ?( statusBar== false ? <Progress
           type="circle"
           percent={100}

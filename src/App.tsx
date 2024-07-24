@@ -14,6 +14,7 @@ import 'antd/dist/reset.css';
 import Intents from './pages/Intent'
 import Monitoring from './pages/Monitoring'
 import Chatbot from './pages/Chatbot'
+import DataSecurity from './pages/DataSecurity'
 
 function App() {
   const currentUser = Parse.User.current()
@@ -54,9 +55,11 @@ function App() {
            </Route>
            </Switch>
       ) : (
-        <Route path='/what2study/home'>
-          <Auth />
-        </Route>
+        <><Route path='/what2study/home'>
+            <Auth />
+          </Route><Route path='/what2study/datasecurity'>
+              <DataSecurity />
+            </Route></>
       )}
     </Router>
   )

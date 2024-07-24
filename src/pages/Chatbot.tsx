@@ -33,7 +33,7 @@ const Chatbot = () => {
     return (
         <div>
             <PageContainer
-                title={'Chat Window'}
+                title={'Chatfenster'}
                 pageId='7'
                 button
             >
@@ -54,7 +54,7 @@ const Chatbot = () => {
                             testRequest={true}
                         ></ChatClient>
                     </div>
-                </div>:<h2> Um einen Chatbot zunächst zu testen, müssen Sie einen Chatbot veröffentlichen</h2>}
+                </div>:<h2>Um einen Chatbot zu testen, müssen Sie ihn zuerst veröffentlichen.</h2>}
                 
             </PageContainer>
         </div>

@@ -5,6 +5,11 @@
 @import '../node_modules/@syncfusion/ej2-react-navigations/styles/material.css';
 
 
+.securityP{
+  background-color: "#dddddd";
+  font-size: "50px";
+
+}
 .Error {
 border-color: red;
 }
@@ -36,6 +41,7 @@ border-color: red;
   .fieldsetCustom{
     border: ridge;
     padding: revert;
+    height:inherit;
     margin-block: 20px;
     }
   

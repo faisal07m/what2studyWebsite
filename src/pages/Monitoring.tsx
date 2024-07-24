@@ -15,7 +15,7 @@ const Monitoring = () => {
 
     const [disliked, setDisliked] = useState<number>(0)
 
-    const [viewType, setViewType] = useState<boolean>(false)
+    const [viewType, setViewType] = useState<boolean>(true)
 
     const [feedbackList, setFeedbackList] = useState<any>()
 
@@ -142,7 +142,7 @@ const Monitoring = () => {
     });
     const columns: TableProps['columns'] = [
         {
-            title: 'SessionID',
+            title: 'Session-ID',
             dataIndex: 'sessionID',
             key: 'sessionID',
         },
@@ -173,7 +173,7 @@ const Monitoring = () => {
 
         },
         {
-            title: 'timestamp',
+            title: 'Zeitstempel',
             dataIndex: 'timestamp',
             key: 'timestamp',
             width: "200px",
@@ -378,7 +378,7 @@ const Monitoring = () => {
                     valueFormatString: ""
                 },
                 axisY: {
-                    title: "Anzahl der Fragen und Antworten",
+                    title: "Anzahl der Nachrichten",
                 },
                 data: [{
                     yValueFormatString: "",
@@ -433,6 +433,7 @@ const Monitoring = () => {
                 }
 
             }
+            if(list.length > 0)
             setFeedbackList(list)
 
             for (let i = 0; i < chatbots.length; i++) {
@@ -446,12 +447,15 @@ const Monitoring = () => {
                 }
 
             }
+            if(chatHistoryList.length > 0)
+           
             setChatHistoryList(chatHistoryList)
         }
 
     }
     useEffect(() => {
-
+        console.log(chatbots)
+        if(chatbots != undefined && chatbots.length>0)
         promissFunc(chatbots)
     }, [chatbots])
 
@@ -473,7 +477,7 @@ const Monitoring = () => {
                         <Row gutter={26} >
                             <Col span={9}>
 
-                                <h3>Gesamtzahl der Benutzer/Sessions: <span style={{ fontSize: "x-large", color: "#02addc", fontFamily: "serif" }}>{totalUsersSessions}</span></h3>
+                                <h3>Gesamtanzahl der Benutzer (unique Session IDs): <span style={{ fontSize: "22px", fontWeight:"bold", color: "#02addc" }}>{totalUsersSessions}</span></h3>
 
                             </Col>
 
@@ -483,7 +487,7 @@ const Monitoring = () => {
 
                         <Col span={11} style={{ padding: "50px" }}>
                             <h2>Antwortqualität</h2>
-                            {disliked == 0 ? <div style={{ height: "100%", width: "100%", alignContent: "center", border: "ridge", textAlign: "center" }}><h2 style={{ color: "grey", fontFamily: "monospace" }}>Keine Statistiken verfügbar"</h2></div> : <CanvasJSChart options={options} />}
+                            {disliked == 0 ? <div style={{ height: "100%", width: "100%", alignContent: "center", border: "ridge", textAlign: "center" }}><h2 style={{ color: "grey", fontFamily: "monospace" }}>Keine Statistiken verfügbar</h2></div> : <CanvasJSChart options={options} />}
 
                         </Col>
 
@@ -496,12 +500,13 @@ const Monitoring = () => {
 
                         </Col>
                     </Row>
+                    
                     <Row gutter={24}>
 
                         {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
                         <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
-                        <Switch style={{ margin: 30 }} checkedChildren="Nested View" unCheckedChildren="List View" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
-
+                        <Switch style={{ margin: 30 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
+                        <br></br>
 
                         {viewType == true ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
 

@@ -160,6 +160,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                 text
             ),
     });
+    
     const updateData = async (record) => {
         await deleteKnowledgeItem(record.itemId)
         var index = data?.findIndex(obj => obj.itemId === record.itemId);
@@ -201,7 +202,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             width:"400px",
             key: 'name',
             ...getColumnSearchProps('name'),
-            render: (_, record) => <div style={{width:"400px"}}><p>{record.url_org}</p>  <a href={record.url} download={record.fileName}>{id == "4"?"Crawled Datendatei":"Datei"}  </a></div>,
+            render: (_, record) => <div style={{width:"400px"}}><p>{record.url_org}</p>  <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a></div>,
         },
         // {
         //     title: 'URL',
@@ -242,7 +243,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             ),
         },
         {
-            title: 'Status',
+            title: 'Lernfortschritt',
             key: 'learnStatus',
             dataIndex: 'learnStatus',
             render: (_, { learnStatus }) => (
@@ -253,11 +254,11 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             ),
         },
         {
-            title: '',
+            title: 'Crawl-Status',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                     { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /> Crawl Status</p>: <p style={{marginTop:"13px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /> Crawl Status</p>
+                     { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginTop:"13px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
                     )}
                     <Button type="primary" icon={<EyeOutlined />} onClick={() => {
 
@@ -291,7 +292,6 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
                     }}>Links ansehen</Button>
                     }
-                   
                     <Button danger icon={<DeleteOutlined />}
                         onClick={(e) => {
                             updateData(record)
@@ -350,8 +350,6 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                         },
                     )
                     count = count + 1
-
-
                 });
                 setData(data)
             }
