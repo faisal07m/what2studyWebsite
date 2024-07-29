@@ -53,6 +53,9 @@ function App() {
            <Route path='/what2study/Impressum'>
            <Impressum />
            </Route>
+           <Route path='/what2study/datasecurity'>
+              <DataSecurity />
+            </Route>
            </Switch>
       ) : (
         <><Route path='/what2study/home'>

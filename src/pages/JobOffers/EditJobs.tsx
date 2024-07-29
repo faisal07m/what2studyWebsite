@@ -116,6 +116,8 @@ const EditJobs = () => {
             const query = new Parse.Query(chatbots)
             query.notEqualTo("objectId", temp.id)
             query.equalTo("user", temp.attributes.user)
+            query.limit(1000000000)
+ 
             query.find().then((res) => {
               if (res.length > 0) {
                 res.forEach(element => {

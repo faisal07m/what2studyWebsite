@@ -1320,6 +1320,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         chatbotName={job.name}
         dummyRequest={true}
         language={language}
+        welcomeMsgDE={job.welcomeMsgDE}
+       welcomeMsgEN={job.welcomeMsgEN}
         // accessToken={token}
         // chatbotId={id}
         matriculationNumber={job.matriculationNumber}

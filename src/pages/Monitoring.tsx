@@ -425,6 +425,7 @@ const Monitoring = () => {
             for (let i = 0; i < chatbots.length; i++) {
                 var q = new Parse.Query(feedbacks);
                 q.equalTo("chatbotId", chatbots[i])
+                q.limit(100000000)
                 var response = await q.find()
                 if (response) {
                     response.forEach(feedback => {
@@ -439,6 +440,8 @@ const Monitoring = () => {
             for (let i = 0; i < chatbots.length; i++) {
                 var q2 = new Parse.Query(chathistory);
                 q2.equalTo("chatbotId", chatbots[i])
+                q2.limit(1000000000)
+ 
                 var response = await q2.find()
                 if (response) {
                     response.forEach(feedback => {
@@ -454,7 +457,6 @@ const Monitoring = () => {
 
     }
     useEffect(() => {
-        console.log(chatbots)
         if(chatbots != undefined && chatbots.length>0)
         promissFunc(chatbots)
     }, [chatbots])
@@ -509,7 +511,7 @@ const Monitoring = () => {
                         <br></br>
                         <br></br>
 
-                        {viewType == true ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
+                        {viewType == false ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
 
 
 
