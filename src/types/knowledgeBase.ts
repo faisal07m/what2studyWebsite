@@ -57,8 +57,6 @@ export const getAllKnowledgeBaseWithType = async (type: string) => {
     query.equalTo("user", curUser?.id)
     try {
         const knowledgeBase = await query.find()
-        console.log("knowledge found")
-        console.log(knowledgeBase)
         if(knowledgeBase!=null){
 
           return knowledgeBase

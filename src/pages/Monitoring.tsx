@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PageContainer from '../components/layout/PageContainer'
 import 'react-phone-number-input/style.css'
-import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch } from 'antd'
+import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch, Spin } from 'antd'
 import CanvasJSReact from '@canvasjs/react-charts';
 import Parse from 'parse'
 import { SearchOutlined } from '@ant-design/icons';
@@ -410,8 +410,8 @@ const Monitoring = () => {
             indexLabel: "{label}: {y}%",
             startAngle: -90,
             dataPoints: [
-                { y: disliked, label: "Disliked" },
-                { y: liked, label: "Liked" }
+                { y: disliked, label: "Disliked", color:"#b23e3e" },
+                { y: liked, label: "Liked" , color:"#00addc"}
             ]
         }]
     }
@@ -508,9 +508,12 @@ const Monitoring = () => {
                         {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
                         <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
                         <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
+                        {!data && !data2 &&<Spin tip="..." size="large"></Spin>}
+                       
                         <br></br>
                         <br></br>
 
+                        <br></br>
                         {viewType == false ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
 
 

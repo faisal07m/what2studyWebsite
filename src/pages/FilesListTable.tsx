@@ -202,7 +202,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             width:"400px",
             key: 'name',
             ...getColumnSearchProps('name'),
-            render: (_, record) => <div style={{width:"400px"}}><p>{record.url_org}</p>  <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a></div>,
+            render: (_, record) => <div style={{width:"400px"}}> {id !="4" ? <p>{record.url_org}</p>:  <a href={record.url_org} target='_blank'> {record.url_org}</a> }{ id !="4" && <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>}</div>,
         },
         // {
         //     title: 'URL',
@@ -254,13 +254,14 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             ),
         },
         {
-            title: 'Crawl-Status',
+            title: '',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                     { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><CheckCircleTwoTone  twoToneColor="#52c41a" /></p>: <p style={{marginTop:"13px", fontSize:"Large"}}><CloseCircleTwoTone twoToneColor="red" /></p>
+                     { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CheckCircleTwoTone style={{marginLeft:"10px"}}  twoToneColor="#52c41a" /></p>: <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CloseCircleTwoTone style={{marginLeft:"10px"}} twoToneColor="red" /></p>
                     )}
-                    <Button type="primary" icon={<EyeOutlined />} onClick={() => {
+                    {
+                     id!="4" ? <Button type="primary" icon={<EyeOutlined />} onClick={() => {
 
                         if (id == "2") {
                             textView(record.url)
@@ -276,7 +277,8 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                         }
                         setModal1Open(true)
 
-                    }}>Anzeigen</Button>
+                    }}>Anzeigen</Button> : <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>
+                }
                     {record.nPlus1 && record.nestedLinks.length>0 && 
                     
                     <Button type="primary" icon={<KeyOutlined />} onClick={() => {

@@ -5,7 +5,7 @@ import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, 
 
 import { ApiTwoTone, CodeOutlined, EyeInvisibleOutlined, EyeTwoTone, HddTwoTone, InboxOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
-import { knowledgeBaseBlock, generateKnowledge, getKnowledgeBase } from '../types/knowledgeBase'
+import { knowledgeBaseBlock, generateKnowledge, getKnowledgeBase, getAllKnowledgeBaseWithType } from '../types/knowledgeBase'
 import type { ConfigProviderProps, RadioChangeEvent } from 'antd';
 import ChatClient from "what2study-chatclient";
 import {
@@ -121,6 +121,34 @@ const Overview = () => {
   var activeIDset = async () => {
     let res = await getActiveChatbotID()
     setActiveChatID(res)
+
+    getAllKnowledgeBaseWithType("url").then(function(KB){
+      if (KB != undefined && KB != null && Array.isArray(KB)) {
+        var count = 1
+        var foundFalse=false
+        KB.forEach(element => {
+            var jobstatus = element.attributes.jobStatus
+           
+            if(jobstatus==false){
+              console.log("found false")
+              foundFalse=true
+            }
+            count = count + 1
+        });
+        
+        if(foundFalse == false){
+          setCrawlJobControl(true)
+        }
+        else{
+          setCrawlJobControl(false)
+          
+        }
+    }
+         
+    })
+
+
+        
   }
   useEffect(() => {
     activeIDset()
@@ -129,6 +157,7 @@ const Overview = () => {
     var q2 = new Parse.Query(embeddingStatus);
     q2.equalTo("user", curUser?.id)
     q2.first().then((e) => { if (e && e.attributes.status == 1) { setMainDiv(false) } })
+    
   }, [])
   var currentUser = Parse.User.current()
   const [knowledgebases, setknowledgeBases] = useState<knowledgeBaseBlock[] | null>(null)
@@ -571,11 +600,17 @@ function isValidURL(string) {
       title='Wissensdatenbank'>
       <div style={mainDiv == false ? disable : enable}>
         <Row style={{ justifyContent: "right" }}>
-          {mainDiv == true && <Button
+          {mainDiv == true && crawlJobControl==true ?  <Button
             onClick={(e) => {
               showModal()
 
-            }} style={{ boxShadow: "0 0 15px #ff0000ab", height: "70px", lineHeight: "30px" }} icon={<ApiTwoTone style={{ fontSize: '250%', color: "#257dfe" }} />}>Training des Chatbots starten</Button>}
+            }} style={{ boxShadow: "0 0 15px #ff0000ab", height: "70px", lineHeight: "30px" }} icon={<ApiTwoTone style={{ fontSize: '250%', color: "#257dfe" }} />}>Training des Chatbots starten</Button>
+          :<div><Button
+           disabled
+           style={{ boxShadow: "0 0 15px #ff0000ab", height: "70px", lineHeight: "30px" }} icon={<ApiTwoTone style={{ fontSize: '250%', color: "#257dfe" }} />}>Training des Chatbots starten</Button>
+           <br></br><br></br><p style={{color:"red"}}>Deaktiviert, bis der Crawl-Auftrag abgeschlossen ist </p></div>
+          
+          }
 
         </Row>
         {mainDiv ? <div>
@@ -773,7 +808,7 @@ function isValidURL(string) {
                           <div style={{ background: "white", height: "550px", marginTop: "-13px", marginLeft: "2px", padding: "10px" }}>
                             <Row>
                               <Col span={14} style={{ marginTop: "20px" }}>
-                                <Upload {...propsMedia} maxCount={1} listType='text' fileList={fileList}>
+                                <Upload {...propsMedia} maxCount={1} listType='text' >
                                   <Button style={{ width: "450px", height: "150px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '350%', color: "#257dfe" }} />}><br></br><span>Hochladen: Nur Bilder und Videos (jpg, png, mp4)</span></Button>
 
                                 </Upload>
@@ -850,6 +885,7 @@ function isValidURL(string) {
 
                               <Button type="primary" icon={<SendOutlined />} onClick={(e) => {
                                 setLoader(true)
+                                console.log("image upload req")
                                 submitKnowledgeBase("media")
 
                               }}>

@@ -10,6 +10,8 @@ export type JobOfferBlock = {
   bubbleIcon?:string[]
   selectedBubbleIcon:string
   selectedProfileImage:string
+
+  introVideo:string
   AudioNarration:boolean
   Narrator:string
   behavior:[{id:number, leftValue: string, rightValue:string, pointOnScale:number, given:string},{id:number, leftValue: string, rightValue:string, pointOnScale:number,given:string},{id:number, leftValue: string, rightValue:string, pointOnScale:number,given:string},{id:number, leftValue: string, rightValue:string, pointOnScale:number,given:string},{id:number, leftValue: string, rightValue:string, pointOnScale:number,given:string},{id:number, leftValue: string, rightValue:string, pointOnScale:number,given:string}]
@@ -24,6 +26,7 @@ export type JobOfferBlock = {
   fontstyleUser: string
   uiBackgroundGroupA: string
   uiHighLightGroupA:string
+  langWeiterMain:string
 
   textBoxColorChatbotReply: string
   fontColorChatbotReply: string
@@ -56,12 +59,14 @@ export const blankBlock:  Partial<JobOfferBlock> = {
   behavior:[{id:1, leftValue: "Locker", rightValue:"Professionell", pointOnScale:3, given:"Formalität"},{id:2, leftValue: "Meinungsstark", rightValue:"Neutral", pointOnScale:3, given:"Meinung"},{id:3, leftValue: "Viele Emojis", rightValue:"Keine Emojis", pointOnScale:3, given:"Emotionen"},{id:4, leftValue: "Lange Antworten", rightValue:"Kurze Antworten", pointOnScale:3, given:"Länge"},{id:5, leftValue: "Bezugnehmend", rightValue:"Vorschlagend", pointOnScale:3, given:"Themen"},{id:6, leftValue: "Humorvoll", rightValue:"Seriös", pointOnScale:3, given:"Umgangston"}],
   name: "",
   language: "de"  ,
-  bubbleIcon:[],
+  bubbleIcon:["http://www.cpstech.de/what2study/parse/files/what2study/dd4f02623c6394d1a4834c41a527f6fe_bild.png", "http://www.cpstech.de/what2study/parse/files/what2study/bc9ec1d7c1a6875c776a319340cdfd7f_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/be69286f000e0f3786a91c8266b5bb83_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/a01093390684aebbfbf819a7699e17b3_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/4461c6efdc62290b66392d961c1b07b9_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/34c7715e2ff41acff5ee301283f4bcd0_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/3d0ac7bfff615a9cb50b6b950646eb47_bild.png"],
   AudioNarration:true,
   Narrator:"male",
-  profileImage:[],
-  selectedBubbleIcon:"",
-  selectedProfileImage:"",
+  profileImage:["http://www.cpstech.de/what2study/parse/files/what2study/92f4370093ec61b9ba972fdb68a4383d_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/0fa4fff2864b274716e77fe37790e08f_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/5fe25a325d6f8dbda2d4bd1e89025075_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/d3cb1b1324aee0b417783939ea6afc18_bild.png","http://www.cpstech.de/what2study/parse/files/what2study/7c78a621d2d6cba1dc5df167d8ea2074_bild.png"],
+  introVideo:"",
+  selectedBubbleIcon:"http://www.cpstech.de/what2study/parse/files/what2study/dd4f02623c6394d1a4834c41a527f6fe_bild.png",
+  selectedProfileImage:"http://www.cpstech.de/what2study/parse/files/what2study/92f4370093ec61b9ba972fdb68a4383d_bild.png",
+  langWeiterMain:"",
 
   headerColor:"",
   headerIconFontColor:"",
@@ -88,8 +93,8 @@ export const blankBlock:  Partial<JobOfferBlock> = {
 
   activeChatbot: false,
   scriptTag:"",
-  defaultPrompt: 'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end. You should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs.\nAnswer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).\nIf the question is not related to the context, please answer as best as possible from your role as a study advisor.',
-  customPrompt:'You are a helpful AI assistant. Use the following pieces of context to answer the question at the end. You should act as a study advisor. So students and people who are interested in studying will come to you with questions about their study programs.\nAnswer in German or English. You should help them. Nutze geschlechtssensible Sprache und gendere mit Gendersternchen (z. B. Student*innen, Dozent*innen).\nIf the question is not related to the context, please answer as best as possible from your role as a study advisor.',
+  defaultPrompt: 'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.',
+  customPrompt:'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.',
   welcomeMsgDE:'Hallo, ich bin ein Chatbot der dir bei deinem Studium helfen soll! Bevor wir loslegen, ein paar wichtige Fakten.',
   welcomeMsgEN:"Hello. It's nice to meet you! I am a chatbot built to help you with your studies! Before we get started, here are a few important facts.",
   introScreenInfoDE:'Geben Sie die erste Nachricht ein, die vom Chatbot angezeigt werden soll',

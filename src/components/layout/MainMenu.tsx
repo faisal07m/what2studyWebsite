@@ -102,26 +102,26 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
     
     )
 
-    var embeddingStatus = Parse.Object.extend("embeddingStatus");
-    var q4 = new Parse.Query(embeddingStatus);
-    q4.equalTo("user", Parse.User.current()?.id)
-    q4.equalTo("status", 1)
+    // var embeddingStatus = Parse.Object.extend("embeddingStatus");
+    // var q4 = new Parse.Query(embeddingStatus);
+    // q4.equalTo("user", Parse.User.current()?.id)
+    // q4.equalTo("status", 1)
     
-    let result = q4.first().then((el)=>{
-      if(el){
-        setStatusBarUpload(true)
-      }
-      else{
-        setStatusBarUpload(false)
-        setStatusBar(false)
+    // let result = q4.first().then((el)=>{
+    //   if(el){
+    //     setStatusBarUpload(true)
+    //   }
+    //   else{
+    //     setStatusBarUpload(false)
+    //     setStatusBar(false)
       
     
-      }
+    //   }
       
-    }
+    // }
 
     
-    )
+    // )
   },[])
   const func = async (e) => {
     if (location.state != undefined) {

@@ -14,7 +14,8 @@ import {
   ColorPicker,
   Modal,
   UploadProps,
-  Upload
+  Upload,
+  Radio
 } from 'antd'
 import {
   GlobalOutlined,
@@ -80,7 +81,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     null
   )
   const [filterArr, setFilterArr] = useState<any>(job.behavior)
-
+  const [videoFile, setVideoFile] = useState(job.introVideo);
+  const [promptValue, setPromptValue] = useState(1);
   const [scriptTag, setScriptTag] = useState<any>(job.scriptTag)
   const [token, setToken] = useState<any>()
   const [filterArrChangeCounter, setFilterCounter] = useState<number>(0)
@@ -97,12 +99,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
 
   const area = (customPromptT) => {
-    console.log(customPromptT)
     return <>
       <TextArea
         defaultValue={customPromptT}
         key={customPromptT}
-        style={{ marginTop: "-20px" }}
+        id={customPromptT}
+        style={{ width: "800px" }}
+
         onChange={(e) => {
           onjobChange({ ...job, customPrompt: e.target.value })
         }
@@ -270,6 +273,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   const [language, setlang] = useState<string>(job.language)
 
+  const [base64Video, setBase64] = useState<any>()
+
+
+
   const [selectedProfile, setSelectedProfile] = useState<string>(job.selectedProfileImage)
   // Get current user object
   const currentUser = Parse.User.current()
@@ -334,12 +341,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     if (job.bubbleIcon != undefined) {
       obj = job.bubbleIcon.map((img, index) => {
         return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1}>
-          {job.bubbleIcon ? <Image style={{ width: "100%" }} height="90%" src={img} preview={false} onClick={(e) => {
+          {job.bubbleIcon ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImage(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedBubbleIcon: img })
             setSelectedBubble(img)
-          }} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
+          }} /> </div> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row>
+          {/* <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImage(index)}></DeleteTwoTone></Row> */}
         </Col>
       })
     }
@@ -356,13 +363,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     if (job.profileImage != undefined) {
       obj = job.profileImage.map((img, index) => {
         return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1} >
-          {job.profileImage ? <Image style={{ width: "100%" }} height="90%" src={img} preview={false} onClick={(e) => {
+          {job.profileImage ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImage(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedProfileImage: img })
             setSelectedProfile(img)
 
-          }} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
+          }} /> </div> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
-          <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row>
+          {/* <Row style={{ marginLeft: '35%' }}><DeleteTwoTone style={{ fontSize: "15px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone></Row> */}
         </Col>
       })
     }
@@ -573,6 +580,71 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     },
 
   ];
+  const propsMedia: UploadProps = {
+    accept: "video/mp4",
+    customRequest: async (componentsData) => {
+      return true
+    },
+
+    async beforeUpload(file) {
+      if (file) {
+        handleVideoUpload(file, '', '')
+      }
+
+      return true
+    },
+    onChange({ file, fileList }) {
+      if (file.status !== 'uploading') {
+      }
+      file.status = "done"
+    },
+    defaultFileList: [
+      // {
+      //   uid: '1',
+      //   name: 'xxx.png',
+      //   status: 'uploading',
+      //   url: 'http://www.baidu.com/xxx.png',
+      //   percent: 33,
+      // },
+    ],
+  };
+
+  // Image upload func
+  const handleVideoUpload = async (image: any, caller: string, imageURL: string) => {
+
+    if (Parse.serverURL.includes("cpstech")) {
+      imageURL = imageURL.replace("http:", "https:")
+
+    }
+    else if (Parse.serverURL.includes("localhost")) {
+      imageURL = imageURL.replace("https:", "http:")
+    }
+
+    // else {
+    //   onjobChange({ ...job, ansprechspartnerProfileBild: imageURL })
+    //   setLogoBase64Kontakt(imageURL)
+    // }
+    const base64 = await toBase64(image).catch((err) =>
+      showNotification({
+        type: 'error',
+        title: 'Fehler beim Hochladen',
+        message: 'Beim Hochladen des Bildes ist ein Fehler aufgetreten.',
+      })
+    )
+    var response = await imageBaseToUrl(base64 as string)
+    //var url = response.attributes.bilds._url.replace("http", "https")
+    var url = response.attributes.bilds._url
+    if (Parse.serverURL.includes("cpstech")) {
+      url = url.replace("http:", "https:")
+
+    }
+    else if (Parse.serverURL.includes("localhost")) {
+      url = url.replace("https:", "http:")
+    }
+
+    onjobChange({ ...job, introVideo: url })
+    setVideoFile(url)
+  }
 
 
   // return form HTML 
@@ -680,19 +752,70 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <label style={{ fontWeight: "bold", fontSize: "large" }}>Chatbot Prompt</label>
 
             <p>Bearbeiten Sie hier die Eingabeaufforderung (Prompt) für Ihren Chatbot. Ihr Chatbot nutzt diese Aufforderung, um passende Antworten zu erstellen</p>
-            <Button onClick={(e) => {
+
+            <Radio.Group onChange={(e) => {
+              setPromptValue(e.target.value);
+            }} value={promptValue}>
+              <Space direction="vertical" style={{ width: "auto" }}>
+                <Radio value={1} > Default Prompt:
+                  <TextArea
+                    defaultValue={job.defaultPrompt}
+                    disabled
+
+                    key={"defaultPrompt"}
+                    id={"defaultPrompt"}
+                    style={{ width: "800px" }}
+                    // onChange={(e) => {
+                    //   onjobChange({ ...job, customPrompt: e.target.value })
+                    // }
+                    // }
+
+                    autoSize={{ minRows: 12, maxRows: 15 }}
+                  />
+                </Radio>
+                <Radio value={2}>Bearbeitetes Prompt:   <TextArea
+                  defaultValue={customPromptT}
+                  key={customPromptT}
+                  id={customPromptT}
+                  style={{ width: "800px" }}
+
+                  onChange={(e) => {
+                    onjobChange({ ...job, customPrompt: e.target.value })
+                  }
+                  }
+
+                  autoSize={{ minRows: 12, maxRows: 15 }}
+                /></Radio>
+              </Space></Radio.Group>
+            {/* <Checkbox onClick={(e) => {
               // setToDefaultPrompt(job.defaultPrompt)
               setcustomPromptT(job.defaultPrompt)
+              setPromptTextArea( <div
+               
+              />)
+
+              setPromptTextArea( <TextArea
+                defaultValue={job.defaultPrompt}
+                key={"defaultPrompt"}
+                id={"defaultPrompt"}
+                style={{ marginTop: "-20px" }}
+                onChange={(e) => {
+                  onjobChange({ ...job, customPrompt: e.target.value })
+                }
+                }
+        
+                autoSize={{ minRows: 12, maxRows: 15 }}
+              />)
 
               onjobChange({ ...job, customPrompt: job.defaultPrompt })
             }}>
               Auf Standard-Prompt zurücksetzen
-            </Button>
+            </Checkbox>
             <br></br>
             <br></br>
             <br></br>
 
-            {promptTextArea}
+            {promptTextArea} */}
           </Col></Row>
 
         {/* <Row> <Col span={5} >
@@ -839,7 +962,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                 />
               </Col>
               <Col span={4}></Col>
-            
+
 
             </Row>
             <label>Textfeld (Nutzer) </label>
@@ -1189,12 +1312,46 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Row>
 
+        <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
+          <Col span={12}>
+
+          </Col>
+          <Col span={12}>
+            <br></br>
+
+            <label style={{ fontWeight: "bold", fontSize: "large" }}> Umbenennen Weitere Klärung erforderlich Schaltfläche Name</label>
+            <Input type='text' defaultValue={"Weiterer Klärungsbedarf"} key={"weiterKlarungName"} onChange={(e) => {
+              onjobChange({ ...job, langWeiterMain: e.target.value })
+            }}></Input>
+            <br></br>
+
+          </Col>
+
+        </Row>
+
+
+
       </fieldset>
 
       <fieldset className="fieldsetCustom">
         <legend>Chatbot-Intro</legend>
+        <Row>
+          <Col span={13} style={{ marginTop: "10px" }}>
+
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Laden Sie ein Einführungsvideo für den Chatbot hoch.</label>
+            {/* <p>Wird im Intro des Chatbots angezeigt</p> */}
+
+            <Upload {...propsMedia} maxCount={1} listType='picture' >
+              <Button style={{ width: "450px", height: "150px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '350%', color: "#257dfe" }} />}><br></br><span>Hochladen: Videos (mp4)</span></Button>
+
+            </Upload>
+
+          {job.introVideo!=""&& <p>1 Videodatei mit URL vorhanden: <a href={job.introVideo} target='_blank'>Einführungsvideo</a> Laden Sie eine neue Videodatei hoch, um die alte zu ersetzen</p>}
+          </Col>
+
+        </Row>
         <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
-          <Col span={12}>
+          <Col span={12} style={{ marginTop: "10px" }}>
             <label style={{ fontWeight: "bold", fontSize: "large" }}>Kurzbeschreibung des Chatbots auf Deutsch</label>
             <p>Wird im Intro des Chatbots angezeigt</p>
             <TextArea
@@ -1321,7 +1478,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         dummyRequest={true}
         language={language}
         welcomeMsgDE={job.welcomeMsgDE}
-       welcomeMsgEN={job.welcomeMsgEN}
+        welcomeMsgEN={job.welcomeMsgEN}
+        introVideo={job.introVideo}
+        langWeiterMain={job.langWeiterMain}
         // accessToken={token}
         // chatbotId={id}
         matriculationNumber={job.matriculationNumber}
