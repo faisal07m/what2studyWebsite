@@ -143,6 +143,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       // },
     ],
   };
+
   const props: UploadProps = {
     accept: "image/jpeg, image/png, image/jpg",
     customRequest: async (componentsData) => {
@@ -384,7 +385,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   // After setting current user object 
   useEffect(() => {
-    console.log(/token=.*'/g.exec(job.scriptTag))
+    if(job.langWeiterMain == undefined || job.langWeiterMain == ""){
+      onjobChange({...job, langWeiterMain:"Weiterer Klärungsbedarf"})
+      }
     var token = /token=.*'/g.exec(job.scriptTag)
     if (token) {
       setToken(token[0].slice(6, -1))
@@ -395,6 +398,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     if (filterArr != undefined) {
       setFilterCounter(filterArrChangeCounter + 1)
     }
+
   }, [currentUser])
 
   const marks: SliderMarks = {
@@ -533,8 +537,6 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       onjobChange({ ...job, activeChatbot: true })
 
     }
-    console.log(Parse.User.current()?.id)
-    console.log(job.id)
     if (job.scriptTag == "" || job.scriptTag == undefined) {
       let formData = { user: Parse.User.current()?.id, chatbotId: job.id }
       fetch(
@@ -555,6 +557,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         onjobChange({ ...job, scriptTag: data.result.scriptTag })
       });
     }
+    
   }
   const onUnpublish = () => {
     onjobChange({ ...job, activeChatbot: false })
@@ -754,12 +757,15 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <p>Bearbeiten Sie hier die Eingabeaufforderung (Prompt) für Ihren Chatbot. Ihr Chatbot nutzt diese Aufforderung, um passende Antworten zu erstellen</p>
 
             <Radio.Group onChange={(e) => {
+            console.log("here")
+            console.log(e)
               setPromptValue(e.target.value);
-            }} value={promptValue}>
+              onjobChange({...job, promptSelection:e.target.value==1 ? false:true})
+            }} value={job.promptSelection == false? 1 : 2}>
               <Space direction="vertical" style={{ width: "auto" }}>
                 <Radio value={1} > Default Prompt:
                   <TextArea
-                    defaultValue={job.defaultPrompt}
+                    defaultValue={job.defaultPrompt == 'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.' ? job.defaultPrompt:'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.'}
                     disabled
 
                     key={"defaultPrompt"}
@@ -1346,7 +1352,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
             </Upload>
 
-          {job.introVideo!=""&& <p>1 Videodatei mit URL vorhanden: <a href={job.introVideo} target='_blank'>Einführungsvideo</a> Laden Sie eine neue Videodatei hoch, um die alte zu ersetzen</p>}
+          {job.introVideo!="" && job.introVideo!= undefined && <p>1 Videodatei mit URL vorhanden: <a href={job.introVideo} target='_blank'>Einführungsvideo</a> Laden Sie eine neue Videodatei hoch, um die alte zu ersetzen</p>}
           </Col>
 
         </Row>
@@ -1480,7 +1486,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         welcomeMsgDE={job.welcomeMsgDE}
         welcomeMsgEN={job.welcomeMsgEN}
         introVideo={job.introVideo}
-        langWeiterMain={job.langWeiterMain}
+        langWeiterMain={(job.langWeiterMain == "" || job.langWeiterMain==undefined) ? "Weiterer Klärungsbedarf" : job.langWeiterMain}
         // accessToken={token}
         // chatbotId={id}
         matriculationNumber={job.matriculationNumber}
