@@ -14,10 +14,11 @@ const Chatbot = () => {
 
     const [data, setData] = useState<any>()
     const [token, setToken] = useState<any>()
-    const setScriptTagAsync = async () => {
+    const setScriptTagAsync = async (selectedBot) => {
         const chatbots = Parse.Object.extend('chatbots')
         const curUser = Parse.User.current()
         const query = new Parse.Query(chatbots)
+        console.log("selected bot ID ", selectedBot)
         query.equalTo("objectId", selectedBot)
         
         try {
@@ -25,6 +26,8 @@ const Chatbot = () => {
           var val =  activeID?.attributes.scriptTag
          
            var token = /token=.*'/g.exec(val)
+           console.log("token",token)
+          
            if (token) {
             console.log(token)
                setToken(token[0].slice(6, -1))
@@ -44,8 +47,14 @@ const Chatbot = () => {
         setActiveChatID(res)
     }
     useEffect(() => {
+       if(selectedBot!="" && selectedBot!=undefined){
+        setScriptTagAsync(selectedBot)
+       
+    }
+
+    }, [selectedBot])
+    useEffect(() => {
         activeIDset()
-        setScriptTagAsync()
         setTableData(currentUser?.attributes.Joblist)
 
     }, [])
@@ -98,9 +107,9 @@ const Chatbot = () => {
 
     }
     const handleChange = (value) => {
-        console.log(value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
+        console.log("value",value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
         setSelectedBot(value)
-        setScriptTagAsync()
+        setScriptTagAsync(value)
 
     };
 
@@ -132,7 +141,7 @@ const Chatbot = () => {
                 <br></br>
 
 
-                {selectedBot ?
+                {selectedBot && token !="" && token != undefined?
                     <div style={{ height: "700px", width: "60%", position: "relative" }}>
 
                         <div className='speech-bubble'>Klick mich</div>
