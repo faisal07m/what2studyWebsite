@@ -1326,7 +1326,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span={12}>
             <br></br>
 
-            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[{job.langWeiterMain}]” umbenennen</label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} ]” umbenennen</label>
             <Input type='text' defaultValue={ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} key={"weiterKlarungName"} onChange={(e) => {
               onjobChange({ ...job, langWeiterMain: e.target.value })
             }}></Input>
