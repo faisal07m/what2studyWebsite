@@ -1542,8 +1542,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <br></br>
         <p>Bitte fügen Sie den folgenden Parameter nach dem Token im obigen Skript hinzu, um den Chatclient mit normalem oder Vollbildmodus einzubetten.</p>
 
-<p>für normal: &windowtype="min“</p>
-<p>für Vollbild/Großbild: &windowtype="full“</p>
+<p>für normal: &windowtype=min</p>
+<p>für Vollbild/Großbild: &windowtype=full</p>
 
       </Modal>
     </Form>
