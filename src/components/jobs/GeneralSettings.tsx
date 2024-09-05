@@ -1280,11 +1280,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
           </Col>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>Weiterer Klärungsbedarf  </label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain}   </label>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.talkToaHumanEnabled} onChange={(e) => {
               onjobChange({ ...job, talkToaHumanEnabled: !job.talkToaHumanEnabled })
             }}></Checkbox>
-            <p>Welche Informationen sollten bereitgestellt werden bei der Option "Weiterer Klärungsbedarf"?</p>
+            <p>Welche Informationen sollten bereitgestellt werden bei der Option "{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} "?</p>
             <br></br>
             <TextArea
               defaultValue={job.talkToaHuman || "Wir freuen uns, dass Sie direkt mit uns in Kontakt treten möchten, gerne können Sie hierzu die angegebenen Optionen nutzen. \n\nBitte beachten Sie unsere Öffnungszeiten und gewähren Sie uns nach Möglichkeit Einblick in Ihren Chatverlauf, damit wir direkt sehen können, um welches Problem es sich handelt. Sollte gerade niemand verfügbar sein können wir uns auch auf Wunsch bei Ihnen melden."}
@@ -1312,7 +1312,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.matriculationNumber} onChange={(e) => {
               onjobChange({ ...job, matriculationNumber: !job.matriculationNumber })
             }}></Checkbox>
-            <p> Aktivieren Sie diese Option, damit der Benutzer seine Matrikelnummer über die Funktion 'Weiterer Klärungsbedarf' mitteilen kann.</p>
+            <p> Aktivieren Sie diese Option, damit der Benutzer seine Matrikelnummer über die Funktion '{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} ' mitteilen kann.</p>
             <br></br>
 
           </Col>
@@ -1326,8 +1326,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span={12}>
             <br></br>
 
-            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[Weiterer Klärungsbedarf]” umbenennen</label>
-            <Input type='text' defaultValue={"Weiterer Klärungsbedarf"} key={"weiterKlarungName"} onChange={(e) => {
+            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[{job.langWeiterMain}]” umbenennen</label>
+            <Input type='text' defaultValue={ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} key={"weiterKlarungName"} onChange={(e) => {
               onjobChange({ ...job, langWeiterMain: e.target.value })
             }}></Input>
             <br></br>
