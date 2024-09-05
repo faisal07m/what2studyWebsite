@@ -50,6 +50,8 @@ const Overview = () => {
   const [crawlURLPassword, setCrawlPass] = useState<any>("")
   const disable = { pointerEvent: "none", opacity: 0.7 }
   const [mainDiv, setMainDiv] = useState<boolean>(true)
+  const [selectedChatbotID, setChatbotSelectionId] = useState<string>()
+  
 
   const [crawlJobControl, setCrawlJobControl] = useState<boolean>(true)
   const [crawlURLStatus, set401] = useState<boolean>(true)
@@ -85,12 +87,17 @@ const Overview = () => {
         if (message.attributes.jobStatus == true) {
           setCrawlJobControl(true)
           setLoader(false)
-          setTableJSX(<></>)
-          setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
+          // console.log(message)
+          // if(message.attributes.type =="url"){
+          //   console.log("sss")
+          // setTableJSX(<></>)
+          // setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
 
+          // }
+          
         }
         else {
-          setCrawlJobControl(false)
+          // setCrawlJobControl(false)
           setLoader(false)
 
         }
@@ -489,8 +496,6 @@ function isValidURL(string) {
     if (tempFileNameArr) {
       tempFileName = tempFileNameArr[1]
     }
-    console.log(tempFileName)
-    console.log(tempFileNameArr)
     var isValidURLCheck = isValidURL(urlCrawler)
     if(isValidURLCheck)
     {
@@ -608,7 +613,7 @@ function isValidURL(string) {
           :<div><Button
            disabled
            style={{ boxShadow: "0 0 15px #ff0000ab", height: "70px", lineHeight: "30px" }} icon={<ApiTwoTone style={{ fontSize: '250%', color: "#257dfe" }} />}>Training des Chatbots starten</Button>
-           <br></br><br></br><p style={{color:"red"}}>Deaktiviert, bis der Crawl-Auftrag abgeschlossen ist </p></div>
+           <br></br><br></br><p style={{color:"red"}}>Bitte warten Sie, bis der Ladevorgang abgeschlossen ist</p></div>
           
           }
 
@@ -1155,13 +1160,16 @@ function isValidURL(string) {
               }}>
                 <div className='speech-bubble'>Klick mich</div>
               </div>
-              <ChatClient
+              {/* <ChatClient
                 objectId={activeChatbotID}
                 userId={curUserId}
                 universityId={curUserId}
                 accessToken={token}
                 chatbotId={activeChatbotID}
-              ></ChatClient></>}
+              ></ChatClient> */}
+              
+              </>
+              }
         </div> :
           <div>
             <Row style={{ justifyContent: "center" }}><video width="300" height="250" autoPlay loop >

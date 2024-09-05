@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PageContainer from '../components/layout/PageContainer'
 import 'react-phone-number-input/style.css'
-import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch, Spin } from 'antd'
+import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch, Spin, Select } from 'antd'
 import CanvasJSReact from '@canvasjs/react-charts';
 import Parse from 'parse'
 import { SearchOutlined } from '@ant-design/icons';
@@ -20,6 +20,8 @@ const Monitoring = () => {
     const [feedbackList, setFeedbackList] = useState<any>()
 
     const [chathistoryList, setChatHistoryList] = useState<any>()
+
+    const [selectedChatbotID, setChatbotSelectionId] = useState<string>()
 
     const [dateCountFrequency, setDateCountFreq] = useState<any>()
     const [data, setData] = useState<DataType[]>()
@@ -366,9 +368,7 @@ const Monitoring = () => {
                 options2_Data.push({ x: new Date(dateFormat), y: counts[key] })
 
             }
-            console.log(options2_Data)
             var sortedarr = options2_Data.sort((a, b) => a.x - b.x);
-            console.log(sortedarr)
             setOptions2({
                 animationEnabled: false,
                 title: {
@@ -458,11 +458,14 @@ const Monitoring = () => {
     }
     useEffect(() => {
         if(chatbots != undefined && chatbots.length>0)
+       { 
         promissFunc(chatbots)
+    
+    }
     }, [chatbots])
 
 
-
+   
 
     return (
         <div>
@@ -472,6 +475,7 @@ const Monitoring = () => {
                 button
                 buttonText='Speichern'
             >
+                
                 <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }}>
 
                     <fieldset className="fieldsetCustom">

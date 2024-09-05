@@ -388,6 +388,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     if(job.langWeiterMain == undefined || job.langWeiterMain == ""){
       onjobChange({...job, langWeiterMain:"Weiterer Klärungsbedarf"})
       }
+      onjobChange({...job, defaultPrompt:"You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.' ? job.defaultPrompt:'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met."})
     var token = /token=.*'/g.exec(job.scriptTag)
     if (token) {
       setToken(token[0].slice(6, -1))
@@ -779,7 +780,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                     autoSize={{ minRows: 12, maxRows: 15 }}
                   />
                 </Radio>
-                <Radio value={2}>Bearbeitetes Prompt:   <TextArea
+                <Radio value={2}>Bearbeiteter Prompt:  <TextArea
                   defaultValue={customPromptT}
                   key={customPromptT}
                   id={customPromptT}
@@ -1325,7 +1326,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span={12}>
             <br></br>
 
-            <label style={{ fontWeight: "bold", fontSize: "large" }}> Umbenennen Weitere Klärung erforderlich Schaltfläche Name</label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[Weiterer Klärungsbedarf]” umbenennen</label>
             <Input type='text' defaultValue={"Weiterer Klärungsbedarf"} key={"weiterKlarungName"} onChange={(e) => {
               onjobChange({ ...job, langWeiterMain: e.target.value })
             }}></Input>
@@ -1536,6 +1537,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       >
         <h4>Kopieren Sie das folgende Skript und fügen Sie es in Ihre HTML-Seite ein, um den Chat-Client in Ihre Website zu integrieren.</h4>
         <p style={{ backgroundColor: "lightagrey", padding: "60px", fontFamily: "monospace" }}>{scriptTag}</p>
+        <br></br>
+        <br></br>
+        <br></br>
+        <p>Bitte fügen Sie den folgenden Parameter nach dem Token im obigen Skript hinzu, um den Chatclient mit normalem oder Vollbildmodus einzubetten.</p>
+
+<p>für normal: &windowtype="min“</p>
+<p>für Vollbild/Großbild: &windowtype="full“</p>
 
       </Modal>
     </Form>

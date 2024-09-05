@@ -112,22 +112,23 @@ const EditJobs = () => {
         setPending(true)
         try {
           var temp = await parseRef.save(job)
-          if (job?.activeChatbot == true) {
-            const query = new Parse.Query(chatbots)
-            query.notEqualTo("objectId", temp.id)
-            query.equalTo("user", temp.attributes.user)
-            query.limit(1000000000)
+          // making all publish
+          // if (job?.activeChatbot == true) {
+          //   const query = new Parse.Query(chatbots)
+          //   query.notEqualTo("objectId", temp.id)
+          //   query.equalTo("user", temp.attributes.user)
+          //   query.limit(1000000000)
  
-            query.find().then((res) => {
-              if (res.length > 0) {
-                res.forEach(element => {
-                  element.set("activeChatbot", false)
-                  element.save()
-                });
-              }
+          //   query.find().then((res) => {
+          //     if (res.length > 0) {
+          //       res.forEach(element => {
+          //         element.set("activeChatbot", false)
+          //         element.save()
+          //       });
+          //     }
 
-            })
-          }
+          //   })
+          // }
           var curUserobject = await Parse.User.current()
           if (curUserobject) {
             var queryDocument = new Parse.Query(curUser);
