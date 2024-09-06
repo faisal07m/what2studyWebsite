@@ -20,23 +20,24 @@ const Chatbot = () => {
         const query = new Parse.Query(chatbots)
         console.log("selected bot ID ", selectedBot)
         query.equalTo("objectId", selectedBot)
-        
+
         try {
-          const activeID = await query.first()
-          var val =  activeID?.attributes.scriptTag
-         
-           var token = /token=.*'/g.exec(val)
-           console.log("token",token)
-          
-           if (token) {
-            console.log(token)
-               setToken(token[0].slice(6, -1))
-           }
+            const activeID = await query.first()
+            var val = activeID?.attributes.scriptTag
+
+            var token = /token=.*'/g.exec(val)
+            console.log("token", token)
+
+            if (token) {
+                var tokenString= token[0].slice(6, -1)
+                var tokenStringARR = tokenString.split("&")
+                setToken(tokenStringARR[0])
+            }
         } catch (error) {
-          console.log(error)
-          return error
+            console.log(error)
+            return error
         }
-       
+
     }
     const [activeChatbotID, setActiveChatID] = useState<any>("")
 
@@ -47,10 +48,10 @@ const Chatbot = () => {
         setActiveChatID(res)
     }
     useEffect(() => {
-       if(selectedBot!="" && selectedBot!=undefined){
-        setScriptTagAsync(selectedBot)
-       
-    }
+        if (selectedBot != "" && selectedBot != undefined) {
+            setScriptTagAsync(selectedBot)
+
+        }
 
     }, [selectedBot])
     useEffect(() => {
@@ -84,14 +85,14 @@ const Chatbot = () => {
                 var result = await queryChatbot.get(el)
 
                 if (result) {
-                    if(result.attributes.activeChatbot == true)
-                  {  datainternal.push(
-                        {
-                            value: el,
-                            label: result.attributes.name,
-                        },
-                    )
-                }
+                    if (result.attributes.activeChatbot == true) {
+                        datainternal.push(
+                            {
+                                value: el,
+                                label: result.attributes.name,
+                            },
+                        )
+                    }
                 }
 
 
@@ -107,7 +108,7 @@ const Chatbot = () => {
 
     }
     const handleChange = (value) => {
-        console.log("value",value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
+        console.log("value", value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
         setSelectedBot(value)
         setScriptTagAsync(value)
 
@@ -122,7 +123,7 @@ const Chatbot = () => {
             >
 
 
-<h2>Bitte wählen Sie einen veröffentlichten Chatbot aus der Liste</h2>
+                <h2>Bitte wählen Sie einen veröffentlichten Chatbot aus der Liste</h2>
                 <Select
                     placeholder="Wählen Sie einen Chatbot aus"
 
@@ -141,7 +142,7 @@ const Chatbot = () => {
                 <br></br>
 
 
-                {selectedBot && token !="" && token != undefined?
+                {selectedBot && token != "" && token != undefined ?
                     <div style={{ height: "700px", width: "60%", position: "relative" }}>
 
                         <div className='speech-bubble'>Klick mich</div>

@@ -1276,8 +1276,6 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
               autoSize={{ minRows: 12, maxRows: 15 }}
             />
-
-
           </Col>
           <Col span={12}>
             <label style={{ fontWeight: "bold", fontSize: "large" }}>{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} </label>
