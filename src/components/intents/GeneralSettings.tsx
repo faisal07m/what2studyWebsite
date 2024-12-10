@@ -11,7 +11,8 @@ import {
   Skeleton,
   Checkbox,
   Slider,
-  ColorPicker
+  ColorPicker,
+  Tooltip
 } from 'antd'
 import {
   GlobalOutlined,
@@ -22,7 +23,8 @@ import {
   MinusCircleFilled,
   SendOutlined,
   PlusOutlined,
-  CaretRightFilled
+  CaretRightFilled,
+  InfoCircleOutlined
 } from '@ant-design/icons'
 import { JobOfferBlock } from '../../types/JobOffers'
 import "../../styles.css"
@@ -164,7 +166,9 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
   return (
     <div style={{ backgroundColor: "white", height: "2000px", paddingBlock: "10px", padding: "50px" }}>
 
-      <h4>Name des Szenarios:</h4>
+      <label>Name des Speziallfalls:</label> <Tooltip title={"Falls ein Spezialfall eintritt (z. B. Streik des ÖPNVs) können Sie hier eine vorgefertigte Antwort festlegen, die der Chatbot ausgibt."} >
+                              <InfoCircleOutlined style={{marginLeft:"8px",color:"#1477ff"}}/>
+                          </Tooltip>
       <Row gutter={26} style={{ marginLeft: "1px", marginTop: "15px" }}>
         <Input
           // style={{width:"320px", marginBlock:"10px", marginLeft:"10px", height:"45px"}}

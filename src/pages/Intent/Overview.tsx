@@ -25,7 +25,7 @@ const Overview = ({ ...data }) => {
         right: '41px',
         top: '100px',
       }}>
-        + Neues Szenario erstellen
+        + Neues Spezialfall erstellen
       </Button>
     )
   }
@@ -88,7 +88,7 @@ const Overview = ({ ...data }) => {
 
   const columns = [
     {
-      title: 'Name des Szenarios',
+      title: 'Name des Spezialfall',
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => <b>{text}</b>,
@@ -141,7 +141,7 @@ const Overview = ({ ...data }) => {
           right: '100px',
           top: '100px',
         }}>
-          + Neues Szenario erstellen
+          + Neues Spezialfall erstellen
         </Button>
 
         <Loading />
@@ -159,11 +159,11 @@ const Overview = ({ ...data }) => {
           right: '100px',
           top: '100px',
         }}>
-          + Neues Szenario erstellen
+          + Neues Spezialfall erstellen
         </Button>
 
 
-        <Empty description={<span>Keine Scenario gefunden</span>} />
+        <Empty description={<span>Keine Spezialfall gefunden</span>} />
       </PageContainer>
     )
 
@@ -177,7 +177,7 @@ const Overview = ({ ...data }) => {
         right: '41px',
         top: '100px',
       }}>
-        + Neues Szenario erstellen
+        + Neues Spezialfall erstellen
       </Button>
 
 

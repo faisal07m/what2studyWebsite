@@ -36,8 +36,6 @@ const EditJobs = () => {
 
 
   const onSave = async () => {
-   console.log("asdasda")
-   console.log(intent)
       if (intent && parseRef) {
         setPending(true)
         try {

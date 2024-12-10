@@ -1,9 +1,9 @@
 import PageContainer from '../components/layout/PageContainer'
 import Parse from 'parse'
 import { useHistory } from 'react-router-dom'
-import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin, Modal, UploadFile } from 'antd'
+import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin, Modal, UploadFile ,Tooltip} from 'antd'
 
-import { ApiTwoTone, CodeOutlined, EyeInvisibleOutlined, EyeTwoTone, HddTwoTone, InboxOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
+import { ApiTwoTone, CodeOutlined, EyeInvisibleOutlined, EyeTwoTone, HddTwoTone, InboxOutlined, InfoCircleOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
 import { knowledgeBaseBlock, generateKnowledge, getKnowledgeBase, getAllKnowledgeBaseWithType } from '../types/knowledgeBase'
 import type { ConfigProviderProps, RadioChangeEvent } from 'antd';
@@ -14,7 +14,6 @@ import {
   YAxis,
   ResponsiveContainer,
   BarChart,
-  Tooltip,
   Bar,
   PieChart, Pie, Sector, Cell
 } from 'recharts'
@@ -29,6 +28,7 @@ import FilesListTable from './FilesListTable';
 import TextArea from 'antd/es/input/TextArea';
 import { getActiveChatbotID, getScriptTag } from '../types/JobOffers';
 import { SERVER_URL, SERVER_URL_parsefunctions, ServerCrawl } from '../config/parse';
+
 import React from 'react';
 import { random } from 'lodash';
 
@@ -603,6 +603,9 @@ function isValidURL(string) {
   return (
     <PageContainer pageId='1'
       title='Wissensdatenbank'>
+         <Tooltip title={"Der Chatbot 'weiß' zunächst nichts über Ihre Hochschule. Fügen Sie Dateien und URLs hinzu, damit der Chatbot auf diese Inhalte zugreifen kann. Bereits hinzugefügte Dateien und URLs finden Sie unten in der aktuellen Wissensdatenbank."} >
+                              <InfoCircleOutlined style={{marginLeft:"175px", marginTop:"-55px", position:"absolute",color:"#1477ff"}}/>
+                          </Tooltip>
       <div style={mainDiv == false ? disable : enable}>
         <Row style={{ justifyContent: "right" }}>
           {mainDiv == true && crawlJobControl==true ?  <Button
@@ -1011,6 +1014,7 @@ function isValidURL(string) {
 
                                 <Form.Item label='URL einer Webseite eingeben' name='crawlerUrl'
                                 >
+                               
                                   <Input
                                     // addonBefore="http://"
                                     placeholder='university.de'
@@ -1029,7 +1033,9 @@ function isValidURL(string) {
 
                                     }
                                     }
-                                  />
+                                  />   <Tooltip title={"Wenn auf der von Ihnen hinzugefügten URL auf weitere URLs oder PDFs verwiesen wird, kann der Chatbot in seiner Antwort darauf verweisen. Die Inhalte der verlinkten URLs oder PDFs verwendet der Chatbot jedoch nicht in seiner Antwort."} >
+                                  <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+                              </Tooltip>
                                 
                                 </Form.Item >
                                 <br></br>
@@ -1059,7 +1065,9 @@ function isValidURL(string) {
                                   setNPLus1(e.target.checked)
 
                                 }}>Hierarchische Abfrage (n+1)</Checkbox> 
-                              </Form.Item>
+                              </Form.Item>   <Tooltip title={"Mit der hierarchischen Abfrage werden bis zu 40 verlinkte Unterseiten gleichzeitig in die Datenbank eingetragen."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
                              
                             </Row>
                             <p style={{fontWeight:"50", color:"orange", marginTop:"-20px"}}>Deep Crawl wird für passwortgeschützte URLs automatisch deaktiviert.</p>
@@ -1067,7 +1075,9 @@ function isValidURL(string) {
                             <Row style={{ marginTop: "70px" }}>
                               <TagComponent saveCallback={(tagsArr) => {
                                 setTagsArray(tagsArr)
-                              }} />
+                              }} />  <Tooltip title={"Mit den Tags können Sie die Dateien und URLs mit Schlagworten versehen. Wenn das Schlagwort im Chat genutzt wird, greift der Chatbot auf die Datei/URL zu, die mit diesem Tag versehen wurde."} >
+                              <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+                          </Tooltip>
                             </Row>
                             <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                                 <Form.Item name='' style={{ marginTop: "10px" }}>
@@ -1158,7 +1168,8 @@ function isValidURL(string) {
                 bottom: 0,
                 right: 0
               }}>
-                <div className='speech-bubble'>Klick mich</div>
+                
+                {/* <div className='speech-bubble'>Klick mich</div> */}
               </div>
               {/* <ChatClient
                 objectId={activeChatbotID}

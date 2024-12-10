@@ -1,24 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
 import PageContainer from '../components/layout/PageContainer'
 import 'react-phone-number-input/style.css'
-import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch, Spin, Select } from 'antd'
+import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Table, TableProps, Collapse, Divider, Button, Space, TableColumnType, InputRef, Switch, Spin, Select, Flex, Radio } from 'antd'
 import CanvasJSReact from '@canvasjs/react-charts';
 import Parse from 'parse'
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
+import type { SelectProps } from 'antd';
+import { Options } from 'react-redux';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const Monitoring = () => {
+
+    const [optionsSelect, setoptionsSelect] = useState<any>()
     var currentUser = Parse.User.current()
     const [chatbots, setChatbots] = useState<string[]>(currentUser?.attributes.Joblist)
 
     const [disliked, setDisliked] = useState<number>(0)
 
-    const [viewType, setViewType] = useState<boolean>(true)
+    const [viewType, setViewType] = useState<string>("Gestapelte Ansicht(Session-ID)")
 
     const [feedbackList, setFeedbackList] = useState<any>()
+    
 
+    const [selectionStatus, setSelectionStatus] = useState<boolean>(false)
+
+    const [spin, setSpin] = useState<boolean>(true)
     const [chathistoryList, setChatHistoryList] = useState<any>()
 
     const [selectedChatbotID, setChatbotSelectionId] = useState<string>()
@@ -26,6 +34,8 @@ const Monitoring = () => {
     const [dateCountFrequency, setDateCountFreq] = useState<any>()
     const [data, setData] = useState<DataType[]>()
     const [data2, setData2] = useState<DataType2[]>()
+
+    const [data3, setData3] = useState<DataType2[]>()
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -147,12 +157,15 @@ const Monitoring = () => {
             title: 'Session-ID',
             dataIndex: 'sessionID',
             key: 'sessionID',
+            width: "400px"
         },
         {
             title: 'Chatbot',
             dataIndex: 'chatbotId',
             key: 'chatbotId',
             ...getColumnSearchProps('chatbotId'),
+            width: "70px"
+
 
         },
 
@@ -160,15 +173,16 @@ const Monitoring = () => {
             title: 'Benutzerfrage',
             dataIndex: 'user',
             key: 'user',
-            width: "260px",
+            width: "280px",
             ...getColumnSearchProps('user'),
+
 
         },
         {
             title: 'Bot-Antwort',
             dataIndex: 'bot',
             key: 'bot',
-            width: "500px",
+            width: "900px",
             ...getColumnSearchProps('bot'),
 
 
@@ -193,22 +207,29 @@ const Monitoring = () => {
 
 
         let KB = chathistoryList
+        console.log("KB list ")
         console.log(KB)
         if (KB != undefined && KB != null && Array.isArray(KB)) {
             var count = 1
             var rs
             var actions
-            let datainternal: DataType[] = [];
             setTotalSessions(KB.length)
+            let datainternal: DataType[] = [];
+
             KB.forEach(async element => {
 
-                var fn = async function jsonCreator(el) {
+                element["messages"].forEach(async el => {
 
                     var chatbotOBJ = Parse.Object.extend("chatbots");
                     var queryChatbot = new Parse.Query(chatbotOBJ);
                     var result = await queryChatbot.get(element.chatbotId)
 
                     if (result) {
+                        var timestamp= el.timestamp.split("@")
+                    var splittime = timestamp[1].split(":")
+                    var time = splittime[0] + ":"+splittime[1]
+                    timestamp = timestamp[0] + " @ " + time
+                    
                         datainternal.push(
                             {
                                 key: count.toString(),
@@ -216,30 +237,29 @@ const Monitoring = () => {
                                 chatbotId: result.attributes.name,
                                 user: el.user,
                                 bot: el.bot,
-                                timestamp: el.timestamp
+                                timestamp: timestamp
                             },
                         )
                     }
-                    else {
-                        datainternal.push(
-                            {
-                                key: count.toString(),
-                                sessionID: element.sessionID,
-                                chatbotId: element.chatbotId,
-                                user: el.user,
-                                bot: el.bot,
-                                timestamp: el.timestamp
-                            },
-                        )
-                    }
+                    // else {
+                    //     datainternal.push(
+                    //         {
+                    //             key: count.toString(),
+                    //             sessionID: element.sessionID,
+                    //             chatbotId: element.chatbotId,
+                    //             user: el.user,
+                    //             bot: el.bot,
+                    //             timestamp: el.timestamp
+                    //         },
+                    //     )
+                    // }
 
                     count = count + 1
-                    return datainternal
-                }
-                actions = element.messages.map(fn);
+                })
+
             })
-            rs = await Promise.all(actions)
-            setData(rs[0])
+                setData(datainternal)
+          
 
         }
 
@@ -284,6 +304,8 @@ const Monitoring = () => {
             setLiked(liked)
         }
     }, [feedbackList])
+
+    
     const setTableDataParent = async () => {
 
         let KB = chathistoryList
@@ -298,7 +320,10 @@ const Monitoring = () => {
                     var chatbotOBJ = Parse.Object.extend("chatbots");
                     var queryChatbot = new Parse.Query(chatbotOBJ);
                     var result = await queryChatbot.get(element.chatbotId)
-
+                    var timestamp= el.timestamp.split("@")
+                    var splittime = timestamp[1].split(":")
+                    var time = splittime[0] + ":"+splittime[1]
+                    timestamp = timestamp[0] + " @ " + time
                     if (result) {
                         data.push(
                             {
@@ -306,7 +331,7 @@ const Monitoring = () => {
                                 sessionID: element.sessionID,
                                 user: el.user,
                                 bot: el.bot,
-                                timestamp: el.timestamp,
+                                timestamp: timestamp,
                                 chatbotId: result.attributes.name
 
                             },
@@ -319,7 +344,7 @@ const Monitoring = () => {
                                 sessionID: element.sessionID,
                                 user: el.user,
                                 bot: el.bot,
-                                timestamp: el.timestamp,
+                                timestamp: timestamp,
                                 chatbotId: element.chatbotId
 
                             },
@@ -329,6 +354,9 @@ const Monitoring = () => {
 
                     count = count + 1
                 });
+                console.log("cha2222tbt as dasd a")
+                console.log(data)
+               
                 data2.push(
                     {
                         key: count.toString(),
@@ -341,14 +369,18 @@ const Monitoring = () => {
 
 
             });
-            setData2(data2)
+                setData2(data2)
+         
         }
 
 
     }
 
+
+
     useEffect(() => {
 
+       
         if (chathistoryList) {
             var result = chathistoryList.map(obj => {
                 return obj.messages.map(objIn => objIn.timestamp.split("@")[0].trim())
@@ -388,8 +420,9 @@ const Monitoring = () => {
                 }]
             })
         }
-        setTableData()
-        setTableDataParent()
+       setTableDataParent()
+       setTableData()
+        
 
 
     }, [chathistoryList])
@@ -410,8 +443,8 @@ const Monitoring = () => {
             indexLabel: "{label}: {y}%",
             startAngle: -90,
             dataPoints: [
-                { y: disliked, label: "Disliked", color:"#b23e3e" },
-                { y: liked, label: "Liked" , color:"#00addc"}
+                { y: disliked, label: "Disliked", color: "#b23e3e" },
+                { y: liked, label: "Liked", color: "#00addc" }
             ]
         }]
     }
@@ -434,39 +467,116 @@ const Monitoring = () => {
                 }
 
             }
-            if(list.length > 0)
-            setFeedbackList(list)
+            if (list.length > 0)
+                setFeedbackList(list)
 
             for (let i = 0; i < chatbots.length; i++) {
                 var q2 = new Parse.Query(chathistory);
                 q2.equalTo("chatbotId", chatbots[i])
                 q2.limit(1000000000)
- 
+
                 var response = await q2.find()
                 if (response) {
-                    response.forEach(feedback => {
-                        chatHistoryList.push(feedback.attributes)
+                    response.forEach(historyPerSession => {
+                        chatHistoryList.push(historyPerSession.attributes)
                     });
                 }
 
             }
-            if(chatHistoryList.length > 0)
-           
+            if (chatHistoryList.length > 0)
+                console.log("chat his tory list")
+            console.log(chatHistoryList)
+
+            
             setChatHistoryList(chatHistoryList)
+        }
+
+    //     if (chatHistoryList.length > 0)
+    //     { console.log("chat his tory list")
+    //  console.log(chatHistoryList)
+
+    //  var result = chatHistoryList.map(obj => {
+    //      return obj.messages.map(objIn => 
+    //          {
+    //              console.log("hello time")
+    //              console.log(objIn.timestamp)
+    //              console.log(objIn.timestamp.split("@")[0].trim())
+    //           var timestamp= objIn.timestamp.split("@")
+    //           var splittime = timestamp[1].split(":")
+    //           console.log(splittime)
+    //           var time = splittime[0] + ":"+splittime[1]
+    //          return time
+    //          }
+    //          )
+    //      })
+
+    //      console.log(result)
+    //     }
+       
+    }
+
+
+    const setSelectionOptions = async (chatbots) => {
+        let KB = chatbots
+        console.log("i am a list")
+        console.log(KB)
+        if (KB != undefined && KB != null) {
+            var count = 1
+            var rs
+            var actions
+            let datainternal: any = [];
+
+            var fn = async function jsonCreator(el) {
+
+                var chatbotOBJ = Parse.Object.extend("chatbots");
+                var queryChatbot = new Parse.Query(chatbotOBJ);
+                var result = await queryChatbot.get(el)
+
+                if (result) {
+                    var name = result.attributes.name 
+                    if (result.attributes.name ==""){
+                    name = el
+                    }
+                        datainternal.push(
+                            {
+                                label: name,
+                                value: el 
+                                
+                            },
+                        )
+                    
+                }
+
+
+                count = count + 1
+                return datainternal
+            }
+            actions = KB.map(fn);
+
+            rs = await Promise.all(actions)
+            console.log("hello rs")
+            console.log(rs)
+            setoptionsSelect(rs[0])
+
         }
 
     }
     useEffect(() => {
-        if(chatbots != undefined && chatbots.length>0)
-       { 
-        promissFunc(chatbots)
-    
-    }
+        if (chatbots != undefined && chatbots.length > 0) {
+            setSelectionOptions(chatbots)
+           
+        }
     }, [chatbots])
 
+  
+    const optionsRadio = [
+        { label: "Gestapelte Ansicht(Session-ID)", value: "Gestapelte Ansicht(Session-ID)" },
+        // { label: "Gestapelte Ansicht(Chatbots)", value: "Gestapelte Ansicht(Chatbots)" },
+        { label: "Listenansicht", value: "Listenansicht" },
 
-   
+    ];
 
+    
     return (
         <div>
             <PageContainer
@@ -475,15 +585,56 @@ const Monitoring = () => {
                 button
                 buttonText='Speichern'
             >
-                
-                <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }}>
 
+                <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }}>
+                {optionsSelect!=undefined && 
+                <Space style={{ marginTop:"50px",width: '100%' }} direction="vertical">
+    
+    <Select
+      mode="multiple"
+      allowClear
+      showSearch={false}
+      style={{ width: '100%' }}
+      placeholder="Bitte wählen Sie Chatbot/s aus"
+    //   defaultValue={}
+      onChange={async (e)=>{
+        console.log("i was not changed")
+      console.log(e)
+      let datacp: DataType[] = [];
+      let data2cp: DataType2[] = [];
+      setSpin(true)
+      
+      setData(datacp)
+      setData2(data2cp)
+     promissFunc(e) 
+     setSpin(false)
+     
+      setSelectionStatus(true)
+     
+    //   const interval = setInterval(() => {
+    //     console.log('This will run every second!');
+    //     setData(result[1])
+    //     setData2(result[0])
+    //     setSpin(false)
+    //   }, 3000);
+  
+    //   console.log("second log")
+  
+    //   clearInterval(interval);
+
+    
+    }}
+      options={optionsSelect}
+    /></Space>}
+                    
+                    
+                    {selectionStatus == true &&<>
                     <fieldset className="fieldsetCustom">
                         <legend>Allgemeine Informationen</legend>
                         <Row gutter={26} >
                             <Col span={9}>
 
-                                <h3>Gesamtanzahl der Benutzer (unique Session IDs): <span style={{ fontSize: "22px", fontWeight:"bold", color: "#02addc" }}>{totalUsersSessions}</span></h3>
+                                <h3>Gesamtanzahl der Benutzer (unique Session IDs): <span style={{ fontSize: "22px", fontWeight: "bold", color: "#02addc" }}>{totalUsersSessions}</span></h3>
 
                             </Col>
 
@@ -506,26 +657,44 @@ const Monitoring = () => {
 
                         </Col>
                     </Row>
-                    
+
                     <Row gutter={24}>
 
                         {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
                         <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
-                        <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} />
-                        {!data && !data2 &&<Spin tip="..." size="large"></Spin>}
+                        {/* <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} /> */}
+                        <br></br>
+                        <br></br>
+                        {spin && <Row style={{ marginTop: "10px" }}><Spin style={{ marginLeft: "100px" }} tip="..." size="large"></Spin> <h3 style={{ marginLeft: "20px" }}> Chatverlauf vorbereiten</h3></Row>}
+                        <br></br>
+                        <br></br>
                        
-                        <br></br>
-                        <br></br>
 
-                        <br></br>
-                        {viewType == false ? <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />
-
-
-
-                            : <Table rowKey={"extendedlist"} columns={columns} dataSource={data} />}
+                           
+                     
                     </Row>
-                </Form>
+                    <Row gutter={24}>
+                    <Radio.Group
+                                options={optionsRadio}
+                                style={{ margin: 35 }}
+                                defaultValue={viewType}
+                                optionType="button"
+                                buttonStyle="solid"
+                                onChange={(e) => {
+                                    setViewType(e.target.value )
+                                }}
+                            />
+                        { data2 !=undefined && data2?.length>0 && viewType == "Gestapelte Ansicht(Session-ID)" && <Collapse key="collapseK" accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />}
 
+                        {/* {viewType == "Gestapelte Ansicht(Chatbots)" && <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data3} />} */}
+
+
+                        {  data !=undefined && data?.length>0 &&viewType == "Listenansicht" && <Table key="tableK" style={{ width: "100%" }} rowKey={"extendedlist"} columns={columns} dataSource={data} />}
+                    </Row>
+                   
+                    </> }
+                </Form>
+                            
             </PageContainer>
         </div>
 

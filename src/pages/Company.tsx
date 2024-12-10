@@ -11,10 +11,9 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { toBase64 } from '../helpers/toBase64'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Upload, Button, UploadProps } from 'antd'
+import { Form, Input, Row, Col, Image, Skeleton, Checkbox, Upload, Button, UploadProps, Popover,Tooltip } from 'antd'
 import dayjs from "dayjs";
 import { TimePicker } from "antd";
-
 const Company = () => {
   const errorCss = { borderColor: "red" }
   const errorCssInvert = { borderColor: "rgb(217 217 217)" }
@@ -265,9 +264,15 @@ const Company = () => {
         buttonCallback={onSave}
         buttonLoading={loading}
       >
-        <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }}>
-
+        <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }} >
+       
+        {/* <Tooltip placement="right" title={"Auf dieser Seite können allgemeine Informationen zur Institution hinterlegt werden, wie Name und Logo, aber auch Kontaktinformationen, um Nutzer:innen mit weiterem Gesprächsbedarf eine Möglichkeit zur direkten Kontaktaufnahme zu bieten."}>
+            <InfoCircleOutlined style={{marginLeft:"90px"}}/>
+          </Tooltip> */}
           <fieldset className="fieldsetCustom">
+          <Tooltip title={"Auf dieser Seite können allgemeine Informationen zur Institution hinterlegt werden, wie Name und Logo, aber auch Kontaktinformationen, um Nutzer:innen mit weiterem Gesprächsbedarf eine Möglichkeit zur direkten Kontaktaufnahme zu bieten."} >
+        <InfoCircleOutlined style={{color:"#1477ff",marginLeft:"80px", marginTop:"-80px", position:"absolute"}}/>
+    </Tooltip>
             <legend>Allgemeine Informationen:</legend>
 
             <Row gutter={24} style={{ marginTop: '10px' }}>
@@ -303,9 +308,12 @@ const Company = () => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={8}></Col>
+              <Col span={3}></Col>
               <Col span={4}>
                 <Form.Item id="imageContainerProfile" tooltip='Profilbild hochladen' >
+                  <label>Logo der Organisation:</label><Tooltip title={"Wählen Sie ein Logo aus, welches angezeigt werden soll, wenn eine direkte Kontaktaufnahme erfolgt. Verwenden Sie ein Bild mit möglichst hoher Auflösung, um die Darstellung zu verbessern."} >
+        <InfoCircleOutlined  style={{color:"#1477ff"}}/>
+    </Tooltip><br></br><br></br>
                   {logo ? <Image style={{ width: "100%", height: "100%" }} src={logo} /> : logoBase64 ? <Image style={{ width: "300px", height: "300px" }} src={logoBase64} /> :
                     <Upload {...propsProfile} maxCount={1} showUploadList={false}>
                       <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
@@ -369,7 +377,9 @@ const Company = () => {
           </fieldset>
 
           <fieldset className="fieldsetCustom">
-            <legend>Kontaktinformationen</legend>
+            <legend>Kontaktinformationen</legend>  <Tooltip title={"Möglichkeit, eine E-Mail-Adresse und/oder Telefonnummer für Nutzer:innen bereitzustellen, die direkten Kontakt wünschen."} >
+        <InfoCircleOutlined style={{marginLeft:"160px", marginTop:"-50px", position:"absolute",color:"#1477ff"}}/>
+    </Tooltip>
             <Row>
               <Col span={10}>
                 <Row  >

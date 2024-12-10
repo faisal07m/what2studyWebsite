@@ -15,14 +15,17 @@ import {
   Modal,
   UploadProps,
   Upload,
-  Radio
+  Radio,
+  Tooltip,
+  Switch
 } from 'antd'
 import {
   GlobalOutlined,
   DeleteTwoTone,
   SoundTwoTone,
   DownOutlined,
-  InboxOutlined
+  InboxOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons'
 import { JobOfferBlock } from '../../types/JobOffers'
 import { toBase64 } from '../../helpers/toBase64'
@@ -344,6 +347,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1}>
           {job.bubbleIcon ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImage(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedBubbleIcon: img })
+            console.log("trsint dl 2")
+            
             setSelectedBubble(img)
           }} /> </div> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
@@ -364,8 +369,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     if (job.profileImage != undefined) {
       obj = job.profileImage.map((img, index) => {
         return <Col key={index} style={{ marginLeft: "25px", marginTop: "15px" }} span={1} >
-          {job.profileImage ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImage(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
+          {job.profileImage ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImageProfile(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedProfileImage: img })
+            console.log("trsint dl")
             setSelectedProfile(img)
 
           }} /> </div> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
@@ -660,7 +666,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span='8'>
             <h3>Status</h3>
             <Space>
-              <Tag color={job.activeChatbot ? 'green' : 'blue'}>
+            <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false}  onChange={(e)=>{
+            
+            console.log(e)
+             if(e){
+              onPublish()
+            }
+            else{
+              onUnpublish()
+            }
+          
+          }}
+             />
+              {/* <Tag color={job.activeChatbot ? 'green' : 'blue'}>
                 {job.activeChatbot ? 'Öffentlich' : 'Entwurf'}
               </Tag>
               <Button
@@ -668,7 +686,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                 onClick={job.activeChatbot ? onUnpublish : onPublish}
               >
                 {job.activeChatbot ? 'Zu Entwurf' : 'Veröffentlichen'}
-              </Button>
+              </Button> */}
             </Space>
           </Col>
         </Row><br></br>
@@ -698,7 +716,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               {requiredField}
 
             </Form.Item>
-            <label style={{ fontWeight: "bold", fontSize: "22px" }}> Einstellungen</label>
+            <label style={{ fontWeight: "bold", fontSize: "22px" }}> Grundeinstellungen</label> <Tooltip title={"Einstellung der Standardsprache für die Benutzeroberfläche und den Begrüßungstext des Chatbots. Die Nutzer:innen haben zusätzlich die Möglichkeit, die Sprache in ihren Einstellungen zu ändern. Außerdem reagiert der Chatbot automatisch auf die Sprache der Nachrichten und passt seine Antwort entsprechend an."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
             <Form.Item label='Sprache des Chatbots' name='chatbotLanguage' style={{ marginTop: "10px" }}>
               <Select
                 style={{ width: "200px" }}
@@ -735,7 +755,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
             <SoundTwoTone style={{ fontSize: "large" }} /> <Checkbox checked={job.AudioNarration} style={{ marginTop: "3px", marginLeft: "10PX" }} onChange={(e) => {
               onjobChange({ ...job, AudioNarration: !job.AudioNarration })
-            }}>Text zu Audio</Checkbox><br></br>
+            }}>Automatisch beim Start aktiviert</Checkbox><br></br>
 
             <Form.Item label='Stimme' name='Narrator' style={{ marginTop: "10px" }}>
               <Select
@@ -881,7 +901,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
 
         </Row>
-        <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon</label>
+        <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon</label><Tooltip title={"Wählen Sie ein Icon für den Chatbot aus, das möglichst quadratisch, hochauflösend und mit transparentem Hintergrund ist, um eine optimale Darstellung zu gewährleisten."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
             {selectedBubble ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
@@ -1221,7 +1243,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           </Col>
 
         </Row>
-        <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Profilbild</label>
+        <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Profilbild</label><Tooltip title={"Wählen Sie ein Profilbild für den Chatbot aus, das möglichst quadratisch, hochauflösend und mit transparentem Hintergrund ist, um eine optimale Darstellung zu gewährleisten."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
             {selectedProfile ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
@@ -1257,7 +1281,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       <fieldset className="fieldsetCustom">
         <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>Zufällige Frage</label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Zufällige Frage</label><Tooltip title={"Möglichkeit, eine Nachricht festzulegen, die der Chatbot nach [X] Minuten Inaktivität proaktiv an den/die Nutzer:in sendet."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.randomQuestionEnabled} onChange={(e) => {
               onjobChange({ ...job, randomQuestionEnabled: !job.randomQuestionEnabled })
             }}></Checkbox>
@@ -1278,7 +1304,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             />
           </Col>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} </label>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} </label><Tooltip title={"Möglichkeit, weitere Informationen (bspw. Öffnungszeiten) anzugeben, die angezeigt werden, wenn der Nutzer den Button '[Weiterer Klärungsbedarf]' anwählt."} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.talkToaHumanEnabled} onChange={(e) => {
               onjobChange({ ...job, talkToaHumanEnabled: !job.talkToaHumanEnabled })
             }}></Checkbox>
@@ -1447,7 +1475,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <Col span='5'>
           <h3>Status</h3>
           <Space>
-            <Tag color={job.activeChatbot ? 'green' : 'blue'}>
+            {/* <Tag color={job.activeChatbot ? 'green' : 'blue'}>
               {job.activeChatbot ? 'Öffentlich' : 'Entwurf'}
             </Tag>
             <Button
@@ -1455,12 +1483,27 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               onClick={job.activeChatbot ? onUnpublish : onPublish}
             >
               {job.activeChatbot ? 'Zu Entwurf' : 'Veröffentlichen'}
-            </Button>
+            </Button> */}
+            <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false}  onChange={(e)=>{
+            
+            console.log(e)
+             if(e){
+              onPublish()
+            }
+            else{
+              onUnpublish()
+            }
+          
+          }}
+             />
+    
           </Space>
 
         </Col>
         <Col>
-          <h3>Chatbot-Integration</h3>
+          <h3>Quellcode für die Integration des Chatbots</h3><Tooltip title={"Code für den Webmaster, um den Chatbot in die Website der Organisation zu integrieren"} >
+        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
+    </Tooltip>
 
           <Button style={{ backgroundColor: "#598c70", color: "white" }} onClick={showModal}>
             Klick mich!
