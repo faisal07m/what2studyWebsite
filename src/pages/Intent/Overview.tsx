@@ -9,6 +9,7 @@ import { Loading } from '../../components/common/Loading'
 import { showNotification } from '../../helpers/notification'
 import { IntentClass, Intents, generateIntent } from '../../types/IntentClass'
 import { ROUTES } from '../../config/routes'
+import { SERVER_URL_parsefunctions } from '../../config/parse'
 
 const Overview = ({ ...data }) => {
   let history = useHistory()
@@ -77,6 +78,19 @@ const Overview = ({ ...data }) => {
       await jobToDelete?.destroy()
       setIntents(intents ? intents.filter((intents) => intents.id !== id) : null)
       console.log(id)
+      let formData = { url: "", fileName: id+"_intent", user: currentUser.id, nameWOS:  id+"_intent" }
+                const response = fetch(
+                    SERVER_URL_parsefunctions+"/deletePythonFile",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Parse-Application-Id": "what2study",
+                            "X-Parse-Master-Key": "what2studyMaster",
+                        },
+                        body: JSON.stringify(formData),
+                    }
+                );
     } catch (error) {
       showNotification({
         title: 'Fehler beim Löschen',

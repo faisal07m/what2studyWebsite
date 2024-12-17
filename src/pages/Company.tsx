@@ -316,7 +316,7 @@ const Company = () => {
     </Tooltip><br></br><br></br>
                   {logo ? <Image style={{ width: "100%", height: "100%" }} src={logo} /> : logoBase64 ? <Image style={{ width: "300px", height: "300px" }} src={logoBase64} /> :
                     <Upload {...propsProfile} maxCount={1} showUploadList={false}>
-                      <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
+                      <Button style={{ height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
 
                       </Button>
 
@@ -327,7 +327,7 @@ const Company = () => {
 
                 </Form.Item>
                 {logo &&
-                  <button style={{ fontSize: "15px", marginLeft: "60px" }} onClick={() => removeImage()}>Löschen<DeleteTwoTone style={{ marginTop: "2px", fontSize: "24px" }}></DeleteTwoTone></button>
+                  <Button style={{ fontSize: "15px", marginLeft: "30px" }} onClick={() => removeImage()}>Löschen<DeleteTwoTone style={{ marginTop: "2px", fontSize: "24px" }}></DeleteTwoTone></Button>
                 }
 
 

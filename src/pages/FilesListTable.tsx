@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { Tag, InputRef, theme, Input, Space, TableProps, Table, Button, Modal, TableColumnType, Image, Row, Form } from 'antd'
 
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { CheckCircleFilled, CheckCircleTwoTone, CiCircleFilled, CloseCircleFilled, CloseCircleTwoTone, DeleteOutlined, EyeOutlined, KeyOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, CheckCircleTwoTone, CiCircleFilled, CloseCircleFilled, CloseCircleTwoTone, DeleteOutlined, EditOutlined, EyeOutlined, KeyOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { TweenOneGroup } from 'rc-tween-one';
 import { deleteKnowledgeItem, getAllKnowledgeBaseWithType, knowledgeBaseBlock } from '../types/knowledgeBase';
 import { showNotification } from '../helpers/notification';
@@ -37,13 +37,18 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         jobStatus:boolean,
         type:string,
         learnStatus:boolean
-        url_org:string
+        url_org:string,
+        transcript:string
     }
 
 
     const [urlViewer, setUrlViewer] = useState<string>("https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js")
     const [modal1Open, setModal1Open] = useState(false);
+    const [modal2Open, setModal2Open] = useState(false);
+
     const [data, setData] = useState<DataType[]>()
+
+    const [transcriptObj, setTranscriptObj] = useState<DataType>()
 
     const [dataNew, setDataNew] = useState<DataType[]>()
 
@@ -55,6 +60,8 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
     const [mediaUrl, setMediaUrl] = useState<string>("")
 
+    const [transcriptSelected, settranscriptSelected] = useState<string>("")
+    
 
     const [nestedLinks, setNestedLinks] = useState<JSX.Element>()
 
@@ -258,6 +265,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
+                   
                      { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CheckCircleTwoTone style={{marginLeft:"10px"}}  twoToneColor="#52c41a" /></p>: <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CloseCircleTwoTone style={{marginLeft:"10px"}} twoToneColor="red" /></p>
                     )}
                     {
@@ -294,12 +302,24 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
                     }}>Links ansehen</Button>
                     }
+                    { record.transcript !="" && record.type=="media"&& <Button type='primary' icon={<EyeOutlined />}
+                    
+                    onClick={() => {
+                        // var html = <p> + record.nestedLinks.join("</p><p>") + "</p>;
+                        settranscriptSelected(record.transcript)
+                        setModal2Open(true)
+
+                    }}
+                    
+                    > Transcript</Button>}
                     <Button danger icon={<DeleteOutlined />}
                         onClick={(e) => {
                             updateData(record)
                         }}
 
                     >Löschen</Button>
+                     
+                   
                 </Space>
             ),
         },
@@ -321,16 +341,38 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         else if (id == "4") {
             type = "url"
         }
-
+        let data: DataType[] = [];
+           
         if (type != "") {
 
             let KB = await getAllKnowledgeBaseWithType(type);
-            let data: DataType[] = [];
             console.log(KB)
             if (KB != undefined && KB != null && Array.isArray(KB)) {
                 var count = 1
                 KB.forEach(element => {
                     var file_name =  element.attributes.name.replaceAll("/", "_")
+                    if(type=="text"){
+                        data.push(
+                            {
+                                key: "0",
+                                name: "index.txt",
+                                url_org: "index.txt file",
+                                hochgeladen: "",
+                                priority: "",
+                                expiry:"",
+                                tags: [],
+                                itemId: "index",
+                                url:"https://cpstech.de/indexfile" ,
+                                fileName: "index.txt",
+                                user: "",
+                                nestedLinks: [],
+                                jobStatus:true,
+                                nPlus1:false,
+                                type:"text",
+                                learnStatus: true,
+                                transcript:""
+                            })
+                    }
                     data.push(
                         {
                             key: count.toString(),
@@ -348,14 +390,17 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                             jobStatus:element.attributes.jobStatus,
                             nPlus1:element.attributes.nPlus1,
                             type:element.attributes.type,
-                            learnStatus: element.attributes.learnStatus
+                            learnStatus: element.attributes.learnStatus,
+                            transcript:element.attributes.transcript
                         },
                     )
                     count = count + 1
                 });
+                
                 setData(data)
             }
         }
+       
     }
 
     useEffect(() => {
@@ -418,6 +463,33 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
            
                 nestedLinks}
 
+
+                </div>
+            </Modal>
+
+            <Modal
+                title="Transkription/Beschreibung der Mediendatei"
+                width={800}
+                open={modal2Open}
+                footer={[
+                    <Button key="back" onClick={() => setModal2Open(false)}>
+                      Schließen
+                    </Button>,
+                   
+                  ]}
+                onCancel={() => setModal2Open(false)}
+            >
+                <div style={{
+                    paddingBlock:"10px", width: "75%",backgroundColor: "#f3f3f3", overflowY: "auto"
+
+                }}>
+
+                    <p  style={{width:"500px", marginTop:"20px", marginLeft:"10px"}}>{transcriptSelected!="" && transcriptSelected}</p>
+                    {/* <Button style={{marginLeft:"10px"}} type='primary' onClick={()=>{
+                    
+                    
+                    
+                    }}>aktualisieren</Button> */}
 
                 </div>
             </Modal>

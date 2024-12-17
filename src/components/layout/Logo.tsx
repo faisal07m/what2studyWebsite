@@ -243,6 +243,9 @@ const Logo = () => {
                         </Col>
                       </Row>}
                       <p style={{marginTop:"50px"}}><InfoCircleFilled style={{marginRight:"5px"}}></InfoCircleFilled>Eine Änderung der Modellauswahl startet den Lernprozess des Modells, der einige Sekunden bis Minuten dauern kann.</p>
+                     
+
+                      <p style={{marginTop:"5px"}}><InfoCircleFilled style={{marginRight:"5px"}}></InfoCircleFilled> Wenn Sie OpenAI-Dienste nutzen und personenbezogene Daten verarbeiten, empfehlen wir, ein Data Processing Addendum (DPA) mit OpenAI abzuschließen, um die Datenschutzanforderungen gemäß DSGVO zu erfüllen. Sie können das DPA direkt über diesen Link abschließen: <a href={"https://ironcladapp.com/public-launch/63ffefa2bed6885f4536d0fe"}>[OpenAI DPA] </a>.</p>
 </>
                       :
                       <>

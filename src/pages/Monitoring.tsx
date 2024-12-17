@@ -9,6 +9,7 @@ import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import type { SelectProps } from 'antd';
 import { Options } from 'react-redux';
+import { AnyAction } from 'redux';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const Monitoring = () => {
@@ -16,13 +17,14 @@ const Monitoring = () => {
     const [optionsSelect, setoptionsSelect] = useState<any>()
     var currentUser = Parse.User.current()
     const [chatbots, setChatbots] = useState<string[]>(currentUser?.attributes.Joblist)
-
+    const [collapse, setCollapse] = useState<JSX.Element>()
+    const [table1, setTable1] = useState<JSX.Element>()
     const [disliked, setDisliked] = useState<number>(0)
 
     const [viewType, setViewType] = useState<string>("Gestapelte Ansicht(Session-ID)")
 
     const [feedbackList, setFeedbackList] = useState<any>()
-    
+
 
     const [selectionStatus, setSelectionStatus] = useState<boolean>(false)
 
@@ -152,7 +154,7 @@ const Monitoring = () => {
                 text
             ),
     });
-    const columns: TableProps['columns'] = [
+    const columns: any = [
         {
             title: 'Session-ID',
             dataIndex: 'sessionID',
@@ -192,7 +194,7 @@ const Monitoring = () => {
             title: 'Zeitstempel',
             dataIndex: 'timestamp',
             key: 'timestamp',
-            width: "200px",
+            width: "220px",
             ...getColumnSearchProps('timestamp'),
 
 
@@ -202,64 +204,84 @@ const Monitoring = () => {
 
     ];
 
+    const setZeros= (number)=>{
+        console.log("number changing")
+        console.log(number)
+    
+    if(number<10)
+    {
+        return "0"+ number+""
+    }
+    if (number == 0){
+    return "00"
+    }
+    return ""+number+""
+    }
 
     const setTableData = async () => {
 
 
         let KB = chathistoryList
-        console.log("KB list ")
-        console.log(KB)
         if (KB != undefined && KB != null && Array.isArray(KB)) {
             var count = 1
             var rs
             var actions
             setTotalSessions(KB.length)
-            let datainternal: DataType[] = [];
 
-            KB.forEach(async element => {
+            var funcKB = async function (element) {
 
-                element["messages"].forEach(async el => {
+                var msgsFunc = async function (el) {
+                    var datainternal = {}
 
                     var chatbotOBJ = Parse.Object.extend("chatbots");
                     var queryChatbot = new Parse.Query(chatbotOBJ);
                     var result = await queryChatbot.get(element.chatbotId)
 
                     if (result) {
-                        var timestamp= el.timestamp.split("@")
-                    var splittime = timestamp[1].split(":")
-                    var time = splittime[0] + ":"+splittime[1]
-                    timestamp = timestamp[0] + " @ " + time
-                    
-                        datainternal.push(
-                            {
-                                key: count.toString(),
-                                sessionID: element.sessionID,
-                                chatbotId: result.attributes.name,
-                                user: el.user,
-                                bot: el.bot,
-                                timestamp: timestamp
-                            },
-                        )
+                        var timestamp = el.timestamp.split("@")
+                        var splittime = timestamp[1].split(":")
+                        var time = setZeros( parseInt(splittime[0])) + ":" + setZeros( parseInt(splittime[1]))+ ":" + setZeros( parseInt(splittime[2]))
+                        timestamp = timestamp[0] + " @ " + time
+
+                        datainternal =
+                        {
+                            key: count.toString(),
+                            sessionID: element.sessionID,
+                            chatbotId: result.attributes.name,
+                            user: el.user,
+                            bot: el.bot,
+                            timestamp: timestamp
+                        }
+
                     }
-                    // else {
-                    //     datainternal.push(
-                    //         {
-                    //             key: count.toString(),
-                    //             sessionID: element.sessionID,
-                    //             chatbotId: element.chatbotId,
-                    //             user: el.user,
-                    //             bot: el.bot,
-                    //             timestamp: el.timestamp
-                    //         },
-                    //     )
-                    // }
+
 
                     count = count + 1
-                })
 
+                    return datainternal
+                }
+                var actions3 = element["messages"].map(msgsFunc);
+                var results = await Promise.all(actions3);
+                console.log("was res here ")
+                console.log(results)
+                return results
+
+            }
+
+            var actions2 = KB.map(funcKB);
+            var resultss = Promise.all(actions2);
+            resultss.then((data: any) => {
+                let dataTable: DataType[] = [];
+            if(data)
+                data.forEach(element => {
+                    element.forEach(element => {
+                        dataTable.push(element)
+                    });
+                   
+                });
+                setData(dataTable)
             })
-                setData(datainternal)
-          
+
 
         }
 
@@ -305,74 +327,97 @@ const Monitoring = () => {
         }
     }, [feedbackList])
 
-    
+
     const setTableDataParent = async () => {
 
         let KB = chathistoryList
         let data2: DataType2[] = [];
-        if (KB != undefined && KB != null && Array.isArray(KB)) {
-            var count = 1
+        var count = 1
 
-            KB.forEach(element => {
+        if (KB != undefined && KB != null && Array.isArray(KB)) {
+
+            var funKB = async function (element) {
                 let data: DataType[] = [];
 
-                element["messages"].forEach(async el => {
+                var fn = async function (el) {
+                    var data = {}
+                    var count = 1
                     var chatbotOBJ = Parse.Object.extend("chatbots");
                     var queryChatbot = new Parse.Query(chatbotOBJ);
                     var result = await queryChatbot.get(element.chatbotId)
-                    var timestamp= el.timestamp.split("@")
+                    var timestamp = el.timestamp.split("@")
                     var splittime = timestamp[1].split(":")
-                    var time = splittime[0] + ":"+splittime[1]
+                    var time = setZeros( parseInt(splittime[0])) + ":" + setZeros( parseInt(splittime[1]))+ ":" + setZeros( parseInt(splittime[2]))
                     timestamp = timestamp[0] + " @ " + time
-                    if (result) {
-                        data.push(
-                            {
-                                key: count.toString(),
-                                sessionID: element.sessionID,
-                                user: el.user,
-                                bot: el.bot,
-                                timestamp: timestamp,
-                                chatbotId: result.attributes.name
 
-                            },
-                        )
+                    if (result) {
+                        data =
+                        {
+                            key: count.toString(),
+                            sessionID: element.sessionID,
+                            user: el.user,
+                            bot: el.bot,
+                            timestamp: timestamp,
+                            chatbotId: result.attributes.name
+
+                        }
+
                     }
                     else {
-                        data.push(
-                            {
-                                key: count.toString(),
-                                sessionID: element.sessionID,
-                                user: el.user,
-                                bot: el.bot,
-                                timestamp: timestamp,
-                                chatbotId: element.chatbotId
+                        data =
+                        {
+                            key: count.toString(),
+                            sessionID: element.sessionID,
+                            user: el.user,
+                            bot: el.bot,
+                            timestamp: timestamp,
+                            chatbotId: element.chatbotId
 
-                            },
-                        )
+                        }
+
                     }
 
 
                     count = count + 1
-                });
-                console.log("cha2222tbt as dasd a")
+                    return data
+                }
+                var actions = element["messages"].map(fn);
+                var results = await Promise.all(actions);
+                return results
+            }
+
+            var actions = KB.map(funKB);
+            var results = Promise.all(actions);
+
+
+            results.then((data: any) => // or just .then(console.log)
+            {
+                console.log("final arrqqay")
                 console.log(data)
-               
-                data2.push(
-                    {
-                        key: count.toString(),
-                        label: count.toString() + ": User SessionID: " + element.sessionID,
-                        children: <Table rowKey={element.sessionID} columns={columns} dataSource={data} />
+                if (data.length > 0) {
+                    data.forEach(element => {
+                        data2.push(
+                            {
+                                key: count.toString(),
+                                label: count.toString() + ": User SessionID: " + element[0].sessionID,
+                                children: <Table rowKey={element[0].sessionID} columns={columns} dataSource={element} />
 
-                    },
-                )
-                count = count + 1
+                            },
+                        )
+                        count = count + 1
+                    }
+
+                    );
 
 
-            });
-                setData2(data2)
-         
+                    setData2(data2)
+                }
+
+            }
+            );
+
+
         }
-
 
     }
 
@@ -380,7 +425,7 @@ const Monitoring = () => {
 
     useEffect(() => {
 
-       
+
         if (chathistoryList) {
             var result = chathistoryList.map(obj => {
                 return obj.messages.map(objIn => objIn.timestamp.split("@")[0].trim())
@@ -420,9 +465,9 @@ const Monitoring = () => {
                 }]
             })
         }
-       setTableDataParent()
-       setTableData()
-        
+        setTableDataParent()
+        setTableData()
+
 
 
     }, [chathistoryList])
@@ -440,7 +485,7 @@ const Monitoring = () => {
         },
         data: [{
             type: "pie",
-            indexLabel: "{label}: {y}%",
+            indexLabel: "{label}: {y}",
             startAngle: -90,
             dataPoints: [
                 { y: disliked, label: "Disliked", color: "#b23e3e" },
@@ -487,33 +532,36 @@ const Monitoring = () => {
                 console.log("chat his tory list")
             console.log(chatHistoryList)
 
-            
+
             setChatHistoryList(chatHistoryList)
         }
 
-    //     if (chatHistoryList.length > 0)
-    //     { console.log("chat his tory list")
-    //  console.log(chatHistoryList)
+        //     if (chatHistoryList.length > 0)
+        //     { console.log("chat his tory list")
+        //  console.log(chatHistoryList)
 
-    //  var result = chatHistoryList.map(obj => {
-    //      return obj.messages.map(objIn => 
-    //          {
-    //              console.log("hello time")
-    //              console.log(objIn.timestamp)
-    //              console.log(objIn.timestamp.split("@")[0].trim())
-    //           var timestamp= objIn.timestamp.split("@")
-    //           var splittime = timestamp[1].split(":")
-    //           console.log(splittime)
-    //           var time = splittime[0] + ":"+splittime[1]
-    //          return time
-    //          }
-    //          )
-    //      })
+        //  var result = chatHistoryList.map(obj => {
+        //      return obj.messages.map(objIn => 
+        //          {
+        //              console.log("hello time")
+        //              console.log(objIn.timestamp)
+        //              console.log(objIn.timestamp.split("@")[0].trim())
+        //           var timestamp= objIn.timestamp.split("@")
+        //           var splittime = timestamp[1].split(":")
+        //           console.log(splittime)
+        //           var time = splittime[0] + ":"+splittime[1]
+        //          return time
+        //          }
+        //          )
+        //      })
 
-    //      console.log(result)
-    //     }
-       
+        //      console.log(result)
+        //     }
+
     }
+
+
+
 
 
     const setSelectionOptions = async (chatbots) => {
@@ -533,18 +581,18 @@ const Monitoring = () => {
                 var result = await queryChatbot.get(el)
 
                 if (result) {
-                    var name = result.attributes.name 
-                    if (result.attributes.name ==""){
-                    name = el
+                    var name = result.attributes.name
+                    if (result.attributes.name == "") {
+                        name = el
                     }
-                        datainternal.push(
-                            {
-                                label: name,
-                                value: el 
-                                
-                            },
-                        )
-                    
+                    datainternal.push(
+                        {
+                            label: name,
+                            value: el
+
+                        },
+                    )
+
                 }
 
 
@@ -564,11 +612,11 @@ const Monitoring = () => {
     useEffect(() => {
         if (chatbots != undefined && chatbots.length > 0) {
             setSelectionOptions(chatbots)
-           
+
         }
     }, [chatbots])
 
-  
+
     const optionsRadio = [
         { label: "Gestapelte Ansicht(Session-ID)", value: "Gestapelte Ansicht(Session-ID)" },
         // { label: "Gestapelte Ansicht(Chatbots)", value: "Gestapelte Ansicht(Chatbots)" },
@@ -576,7 +624,7 @@ const Monitoring = () => {
 
     ];
 
-    
+
     return (
         <div>
             <PageContainer
@@ -587,114 +635,114 @@ const Monitoring = () => {
             >
 
                 <Form layout='vertical' name='basic' style={{ marginTop: '-50px' }}>
-                {optionsSelect!=undefined && 
-                <Space style={{ marginTop:"50px",width: '100%' }} direction="vertical">
-    
-    <Select
-      mode="multiple"
-      allowClear
-      showSearch={false}
-      style={{ width: '100%' }}
-      placeholder="Bitte wählen Sie Chatbot/s aus"
-    //   defaultValue={}
-      onChange={async (e)=>{
-        console.log("i was not changed")
-      console.log(e)
-      let datacp: DataType[] = [];
-      let data2cp: DataType2[] = [];
-      setSpin(true)
-      
-      setData(datacp)
-      setData2(data2cp)
-     promissFunc(e) 
-     setSpin(false)
-     
-      setSelectionStatus(true)
-     
-    //   const interval = setInterval(() => {
-    //     console.log('This will run every second!');
-    //     setData(result[1])
-    //     setData2(result[0])
-    //     setSpin(false)
-    //   }, 3000);
-  
-    //   console.log("second log")
-  
-    //   clearInterval(interval);
+                    {optionsSelect != undefined &&
+                        <Space style={{ marginTop: "50px", width: '100%' }} direction="vertical">
 
-    
-    }}
-      options={optionsSelect}
-    /></Space>}
-                    
-                    
-                    {selectionStatus == true &&<>
-                    <fieldset className="fieldsetCustom">
-                        <legend>Allgemeine Informationen</legend>
-                        <Row gutter={26} >
-                            <Col span={9}>
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                showSearch={false}
+                                style={{ width: '100%' }}
+                                placeholder="Bitte wählen Sie Chatbot/s aus"
+                                //   defaultValue={}
+                                onChange={async (e) => {
+                                    console.log("i was not changed")
+                                    console.log(e)
+                                    let datacp: DataType[] = [];
+                                    let data2cp: DataType2[] = [];
+                                    setSpin(true)
 
-                                <h3>Gesamtanzahl der Benutzer (unique Session IDs): <span style={{ fontSize: "22px", fontWeight: "bold", color: "#02addc" }}>{totalUsersSessions}</span></h3>
+                                    //   setData(datacp)
+                                    //   setData2(data2cp)
+                                    promissFunc(e)
+                                    setSpin(false)
+
+                                    setSelectionStatus(true)
+
+                                    //   const interval = setInterval(() => {
+                                    //     console.log('This will run every second!');
+                                    //     setData(result[1])
+                                    //     setData2(result[0])
+                                    //     setSpin(false)
+                                    //   }, 3000);
+
+                                    //   console.log("second log")
+
+                                    //   clearInterval(interval);
+
+
+                                }}
+                                options={optionsSelect}
+                            /></Space>}
+
+
+                    {selectionStatus == true && <>
+                        <fieldset className="fieldsetCustom">
+                            <legend>Allgemeine Informationen</legend>
+                            <Row gutter={26} >
+                                <Col span={9}>
+
+                                    <h3>Gesamtanzahl der Benutzer (unique Session IDs): <span style={{ fontSize: "22px", fontWeight: "bold", color: "#02addc" }}>{totalUsersSessions}</span></h3>
+
+                                </Col>
+
+                            </Row>
+                        </fieldset>
+                        <Row gutter={24}>
+
+                            <Col span={11} style={{ padding: "50px" }}>
+                                <h2>Antwortqualität</h2>
+                                {disliked == 0 ? <div style={{ height: "100%", width: "100%", alignContent: "center", border: "ridge", textAlign: "center" }}><h2 style={{ color: "grey", fontFamily: "monospace" }}>Keine Statistiken verfügbar</h2></div> : <CanvasJSChart options={options} />}
 
                             </Col>
 
+                            <Col span={11} style={{ padding: "50px" }}>
+                                <h2>Aktivität</h2>
+                                <CanvasJSChart options={options2}
+                                /* onRef={ref => this.chart = ref} */
+                                />
+
+
+                            </Col>
                         </Row>
-                    </fieldset>
-                    <Row gutter={24}>
 
-                        <Col span={11} style={{ padding: "50px" }}>
-                            <h2>Antwortqualität</h2>
-                            {disliked == 0 ? <div style={{ height: "100%", width: "100%", alignContent: "center", border: "ridge", textAlign: "center" }}><h2 style={{ color: "grey", fontFamily: "monospace" }}>Keine Statistiken verfügbar</h2></div> : <CanvasJSChart options={options} />}
+                        <Row gutter={24}>
 
-                        </Col>
-
-                        <Col span={11} style={{ padding: "50px" }}>
-                            <h2>Aktivität</h2>
-                            <CanvasJSChart options={options2}
-                            /* onRef={ref => this.chart = ref} */
-                            />
+                            {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
+                            <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
+                            {/* <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} /> */}
+                            <br></br>
+                            <br></br>
+                            {spin && <Row style={{ marginTop: "10px" }}><Spin style={{ marginLeft: "100px" }} tip="..." size="large"></Spin> <h3 style={{ marginLeft: "20px" }}> Chatverlauf vorbereiten</h3></Row>}
+                            <br></br>
+                            <br></br>
 
 
-                        </Col>
-                    </Row>
 
-                    <Row gutter={24}>
 
-                        {/* <Table rowKey="Name" columns={columns} dataSource={data} /> */}
-                        <Divider orientation="left" style={{ fontSize: "20px", border: "10px" }}>Chatverlauf</Divider>
-                        {/* <Switch style={{ margin: 35 }} checkedChildren="Gestapelte Ansicht" unCheckedChildren="Listenansicht" defaultChecked={viewType} onChange={() => { setViewType(!viewType) }} /> */}
-                        <br></br>
-                        <br></br>
-                        {spin && <Row style={{ marginTop: "10px" }}><Spin style={{ marginLeft: "100px" }} tip="..." size="large"></Spin> <h3 style={{ marginLeft: "20px" }}> Chatverlauf vorbereiten</h3></Row>}
-                        <br></br>
-                        <br></br>
-                       
-
-                           
-                     
-                    </Row>
-                    <Row gutter={24}>
-                    <Radio.Group
+                        </Row>
+                        <Row gutter={24}>
+                            <Radio.Group
                                 options={optionsRadio}
                                 style={{ margin: 35 }}
                                 defaultValue={viewType}
                                 optionType="button"
                                 buttonStyle="solid"
                                 onChange={(e) => {
-                                    setViewType(e.target.value )
+                                    setViewType(e.target.value)
                                 }}
                             />
-                        { data2 !=undefined && data2?.length>0 && viewType == "Gestapelte Ansicht(Session-ID)" && <Collapse key="collapseK" accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />}
+                            {viewType == "Gestapelte Ansicht(Session-ID)" && <Collapse key="collapseK" accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data2} />}
 
-                        {/* {viewType == "Gestapelte Ansicht(Chatbots)" && <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data3} />} */}
+                            {/* {viewType == "Gestapelte Ansicht(Chatbots)" && <Collapse accordion={true} size="large" style={{ width: "100%" }} defaultActiveKey={['1']} items={data3} />} */}
 
 
-                        {  data !=undefined && data?.length>0 &&viewType == "Listenansicht" && <Table key="tableK" style={{ width: "100%" }} rowKey={"extendedlist"} columns={columns} dataSource={data} />}
-                    </Row>
-                   
-                    </> }
+                            {viewType == "Listenansicht" && <Table key="tableK" style={{ width: "100%" }} rowKey={"extendedlist"} columns={columns} dataSource={data} />}
+                        </Row>
+
+                    </>}
                 </Form>
-                            
+
             </PageContainer>
         </div>
 

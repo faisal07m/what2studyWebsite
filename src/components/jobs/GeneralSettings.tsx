@@ -96,9 +96,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   const [changecount, setchangecount] = useState<number>(0)
   const location = useLocation()
   const [loading, setLoading] = useState(false);
+
+  const [defaultpromptwithvariables, setDefaultPromptWithVariables] = useState<string>();
+
   const [open, setOpen] = useState(false);
 
-  const [customPromptT, setcustomPromptT] = useState<string>(job.customPrompt);
+  const [customPromptT, setcustomPromptT] = useState<string>();
 
 
   const area = (customPromptT) => {
@@ -197,6 +200,22 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     setOpen(false);
   };
   useEffect(() => {
+    var defaultPrompt= job.defaultPrompt
+
+    if(job.defaultPrompt != 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://www.cpstech.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.')
+    {
+      defaultPrompt= 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://www.cpstech.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.'
+    }
+    if(job.name !="") defaultPrompt= defaultPrompt.replace("chatbotname", job?.name)
+    defaultPrompt= defaultPrompt.replace("universityname", currentUser?.attributes.name)
+    console.log(defaultPrompt)
+    setDefaultPromptWithVariables(defaultPrompt)
+
+    var customPrompt= job.customPrompt
+    if(job.name !="")  customPrompt= customPrompt.replace("chatbotname", job?.name)
+    customPrompt= customPrompt.replace("universityname", currentUser?.attributes.name)
+    
+    setcustomPromptT(customPrompt)
     if (changecount > 3) {
       setChangedState(true)
 
@@ -391,10 +410,23 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   // After setting current user object 
   useEffect(() => {
+    var defaultPrompt= job.defaultPrompt
+    if(job.name !="")  defaultPrompt= defaultPrompt.replace("chatbotname", job?.name)
+    defaultPrompt= defaultPrompt.replace("universityname", currentUser?.attributes.name)
+    setDefaultPromptWithVariables(defaultPrompt)
+    console.log(defaultPrompt)
+   
+    
+    var customPrompt= job.customPrompt
+    if(job.name !="")  customPrompt= customPrompt.replace("chatbotname", job?.name)
+    customPrompt= customPrompt.replace("universityname", currentUser?.attributes.name)
+    
+    setcustomPromptT(customPrompt)
     if(job.langWeiterMain == undefined || job.langWeiterMain == ""){
       onjobChange({...job, langWeiterMain:"Weiterer Klärungsbedarf"})
       }
-      onjobChange({...job, defaultPrompt:"You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.' ? job.defaultPrompt:'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met."})
+      onjobChange({...job, defaultPrompt:'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://www.cpstech.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.',
+ })
     var token = /token=.*'/g.exec(job.scriptTag)
     if (token) {
       setToken(token[0].slice(6, -1))
@@ -786,12 +818,12 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               <Space direction="vertical" style={{ width: "auto" }}>
                 <Radio value={1} > Default Prompt:
                   <TextArea
-                    defaultValue={job.defaultPrompt == 'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.' ? job.defaultPrompt:'You are a helpful AI assistant. Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language and the gender asterisk (e.g., Student*innen, Dozent*innen).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.'}
+                    value={defaultpromptwithvariables}
                     disabled
 
                     key={"defaultPrompt"}
                     id={"defaultPrompt"}
-                    style={{ width: "800px" }}
+                    style={{ width: "800px" ,backgroundColor:"whitesmoke"}}
                     // onChange={(e) => {
                     //   onjobChange({ ...job, customPrompt: e.target.value })
                     // }
@@ -913,7 +945,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               <Row id="imageContainerJob">
                 <Upload {...props} maxCount={1} showUploadList={false}>
 
-                  <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
+                  <Button style={{ height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
 
                   </Button>
                 </Upload>
@@ -1153,6 +1185,31 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
                   )}
                 />
               </Col>
+              <Col span={7} style={{ textAlign: "center" }}>
+                <label>Schriftart</label><br></br>
+                <Select
+                  style={{ width: "180px" }}
+
+                  defaultValue={job.fontstyle || 'Inter'}
+                  onChange={(value) => onjobChange({ ...job, fontstyle: value.toString() })}
+                >
+                  <Option value='Inter'>Inter</Option>
+                  <Option value='Poppins'>Poppins</Option>
+                  <Option value='Roboto'>Roboto</Option>
+
+                  <Option value='Tinos'>Times New Roman</Option>
+
+                  <Option value='Fira Sans Condensed'>Calibri</Option>
+
+                  <Option value='Arimo'>Arial</Option>
+
+                  <Option value='IBM Plex Sans'>Helvetica</Option>
+
+                  <Option value='Open Sans'>Open Sans</Option>
+
+
+                </Select>
+              </Col>
 
             </Row>
             <label></label><br></br>
@@ -1256,7 +1313,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
                 <Upload {...propsProfile} maxCount={1} showUploadList={false}>
 
-                  <Button style={{ width: "230px", height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
+                  <Button style={{  height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
 
                   </Button>
                 </Upload>
@@ -1501,13 +1558,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Col>
         <Col>
-          <h3>Quellcode für die Integration des Chatbots</h3><Tooltip title={"Code für den Webmaster, um den Chatbot in die Website der Organisation zu integrieren"} >
+          <h3>Quellcode für die Integration des Chatbots</h3>
+          <Button style={{ backgroundColor: "#598c70", color: "white" }} onClick={showModal}>
+            Klick mich!
+          </Button><Tooltip title={"Code für den Webmaster, um den Chatbot in die Website der Organisation zu integrieren"} >
         <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
     </Tooltip>
 
-          <Button style={{ backgroundColor: "#598c70", color: "white" }} onClick={showModal}>
-            Klick mich!
-          </Button>
         </Col>
 
       </Row>

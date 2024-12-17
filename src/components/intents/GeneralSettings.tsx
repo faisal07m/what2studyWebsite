@@ -161,8 +161,7 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
     }
   };
 
-
-  // return form HTML 
+ 
   return (
     <div style={{ backgroundColor: "white", height: "2000px", paddingBlock: "10px", padding: "50px" }}>
 

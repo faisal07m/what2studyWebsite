@@ -1012,9 +1012,8 @@ function isValidURL(string) {
                               <Col span={14}  >
 
 
-                                <Form.Item label='URL einer Webseite eingeben' name='crawlerUrl'
+                                <Form.Item label='URL einer Webseite eingeben' name='crawlerUrl' tooltip={ "Wenn auf der von Ihnen hinzugefügten URL auf weitere URLs oder PDFs verwiesen wird, kann der Chatbot in seiner Antwort darauf verweisen. Die Inhalte der verlinkten URLs oder PDFs verwendet der Chatbot jedoch nicht in seiner Antwort." }
                                 >
-                               
                                   <Input
                                     // addonBefore="http://"
                                     placeholder='university.de'
@@ -1033,9 +1032,7 @@ function isValidURL(string) {
 
                                     }
                                     }
-                                  />   <Tooltip title={"Wenn auf der von Ihnen hinzugefügten URL auf weitere URLs oder PDFs verwiesen wird, kann der Chatbot in seiner Antwort darauf verweisen. Die Inhalte der verlinkten URLs oder PDFs verwendet der Chatbot jedoch nicht in seiner Antwort."} >
-                                  <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-                              </Tooltip>
+                                  />  
                                 
                                 </Form.Item >
                                 <br></br>
@@ -1065,10 +1062,10 @@ function isValidURL(string) {
                                   setNPLus1(e.target.checked)
 
                                 }}>Hierarchische Abfrage (n+1)</Checkbox> 
-                              </Form.Item>   <Tooltip title={"Mit der hierarchischen Abfrage werden bis zu 40 verlinkte Unterseiten gleichzeitig in die Datenbank eingetragen."} >
+                                <Tooltip title={"Mit der hierarchischen Abfrage werden bis zu 40 verlinkte Unterseiten gleichzeitig in die Datenbank eingetragen."} >
         <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
     </Tooltip>
-                             
+    </Form.Item> 
                             </Row>
                             <p style={{fontWeight:"50", color:"orange", marginTop:"-20px"}}>Deep Crawl wird für passwortgeschützte URLs automatisch deaktiviert.</p>
                           
@@ -1213,7 +1210,11 @@ function isValidURL(string) {
       >
         <h3 style={{ marginBlock: "40px", marginLeft: "50px", marginRight: "50PX" }}>Bevor Sie den Trainingsprozess starten, vergewissern Sie sich, dass Sie alle relevanten Dateien und URLs unter "Aktuelle Wissensdatenbank" über den Button "Hinzufügen" aufgenommen haben. <br></br><br></br>
 
-          Der Trainingsprozess kann nicht gestoppt werden und kann mehrere Minuten dauern.</h3>
+          Der Trainingsprozess kann nicht gestoppt werden und kann mehrere Minuten dauern.
+          
+          </h3>
+          <h4 style={{marginBlock: "40px", marginLeft: "20px", marginRight: "20PX" ,fontStyle:"italic"}}> Sie sind dafür verantwortlich, dass alle von Ihnen hochgeladenen Inhalte rechtmäßig sind und Sie über die erforderlichen Rechte zur Nutzung und Verarbeitung verfügen. Mit dem Hochladen bestätigen Sie, dass keine Rechte Dritter verletzt werden und die Inhalte den geltenden rechtlichen Vorschriften entsprechen. Bei Bedarf sollte eine Abstimmung mit der jeweils zuständigen Rechtsabteilung stattfinden.
+         </h4>
       </Modal>
     </PageContainer >
   )
