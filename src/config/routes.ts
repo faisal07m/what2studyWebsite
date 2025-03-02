@@ -7,6 +7,10 @@ export const ROUTES = {
 
   IntentsState: '/what2study/intentsState',
 
+  kbs:'/what2study/kbs',
+
+  KbState:'/what2study/KbState',
+
   LIMITS_URL: '/what2study/limits',
     General: '/what2study/general',
  

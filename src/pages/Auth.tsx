@@ -186,7 +186,7 @@ setTokenLoading(true)
     <FormContainer style={{ display:"flex", flexDirection:"row" , backgroundColor: "aliceblue" , backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat'}}>
-      <p style={{ borderRadius:"70px", marginRight:"80px", backgroundImage: `url("https://cpstech.de/image/backgroundLogoW")`, backgroundPosition: 'center',
+      <p style={{ borderRadius:"70px", marginRight:"80px", backgroundImage: `url("https://digitaledulab.de/image/backgroundLogoW")`, backgroundPosition: 'center',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat' , width: '35%',
     height: '35%'}}></p>

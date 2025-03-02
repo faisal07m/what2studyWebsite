@@ -10,13 +10,15 @@ export type IntentClass = {
   user:string
   name: string
   scenario:scenario[]
+  kbs:string
 
   }
 
 export const blankBlock:  Partial<IntentClass> = {
   user:"",
   name: "",
-  scenario:[]
+  scenario:[],
+  kbs:""
  }
 
 

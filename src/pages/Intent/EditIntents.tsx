@@ -43,7 +43,7 @@ const EditJobs = () => {
  
   // return form HTML 
 
-  const submitKnowledgeBase = async (base64,filename) => {
+  const submitKnowledgeBase = async (base64,filename,kbs) => {
     console.log(base64)
     if (base64 != undefined) {
       let fileObjName = "textUploadIntent"
@@ -59,7 +59,7 @@ const EditJobs = () => {
 
         let response = await gallery.save();
         var url = response.attributes[propertyName]._url
-        if (Parse.serverURL.includes("cpstech")) {
+        if (Parse.serverURL.includes("digitaledulab")) {
           url = url.replace("http:", "https:")
 
         }
@@ -69,7 +69,7 @@ const EditJobs = () => {
         setUrl(url)
         
        
-          let formData = { url: url, fileName:filename , user: currentUser?.id, indexFile: "", type: "text",transcript:"" }
+          let formData = { url: url, fileName:filename , user: currentUser?.id, indexFile: "", type: "text",transcript:"" ,kbId:kbs}
 
 
          fetch(
@@ -86,7 +86,7 @@ const EditJobs = () => {
           );
          
 
-          let formData2 = { user: currentUser?.id }
+          let formData2 = { user: currentUser?.id,kbId:kbs }
           showNotification({
             title: 'Training initiiert',
             message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
@@ -130,7 +130,7 @@ const EditJobs = () => {
             
             
               console.log(base64)
-              submitKnowledgeBase(base64,filename)
+              submitKnowledgeBase(base64,filename, intent.kbs)
             })
             
             }

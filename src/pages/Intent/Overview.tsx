@@ -26,7 +26,7 @@ const Overview = ({ ...data }) => {
         right: '41px',
         top: '100px',
       }}>
-        + Neues Spezialfall erstellen
+        + Neuen Spezialfall erstellen
       </Button>
     )
   }
@@ -75,10 +75,11 @@ const Overview = ({ ...data }) => {
     query.equalTo('objectId', id)
     try {
       const jobToDelete = await query.first()
+      const kbID = jobToDelete?.attributes.kbs
       await jobToDelete?.destroy()
       setIntents(intents ? intents.filter((intents) => intents.id !== id) : null)
       console.log(id)
-      let formData = { url: "", fileName: id+"_intent", user: currentUser.id, nameWOS:  id+"_intent" }
+      let formData = { url: "", fileName: id+"_intent", user: currentUser.id, nameWOS:  id+"_intent",kbId:kbID }
                 const response = fetch(
                     SERVER_URL_parsefunctions+"/deletePythonFile",
                     {
@@ -120,9 +121,9 @@ const Overview = ({ ...data }) => {
             </Link>
             <Popconfirm
               placement='rightTop'
-              title='Do you want to delete the chatbot?'
-              okText='Yes, Delete'
-              cancelText='Cancel'
+              title='möchten Sie den Spezialfall löschen?'
+              okText='Ja, Löschen'
+              cancelText='Abbrechen'
               onConfirm={() => onDeleteJob(id)}
             >
               <Button icon={<DeleteOutlined />} />
@@ -135,10 +136,10 @@ const Overview = ({ ...data }) => {
 
   if (error)
     return (
-      <PageContainer pageId='5' title='Fehler beim Laden der Chatbots'>
+      <PageContainer pageId='5' title='Fehler beim Laden des Spezialfalls'>
         <Result
           status={500}
-          title='Fehler beim Laden der Chatbots'
+          title='Fehler beim Laden des Spezialfalls'
           subTitle='Bitte versuche es später erneut'
         />
       </PageContainer>
@@ -148,14 +149,14 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='5'
-        title=' Übersicht'
+        title=' Überblick über den Spezialfall'
       >
         <Button type="primary" onClick={onNewIntent} style={{
           background: "green", border: 'green', position: 'absolute',
           right: '100px',
           top: '100px',
         }}>
-          + Neues Spezialfall erstellen
+          + Neuen Spezialfall erstellen
         </Button>
 
         <Loading />
@@ -166,14 +167,14 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='5'
-        title='Übersicht'
+        title='Überblick über den Spezialfall'
       >
         <Button type="primary" onClick={onNewIntent} style={{
           background: "green", border: 'green', position: 'absolute',
           right: '100px',
           top: '100px',
         }}>
-          + Neues Spezialfall erstellen
+          + Neuen Spezialfall erstellen
         </Button>
 
 
@@ -184,14 +185,14 @@ const Overview = ({ ...data }) => {
   return (
     <PageContainer
       pageId='5'
-      title='Übersicht'
+      title='Überblick über den Spezialfall'
     >
       <Button type="primary" onClick={onNewIntent} style={{
         background: "green", border: 'green', position: 'absolute',
         right: '41px',
         top: '100px',
       }}>
-        + Neues Spezialfall erstellen
+        + Neuen Spezialfall erstellen
       </Button>
 
 

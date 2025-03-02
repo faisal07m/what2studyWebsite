@@ -1,6 +1,6 @@
 import PageContainer from '../components/layout/PageContainer'
 import Parse from 'parse'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Row, Col, Tabs, Upload, Button, UploadProps, Form, Select, DatePicker, Input, Checkbox, Spin, Modal, UploadFile ,Tooltip} from 'antd'
 
 import { ApiTwoTone, CodeOutlined, EyeInvisibleOutlined, EyeTwoTone, HddTwoTone, InboxOutlined, InfoCircleOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined, SendOutlined } from '@ant-design/icons';
@@ -32,11 +32,14 @@ import { SERVER_URL, SERVER_URL_parsefunctions, ServerCrawl } from '../config/pa
 import React from 'react';
 import { random } from 'lodash';
 
-const Overview = () => {
+const Overview = (kbID:any ) => {
+  console.log("kb was created")
+  console.log(kbID)
 
+  const [kbIDVal, setkbID] = useState<any>(kbID["kbID"])
   const { Option } = Select
   const history = useHistory()
-  history.push('/what2study/database')
+  // history.push('/what2study/database')
   type SizeType = ConfigProviderProps['componentSize'];
   const [size, setSize] = useState<SizeType>('large');
   const [size2, setSize2] = useState<SizeType>('large');
@@ -77,53 +80,7 @@ const Overview = () => {
     });
   });
 
-  // Enable subscription to chart name change
-  var knowledgeBase = Parse.Object.extend("knowledgeBase");
-  var q3 = new Parse.Query(knowledgeBase);
-  q3.subscribe().then(async function (sub) {
-    sub.on('update', function (message) {
-
-      if (message.attributes.user == curUser?.id) {
-        if (message.attributes.jobStatus == true) {
-          setCrawlJobControl(true)
-          setLoader(false)
-          // console.log(message)
-          // if(message.attributes.type =="url"){
-          //   console.log("sss")
-          // setTableJSX(<></>)
-          // setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
-
-          // }
-          
-        }
-        else {
-          // setCrawlJobControl(false)
-          setLoader(false)
-
-        }
-      }
-      
-    });
-    // sub.on('delete', function (message) {
-    //   console.log("destroy")
-    //   console.log(message)
-    //   if (message.attributes.user == curUser?.id) {
-    //     if (message.attributes.jobStatus == false) {
-    //       //  setMainDiv(true)
-    //       setLoader(false)
-    //       setTableJSX(<></>)
-    //       setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
-
-    //       console.log("subscription success")
-    //     }
-    //     else {
-    //       //  setMainDiv(false)
-    //       setLoader(false)
-
-    //     }
-    //   }
-    // });
-  });
+  
 
   var activeIDset = async () => {
     let res = await getActiveChatbotID()
@@ -381,7 +338,7 @@ const Overview = () => {
 
         let response = await gallery.save();
         var url = response.attributes[propertyName]._url
-        if (Parse.serverURL.includes("cpstech")) {
+        if (Parse.serverURL.includes("digitaledulab")) {
           url = url.replace("http:", "https:")
 
         }
@@ -404,6 +361,7 @@ const Overview = () => {
           jobStatus: false,
           nestedLinks: nestedLinks,
           nPlus1: nPLus1,
+          kbID:kbIDVal
 
         }).then(data => {
           setTableJSX(<></>)
@@ -414,9 +372,8 @@ const Overview = () => {
             message: 'Erfolg',
             type: 'success',
           })
-          let formData = { url: url, fileName: fileName, user: currentUser?.id, indexFile: "", type: fileType, transcript: transcript }
-
-
+          let formData = { url: url, fileName: fileName, user: currentUser?.id, indexFile: "", type: fileType, transcript: transcript, kbId:kbIDVal }
+         
           const response = fetch(
             SERVER_URL_parsefunctions + "/uploadPythonFile",
             {
@@ -530,7 +487,7 @@ function isValidURL(string) {
     if(status != 401){
     nplus1_= nPLus1
     }
-    let formData = { url: urlCrawler, allowDeepCrawl: nplus1_ ? "1" : "0" ,  userId: curUser?.id, jobId: res, username: crawlURLUsername, password: crawlURLPassword }
+    let formData = { url: urlCrawler, allowDeepCrawl: nplus1_ ? "1" : "0" ,  userId: curUser?.id, jobId: res, username: crawlURLUsername, password: crawlURLPassword}
 
 
     const response = fetch(
@@ -565,8 +522,10 @@ function isValidURL(string) {
   const showModal = () => {
     setOpen(true);
   };
+
+  const { id } = useParams<{ id: string }>()
   const handleOk = () => {
-    let formData = { user: currentUser?.id }
+    let formData = { user: currentUser?.id, kbId: id}
     setMainDiv(false)
     showNotification({
       title: 'Training initiiert',
@@ -601,11 +560,12 @@ function isValidURL(string) {
     )
   }
   return (
-    <PageContainer pageId='1'
-      title='Wissensdatenbank'>
-         <Tooltip title={"Der Chatbot 'weiß' zunächst nichts über Ihre Hochschule. Fügen Sie Dateien und URLs hinzu, damit der Chatbot auf diese Inhalte zugreifen kann. Bereits hinzugefügte Dateien und URLs finden Sie unten in der aktuellen Wissensdatenbank."} >
+    // <PageContainer pageId='1'
+    //   title='Wissensdatenbank'>
+    <div>
+         {/* <Tooltip title={"Der Chatbot 'weiß' zunächst nichts über Ihre Hochschule. Fügen Sie Dateien und URLs hinzu, damit der Chatbot auf diese Inhalte zugreifen kann. Bereits hinzugefügte Dateien und URLs finden Sie unten in der aktuellen Wissensdatenbank."} >
                               <InfoCircleOutlined style={{marginLeft:"175px", marginTop:"-55px", position:"absolute",color:"#1477ff"}}/>
-                          </Tooltip>
+                          </Tooltip> */}
       <div style={mainDiv == false ? disable : enable}>
         <Row style={{ justifyContent: "right" }}>
           {mainDiv == true && crawlJobControl==true ?  <Button
@@ -1181,7 +1141,7 @@ function isValidURL(string) {
         </div> :
           <div>
             <Row style={{ justifyContent: "center" }}><video width="300" height="250" autoPlay loop >
-              <source src="https://cpstech.de/chatanimation" type="video/mp4" />
+              <source src="https://digitaledulab.de/chatanimation" type="video/mp4" />
             </video></Row>
             <Row>
 
@@ -1216,7 +1176,8 @@ function isValidURL(string) {
           <h4 style={{marginBlock: "40px", marginLeft: "20px", marginRight: "20PX" ,fontStyle:"italic"}}> Sie sind dafür verantwortlich, dass alle von Ihnen hochgeladenen Inhalte rechtmäßig sind und Sie über die erforderlichen Rechte zur Nutzung und Verarbeitung verfügen. Mit dem Hochladen bestätigen Sie, dass keine Rechte Dritter verletzt werden und die Inhalte den geltenden rechtlichen Vorschriften entsprechen. Bei Bedarf sollte eine Abstimmung mit der jeweils zuständigen Rechtsabteilung stattfinden.
          </h4>
       </Modal>
-    </PageContainer >
+    {/* </PageContainer > */}
+    </div>
   )
 }
 

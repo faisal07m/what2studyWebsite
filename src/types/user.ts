@@ -17,6 +17,7 @@ export type UserType = {
   friday:string
   openAIKey:string
   localModel:boolean
+  localModalName:string
 }
 
 type RegisterProps = {
@@ -46,6 +47,7 @@ export const register = async (props: RegisterProps) => {
   user.set('friday', '09:00,17:00')
   user.set('openAIKey', '')
   user.set('localModel', true)
+  user.set('localModalName', 'llama3.3:latest')
  
 
 
@@ -78,7 +80,7 @@ export const login = async (email: string, password: string) => {
 export const adminUpdateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday,openAIKey,localModel } = user
+  const { name, username, website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail,AllowKontaktTele, monday,tuesday,wednesday,thursday,friday,openAIKey,localModel,localModalName } = user
   const query = new Parse.Query(Parse.User)
   query.equalTo('username', username)
   const userToUpdate = await query.first()
@@ -98,6 +100,8 @@ export const adminUpdateUser = async (user: UserType) => {
   userToUpdate.set('friday', friday)
   userToUpdate.set('openAIKey', openAIKey)
   userToUpdate.set('localModel', localModel)
+
+  userToUpdate.set('localModalName', localModalName)
   
 
   try {
@@ -116,7 +120,7 @@ export const curUser = Parse.Object.extend('_User')
 export const updateUser = async (user: UserType) => {
   const curUser = Parse.User.current()
   if (!curUser) return { error: true }
-  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday,openAIKey,localModel } = user
+  const { name, username,website, Telefonnummer, logo, kontaktEmail,AllowKontaktEmail, AllowKontaktTele,  monday,tuesday,wednesday,thursday,friday,openAIKey,localModel,localModalName } = user
   curUser.set('name', name)
   curUser.set('username', username)
   curUser.set('Telefonnummer', Telefonnummer)
@@ -133,6 +137,8 @@ export const updateUser = async (user: UserType) => {
   curUser.set('openAIKey', openAIKey)
 
   curUser.set('localModel', localModel)
+
+  curUser.set('localModalName', localModalName)
 
 
   try {

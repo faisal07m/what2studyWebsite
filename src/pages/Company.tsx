@@ -198,7 +198,7 @@ const Company = () => {
     )
     var response = await imageBaseToUrl(base64 as string)
     var url = response.attributes.bilds._url
-    if (Parse.serverURL.includes("cpstech")) {
+    if (Parse.serverURL.includes("digitaledulab")) {
       url = url.replace("http:", "https:")
 
     }

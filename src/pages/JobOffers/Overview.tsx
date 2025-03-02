@@ -149,9 +149,9 @@ const Overview = ({ ...data }) => {
             </Link>
             <Popconfirm
               placement='rightTop'
-              title='Do you want to delete the chatbot?'
-              okText='Yes, Delete'
-              cancelText='Cancel'
+              title='Möchten Sie den Chatbot löschen?'
+              okText='Ja, Löschen'
+              cancelText='Abbrechen'
               onConfirm={() => onDeleteJob(id)}
             >
               <Button icon={<DeleteOutlined />} />
@@ -177,7 +177,7 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='15'
-        title='Übersicht'
+        title='Überblick über Chatbots'
       >
         <Button type="primary" onClick={onNewJob} style={{
           background: "green", border: 'green', position: 'absolute',
@@ -195,7 +195,7 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='15'
-        title='Übersicht'
+        title='Überblick über Chatbots'
       >
         <Button type="primary" onClick={onNewJob} style={{
           background: "green", border: 'green', position: 'absolute',
@@ -213,7 +213,7 @@ const Overview = ({ ...data }) => {
   return (
     <PageContainer
       pageId='15'
-      title='Übersicht'
+      title='Überblick über Chatbots'
     >
       <Button type="primary" onClick={onNewJob} style={{
         background: "green", border: 'green', position: 'absolute',

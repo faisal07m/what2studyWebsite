@@ -18,6 +18,7 @@ import DataSecurity from './pages/DataSecurity'
 import Prototyp1 from './pages/Prototype'
 import Prototype from './pages/Prototype'
 import 'react-tooltip/dist/react-tooltip.css'
+import Kb from './pages/Kb'
 function App() {
   const currentUser = Parse.User.current()
   return (
@@ -37,15 +38,22 @@ function App() {
           <Route path={ROUTES.USER_URL}>
             <User />
           </Route>
-          <Route path='/what2study/database'>
+          <Route path={ROUTES.kbs}>
+            <Kb />
+          </Route>
+          <Route path={ROUTES.KbState}>
+            <Kb />
+          </Route>
+          {/* <Route path='/what2study/database'>
             <Overview />
-           </Route>
+           </Route> */}
            <Route path={ROUTES.Intents}>
             <Intents />
           </Route>
           <Route path={ROUTES.IntentsState}>
             <Intents />
           </Route>
+         
           <Route path='/what2study/monitoring'>
             <Monitoring />
            </Route>

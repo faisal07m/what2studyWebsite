@@ -38,7 +38,8 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         type:string,
         learnStatus:boolean
         url_org:string,
-        transcript:string
+        transcript:string,
+        kbID:string
     }
 
 
@@ -174,7 +175,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         if (index !== -1 && index != undefined) {
             if (data) {
                 const objArr = data[index]
-                let formData = { url: objArr.url, fileName: objArr.url.split("/").pop(), user: objArr.user, nameWOS: objArr.fileName }
+                let formData = { url: objArr.url, fileName: objArr.url.split("/").pop(), user: objArr.user, nameWOS: objArr.fileName ,kbId:objArr.kbID}
                 const response = fetch(
                     SERVER_URL_parsefunctions+"/deletePythonFile",
                     {
@@ -346,33 +347,34 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
         if (type != "") {
 
             let KB = await getAllKnowledgeBaseWithType(type);
-            console.log(KB)
+            if(type=="text"){
+                data.push(
+                    {
+                        key: "0",
+                        name: "index.txt",
+                        url_org: "index.txt file",
+                        hochgeladen: "",
+                        priority: "",
+                        expiry:"",
+                        tags: [],
+                        itemId: "index",
+                        url:"https://digitaledulab.de/indexfile/" ,
+                        fileName: "index.txt",
+                        user: "",
+                        nestedLinks: [],
+                        jobStatus:true,
+                        nPlus1:false,
+                        type:"text",
+                        learnStatus: true,
+                        transcript:"",
+                        kbID:""
+                    })
+            }
             if (KB != undefined && KB != null && Array.isArray(KB)) {
                 var count = 1
                 KB.forEach(element => {
                     var file_name =  element.attributes.name.replaceAll("/", "_")
-                    if(type=="text"){
-                        data.push(
-                            {
-                                key: "0",
-                                name: "index.txt",
-                                url_org: "index.txt file",
-                                hochgeladen: "",
-                                priority: "",
-                                expiry:"",
-                                tags: [],
-                                itemId: "index",
-                                url:"https://cpstech.de/indexfile" ,
-                                fileName: "index.txt",
-                                user: "",
-                                nestedLinks: [],
-                                jobStatus:true,
-                                nPlus1:false,
-                                type:"text",
-                                learnStatus: true,
-                                transcript:""
-                            })
-                    }
+                    
                     data.push(
                         {
                             key: count.toString(),
@@ -391,7 +393,8 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                             nPlus1:element.attributes.nPlus1,
                             type:element.attributes.type,
                             learnStatus: element.attributes.learnStatus,
-                            transcript:element.attributes.transcript
+                            transcript:element.attributes.transcript,
+                            kbID:element.attributes.kbID
                         },
                     )
                     count = count + 1
@@ -431,14 +434,14 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
          <Table rowKey="Name" columns={columns} dataSource={data} />
             <Modal
                 title="Dateibetrachter"
-                style={{ top: 20 }}
-                width={1200}
+                style={{ top: 15 }}
+                width={1350}
                 open={modal1Open}
                 onOk={() => setModal1Open(false)}
                 onCancel={() => setModal1Open(false)}
             >
                 <div style={{
-                    width: "95%", height: "90%", backgroundColor: "#e4e4e4", overflowY: "auto", display: "flex", justifyContent: "center", alignItems: "center"
+                    width: "95%", height: "90%", backgroundColor: "#e4e4e4", overflowY: "auto", display: "block", justifyContent: "center", alignItems: "center"
 
                 }}>
 

@@ -16,6 +16,7 @@ export type knowledgeBaseBlock = {
     nestedLinks:string[]
     jobStatus:boolean
     learnStatus:boolean
+    kbID:any
 
 }
 
@@ -32,6 +33,7 @@ export const blankBlock: Partial<knowledgeBaseBlock> = {
     nestedLinks:[],
     jobStatus:false,
     learnStatus:false,
+    kbID:""
 }
 
 

@@ -50,79 +50,82 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
             setStatusBar(true)
           }
         }
+        if(message.attributes.user ==Parse.User.current()?.id )
+         {
+          if(message.attributes.statusData == 0){
+            setStatusBar(false)
+            console.log("subscription")
+          }
+          else{
+            setStatusBar(true)
+          }
+        }
       });   
   });
-  var knowledgeBase = Parse.Object.extend("knowledgeBase");
-  var q3 = new Parse.Query(knowledgeBase);
-  q3.subscribe().then(async function (sub) {
-    sub.on('update', function (message) {
-     
-       if(message.attributes.user ==Parse.User.current()?.id )
-       {
-        if(message.attributes.learnStatus == false){
-          setStatusBarUpload(true)
-        }
-        else{
-          setStatusBarUpload(false)
-        }
-      }
-    });   
-    sub.on('create', function (message) {
-     
-      if(message.attributes.user ==Parse.User.current()?.id )
-      {
-       if(message.attributes.learnStatus == false){
-        setStatusBarUpload(true)
-       }
-       else{
-        setStatusBarUpload(false)
-       }
-     }
-   });   
-});
+  
 
   useEffect(()=>{
-    var knowledgeBase = Parse.Object.extend("knowledgeBase");
-    var q3 = new Parse.Query(knowledgeBase);
-    q3.equalTo("user", Parse.User.current()?.id)
-    q3.equalTo("learnStatus", false)
+    // var knowledgeBase = Parse.Object.extend("knowledgeBase");
+    // var q3 = new Parse.Query(knowledgeBase);
+    // q3.equalTo("user", Parse.User.current()?.id)
+    // q3.equalTo("learnStatus", false)
     
-    q3.first().then((el)=>{
-      if(el != undefined)
-         { 
-          setStatusBarUpload(true)
-        }
-          else{
-            setStatusBarUpload(false)
+    // q3.first().then((el)=>{
+    //   if(el != undefined)
+    //      { 
+    //       setStatusBarUpload(true)
+    //     }
+    //       else{
+    //         setStatusBarUpload(false)
             
-            setStatusBar(false)
-          }
-      
-    }
-    
-    )
-
-    // var embeddingStatus = Parse.Object.extend("embeddingStatus");
-    // var q4 = new Parse.Query(embeddingStatus);
-    // q4.equalTo("user", Parse.User.current()?.id)
-    // q4.equalTo("status", 1)
-    
-    // let result = q4.first().then((el)=>{
-    //   if(el){
-    //     setStatusBarUpload(true)
-    //   }
-    //   else{
-    //     setStatusBarUpload(false)
-    //     setStatusBar(false)
-      
-    
-    //   }
+    //         setStatusBar(false)
+    //       }
       
     // }
-
     
     // )
-  },[])
+
+    var embeddingStatus = Parse.Object.extend("embeddingStatus");
+    var q4 = new Parse.Query(embeddingStatus);
+    q4.equalTo("user", Parse.User.current()?.id)
+    q4.equalTo("status", 1)
+    
+    let result = q4.first().then((el)=>{
+      if(el){
+        setStatusBarUpload(true)
+      }
+      else{
+        setStatusBarUpload(false)
+        setStatusBar(false)
+      
+    
+      }
+
+      
+      
+    })
+
+    var q5 = new Parse.Query(embeddingStatus);
+    q5.equalTo("user", Parse.User.current()?.id)
+    q5.equalTo("statusData", 1)
+    
+    let res = q5.first().then((el)=>{
+      console.log("status data is here")
+      console.log(el)
+      if(el){
+        setStatusBarUpload(true)
+      }
+      else{
+        setStatusBarUpload(false)
+        setStatusBar(false)
+      
+    
+      }
+      
+    })
+
+    
+  },[company])
   const func = async (e) => {
     if (location.state != undefined) {
 
@@ -167,9 +170,12 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='15' icon={<TeamOutlined />}>
           <Link to={{ pathname: ROUTES.General, state: { prevPath: location.pathname } }}>Chat-Client</Link>
         </Menu.Item>
-        <Menu.Item key='1' icon={<ApiOutlined />}>
-          <Link to={{ pathname: "/what2study/database", state: { prevPath: location.pathname } }} >Datenbank</Link>
+        <Menu.Item key='105' icon={<TagOutlined />}>
+          <Link to={{ pathname: ROUTES.kbs, state: { prevPath: location.pathname } }} >Datenbank</Link>
         </Menu.Item>
+        {/* <Menu.Item key='1' icon={<ApiOutlined />}>
+          <Link to={{ pathname: "/what2study/database", state: { prevPath: location.pathname } }} >Datenbank</Link>
+        </Menu.Item> */}
         <Menu.Item key='5' icon={<TagOutlined />}>
           <Link to={{ pathname: ROUTES.Intents, state: { prevPath: location.pathname } }} >Szenarien</Link>
         </Menu.Item>
@@ -179,6 +185,7 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='7' icon={<WechatOutlined/>}>
           <Link to={{ pathname: "/what2study/chatwindow", state: { prevPath: location.pathname } }} >Chatbot</Link>
         </Menu.Item>
+       
         <div style={{left: "0", position: "absolute",  bottom: "0", marginBottom: "135px", marginLeft: "35px"}}
        >
          {/* {(attributes.localModel == false && attributes.openAIKey=="" )? <p>enter openAI key</p>:<></>} */}

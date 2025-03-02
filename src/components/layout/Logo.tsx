@@ -31,8 +31,10 @@ const Logo = () => {
   })
   const [openAIKey, setKey] = useState<string>(attributes.openAIKey);
 
-  const [switchOPT1, setSwitchOPT1] = useState<Boolean>(!attributes.localModel);
+  const [switchOPT1, setSwitchOPT1] = useState<boolean>(!attributes.localModel);
   const [localModelSelection, setLocalModelSelection] = useState<Boolean>(attributes.localModel);
+
+  const [localModalName, setlocalModalName] = useState<string>(attributes.localModalName);
   useEffect(() => {
     setAttributes({ ...attributes, openAIKey: openAIKey })
   }, [openAIKey])
@@ -122,53 +124,55 @@ const Logo = () => {
           }}
           footer={[
             <Button key="submit" type="primary"  
-            // onClick={async () => {
-            //   if(openAIKey=="" && switchOPT1 == true)
-            //   {showNotification({
-            //     title: 'Informationen',
-            //     message:
-            //       'Bitte openAI-Schlüssel eingeben',
-            //     type: 'warning',
-            //   })}
-            //   else{
-            //   const { error } = await updateUser({ ...attributes })
-            //   if (error)
-            //     return showNotification({
-            //       title: 'Fehler beim Speichern',
-            //       message:
-            //         'Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen es später erneut',
-            //       type: 'error',
-            //     })
+            onClick={async () => {
+              if(openAIKey=="" && switchOPT1 == true)
+              {showNotification({
+                title: 'Informationen',
+                message:
+                  'Bitte openAI-Schlüssel eingeben',
+                type: 'warning',
+              })}
+              else{
+console.log("reqeust got here")
+console.log(attributes)
+const { error } = await updateUser({ ...attributes })
+              if (error)
+                return showNotification({
+                  title: 'Fehler beim Speichern',
+                  message:
+                    'Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen es später erneut',
+                  type: 'error',
+                })
   
-            //   showNotification({
-            //     type: 'success',
-            //     title: 'Erfolgreich gespeichert',
-            //     message: 'Ihre Auswahl wurde erfolgreich gespeichert',
-            //   })
-            //   setModal2Open(false)
+              showNotification({
+                type: 'success',
+                title: 'Erfolgreich gespeichert',
+                message: 'Ihre Auswahl wurde erfolgreich gespeichert',
+              })
+              setModal2Open(false)
 
-            //   let formData = { user: company?.id }
-            //   showNotification({
-            //     title: 'Training initiiert',
-            //     message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
-            //     type: 'info',
-            //   })
-          
-            //   const response = fetch(
-            //     SERVER_URL_parsefunctions + "/startEmbeddings",
-            //     {
-            //       method: "POST",
-            //       headers: {
-            //         "Content-Type": "application/json",
-            //         "X-Parse-Application-Id": "what2study",
-            //         "X-Parse-Master-Key": "what2studyMaster",
-            //       },
-            //       body: JSON.stringify(formData),
-            //     }
-            //   );
-            // }
+              let formData = { user: company?.id, kbId:"all"}
+              showNotification({
+                title: 'Training initiiert',
+                message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
+                type: 'info',
+              })
+             
+              const response = fetch(
+                SERVER_URL_parsefunctions + "/startEmbeddingsAll",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Parse-Application-Id": "what2study",
+                    "X-Parse-Master-Key": "what2studyMaster",
+                  },
+                  body: JSON.stringify(formData),
+                }
+              );
+            }
   
-            // }}
+            }}
             >
               Speichern
             </Button>,
@@ -182,7 +186,7 @@ const Logo = () => {
               items={[AppstoreOutlined, AccountBookOutlined].map((Icon, i) => {
                 const id = String(i + 1);
                 return {
-                 
+                  
                   key: id,
                   label: <span style={{width:"150px"}}>{id == "1" ? <>Chatbot-Modell</> : id == "2" ? <span style={{ cursor: "not-allowed",
                     backgroundColor: "rgb(229, 229, 229) !important"}}>Account</span> : <></>}</span>,
@@ -192,8 +196,13 @@ const Logo = () => {
                     {id=="1"?
                      <> <label>Modelltyp auswählen:</label><span> 
                       {/* localModelSelection == false ? true: */}
-                      <Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ true} onChange={(e) => {
-                        setSwitchOPT1(e)
+                      <Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ switchOPT1} onChange={async (e) => {
+                        await setSwitchOPT1(e)
+                        await setAttributes({ ...attributes, localModel: switchOPT1})
+                       
+                        // 
+                        // await setAttributes({ ...attributes, openAIKey: e.target.value })
+                        // await setAttributes({ ...attributes, localModalName: e.target.value })
                         // setAttributes({ ...attributes, localModel: !e })
              
                       }} /></span>
@@ -206,15 +215,17 @@ const Logo = () => {
                           ]}>
                             <Input
                               // defaultValue={openAIKey}
-                              defaultValue={"********************************"}
-                              disabled
+                              defaultValue={openAIKey}
+                              placeholder={"********************************"}
                               style={{ width: "500px" }}
-                              // onChange={async (e) => {
-                              //   await setKey(e.target.value)
-                              //   await setAttributes({ ...attributes, openAIKey: e.target.value })
-                              // 
-                            // }
-                              // }
+                              onChange={async (e) => {
+                                await setKey(e.target.value)
+                                await setAttributes({ ...attributes, openAIKey: e.target.value })
+                               
+                                // await setAttributes({ ...attributes, openAIKey: e.target.value })
+                              
+                            }
+                              }
                             />
                             {/* <Button style={{ marginTop: "10px" }} type='primary' size='middle'> Aktualisieren / Schlüssel speichern</Button> */}
                           </Form.Item>
@@ -225,9 +236,36 @@ const Logo = () => {
                         <Col span={9}>
                         <h3 ><strong>Chat Model</strong></h3>
                           <ul>
-                          <li><p style={{marginTop:"20px"}}><strong> Ausgewählt:</strong> Mixtral</p></li>
-                          <li> <p><strong> Modellgröße:</strong> 47b</p></li>
-                          <li><p><strong> Typ: </strong> Lokal (<a href={"https://huggingface.co/"}>Hugging Face</a>)</p></li>
+                          <p style={{marginTop:"20px"}}>
+                          <Radio.Group
+                              defaultValue={1}
+                              options={[
+                                { value: 1, label: "llama3.3:latest" },
+                                { value: 2, label: "deepseek-r1:70b"},
+                                { value: 3, label: "mixtral:8x22b" },
+                                { value: 4, label: "falcon:180b" },
+                                { value: 5, label: "qwen:110b" },
+                              ]}
+                              onChange={async (e)=>{
+                              console.log(e)
+                              var models = [
+                                "llama3.3:latest" ,
+                                 "deepseek-r1:70b",
+                                 "mixtral:8x22b" ,
+                                 "falcon:180b" ,
+                               "qwen:110b" 
+                              ]
+                              await setlocalModalName(models[e.target.value-1])
+                              await setAttributes({ ...attributes, localModalName:models[e.target.value-1] })
+                               
+                              // await setAttributes({ ...attributes, openAIKey: e.target.value })
+                              // await setAttributes({ ...attributes, localModalName: e.target.value })
+                              }}
+                            />
+                            
+                            
+                            </p>
+                          <li><p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/library"}>Ollama</a>)</p></li>
                           <li><p><strong> Datensicherheit:</strong> Modell läuft auf einem lokalen Server</p></li>
                           </ul>
                         </Col>
@@ -235,8 +273,8 @@ const Logo = () => {
                         <h3 ><strong>Embeddings Model</strong></h3>
                         <ul>
                           <li>
-                           <p style={{marginTop:"20px"}}><strong> Ausgewählt:</strong> <a href={"https://huggingface.co/BAAI/bge-large-en-v1.5"}> BAAI/bge-large-en-v1.5</a></p></li>
-                          <li> <p><strong> Typ: </strong> Lokal (<a href={"https://huggingface.co/"}>Hugging Face</a>)</p></li>
+                           <p style={{marginTop:"20px"}}><strong> Ausgewählt:</strong> <a href={"https://ollama.com/library/nomic-embed-text"}> nomic-embed-text</a></p></li>
+                          <li> <p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/search?c=embedding"}>Ollama</a>)</p></li>
                           <li> <p><strong> Datensicherheit:</strong>  Datensicherheit: Modell läuft auf einem lokalen Server</p>
                          </li>
                           </ul>

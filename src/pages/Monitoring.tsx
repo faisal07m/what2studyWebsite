@@ -17,6 +17,7 @@ const Monitoring = () => {
     const [optionsSelect, setoptionsSelect] = useState<any>()
     var currentUser = Parse.User.current()
     const [chatbots, setChatbots] = useState<string[]>(currentUser?.attributes.Joblist)
+    
     const [collapse, setCollapse] = useState<JSX.Element>()
     const [table1, setTable1] = useState<JSX.Element>()
     const [disliked, setDisliked] = useState<number>(0)
@@ -205,9 +206,7 @@ const Monitoring = () => {
     ];
 
     const setZeros= (number)=>{
-        console.log("number changing")
-        console.log(number)
-    
+       
     if(number<10)
     {
         return "0"+ number+""
@@ -233,11 +232,12 @@ const Monitoring = () => {
                 var msgsFunc = async function (el) {
                     var datainternal = {}
 
-                    var chatbotOBJ = Parse.Object.extend("chatbots");
-                    var queryChatbot = new Parse.Query(chatbotOBJ);
-                    var result = await queryChatbot.get(element.chatbotId)
+                    // var chatbotOBJ = Parse.Object.extend("chatbots");
+                    // var queryChatbot = new Parse.Query(chatbotOBJ);
+                    // var result = await queryChatbot.get(element.chatbotId)
 
-                    if (result) {
+                    // if (result) {
+                    console.log(optionsSelect)
                         var timestamp = el.timestamp.split("@")
                         var splittime = timestamp[1].split(":")
                         var time = setZeros( parseInt(splittime[0])) + ":" + setZeros( parseInt(splittime[1]))+ ":" + setZeros( parseInt(splittime[2]))
@@ -247,13 +247,13 @@ const Monitoring = () => {
                         {
                             key: count.toString(),
                             sessionID: element.sessionID,
-                            chatbotId: result.attributes.name,
+                            chatbotId:  optionsSelect.find(({value}) => value === element.chatbotId)?.label,
                             user: el.user,
                             bot: el.bot,
                             timestamp: timestamp
                         }
 
-                    }
+                    // }
 
 
                     count = count + 1
@@ -262,16 +262,14 @@ const Monitoring = () => {
                 }
                 var actions3 = element["messages"].map(msgsFunc);
                 var results = await Promise.all(actions3);
-                console.log("was res here ")
-                console.log(results)
                 return results
 
             }
 
             var actions2 = KB.map(funcKB);
-            var resultss = Promise.all(actions2);
-            resultss.then((data: any) => {
+            var resultss=  Promise.all(actions2).then((data: any) => {
                 let dataTable: DataType[] = [];
+
             if(data)
                 data.forEach(element => {
                     element.forEach(element => {
@@ -279,6 +277,8 @@ const Monitoring = () => {
                     });
                    
                 });
+                console.log("datatable")
+                console.log(dataTable)
                 setData(dataTable)
             })
 
@@ -309,7 +309,7 @@ const Monitoring = () => {
     })
 
     useEffect(() => {
-
+console.log(feedbackList)
         if (feedbackList) {
             var liked = 0
             var disliked = 0
@@ -342,15 +342,14 @@ const Monitoring = () => {
                 var fn = async function (el) {
                     var data = {}
                     var count = 1
-                    var chatbotOBJ = Parse.Object.extend("chatbots");
-                    var queryChatbot = new Parse.Query(chatbotOBJ);
-                    var result = await queryChatbot.get(element.chatbotId)
+                    // var chatbotOBJ = Parse.Object.extend("chatbots");
+                    // var queryChatbot = new Parse.Query(chatbotOBJ);
+                    // var result = await queryChatbot.get(element.chatbotId)
                     var timestamp = el.timestamp.split("@")
                     var splittime = timestamp[1].split(":")
                     var time = setZeros( parseInt(splittime[0])) + ":" + setZeros( parseInt(splittime[1]))+ ":" + setZeros( parseInt(splittime[2]))
                     timestamp = timestamp[0] + " @ " + time
 
-                    if (result) {
                         data =
                         {
                             key: count.toString(),
@@ -358,24 +357,12 @@ const Monitoring = () => {
                             user: el.user,
                             bot: el.bot,
                             timestamp: timestamp,
-                            chatbotId: result.attributes.name
+                            chatbotId: optionsSelect.find(({value}) => value === element.chatbotId)?.label,
 
                         }
 
-                    }
-                    else {
-                        data =
-                        {
-                            key: count.toString(),
-                            sessionID: element.sessionID,
-                            user: el.user,
-                            bot: el.bot,
-                            timestamp: timestamp,
-                            chatbotId: element.chatbotId
-
-                        }
-
-                    }
+                    
+                   
 
 
                     count = count + 1
@@ -392,8 +379,6 @@ const Monitoring = () => {
 
             results.then((data: any) => // or just .then(console.log)
             {
-                console.log("final arrqqay")
-                console.log(data)
                 if (data.length > 0) {
                     data.forEach(element => {
                         data2.push(
@@ -424,20 +409,24 @@ const Monitoring = () => {
 
 
     useEffect(() => {
-
+        console.log("chat hustroy")
 
         if (chathistoryList) {
+            console.log(chathistoryList)
             var result = chathistoryList.map(obj => {
                 return obj.messages.map(objIn => objIn.timestamp.split("@")[0].trim())
             });
             var concatArr: any = []
+            console.log(result)
             if (result)
                 for (let index = 0; index < result.length; index++) {
                     concatArr = concatArr.concat(result[index])
 
                 }
+            console.log(concatArr)
             const counts = {};
             concatArr.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+            console.log(counts)
             var options2_Data: any = []
             for (let key in counts) {
                 var key_ = key.split("/")
@@ -446,6 +435,7 @@ const Monitoring = () => {
 
             }
             var sortedarr = options2_Data.sort((a, b) => a.x - b.x);
+            console.log(sortedarr)
             setOptions2({
                 animationEnabled: false,
                 title: {
@@ -503,7 +493,7 @@ const Monitoring = () => {
             for (let i = 0; i < chatbots.length; i++) {
                 var q = new Parse.Query(feedbacks);
                 q.equalTo("chatbotId", chatbots[i])
-                q.limit(100000000)
+                q.limit(1000000000)
                 var response = await q.find()
                 if (response) {
                     response.forEach(feedback => {
@@ -518,7 +508,7 @@ const Monitoring = () => {
             for (let i = 0; i < chatbots.length; i++) {
                 var q2 = new Parse.Query(chathistory);
                 q2.equalTo("chatbotId", chatbots[i])
-                q2.limit(1000000000)
+                q2.limit(10000000000)
 
                 var response = await q2.find()
                 if (response) {
@@ -529,9 +519,7 @@ const Monitoring = () => {
 
             }
             if (chatHistoryList.length > 0)
-                console.log("chat his tory list")
-            console.log(chatHistoryList)
-
+           
 
             setChatHistoryList(chatHistoryList)
         }
@@ -566,8 +554,6 @@ const Monitoring = () => {
 
     const setSelectionOptions = async (chatbots) => {
         let KB = chatbots
-        console.log("i am a list")
-        console.log(KB)
         if (KB != undefined && KB != null) {
             var count = 1
             var rs
@@ -602,14 +588,14 @@ const Monitoring = () => {
             actions = KB.map(fn);
 
             rs = await Promise.all(actions)
-            console.log("hello rs")
-            console.log(rs)
             setoptionsSelect(rs[0])
 
         }
 
     }
     useEffect(() => {
+        console.log(chatbots)
+          
         if (chatbots != undefined && chatbots.length > 0) {
             setSelectionOptions(chatbots)
 
@@ -646,8 +632,6 @@ const Monitoring = () => {
                                 placeholder="Bitte wählen Sie Chatbot/s aus"
                                 //   defaultValue={}
                                 onChange={async (e) => {
-                                    console.log("i was not changed")
-                                    console.log(e)
                                     let datacp: DataType[] = [];
                                     let data2cp: DataType2[] = [];
                                     setSpin(true)
@@ -729,6 +713,7 @@ const Monitoring = () => {
                                 optionType="button"
                                 buttonStyle="solid"
                                 onChange={(e) => {
+                                    console.log(e.target.value)
                                     setViewType(e.target.value)
                                 }}
                             />
