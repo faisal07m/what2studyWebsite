@@ -200,21 +200,20 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     setOpen(false);
   };
   useEffect(() => {
-    var defaultPrompt= job.defaultPrompt
+    var defaultPrompt = job.defaultPrompt
 
-    if(job.defaultPrompt != 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.')
-    {
-      defaultPrompt= 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.'
+    if (job.defaultPrompt != 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.') {
+      defaultPrompt = 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.'
     }
-    if(job.name !="") defaultPrompt= defaultPrompt.replace("chatbotname", job?.name)
-    defaultPrompt= defaultPrompt.replace("universityname", currentUser?.attributes.name)
+    if (job.name != "") defaultPrompt = defaultPrompt.replace("chatbotname", job?.name)
+    defaultPrompt = defaultPrompt.replace("universityname", currentUser?.attributes.name)
     console.log(defaultPrompt)
     setDefaultPromptWithVariables(defaultPrompt)
 
     // var customPrompt= job.customPrompt
     // if(job.name !="")  customPrompt= customPrompt.replace("chatbotname", job?.name)
     // customPrompt= customPrompt.replace("universityname", currentUser?.attributes.name)
-    
+
     // setcustomPromptT(customPrompt)
     if (changecount > 3) {
       setChangedState(true)
@@ -367,7 +366,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           {job.bubbleIcon ? <div style={{ textAlign: 'center' }}><DeleteTwoTone style={{ fontSize: "18px" }} onClick={() => removeImage(index)}></DeleteTwoTone><Image style={{ width: "100%" }} height="100%" src={img} preview={false} onClick={(e) => {
             // onjobChange({ ...job, selectedBubbleIcon: img })
             console.log("trsint dl 2")
-            
+
             setSelectedBubble(img)
           }} /> </div> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
 
@@ -410,23 +409,24 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
   // After setting current user object 
   useEffect(() => {
-    var defaultPrompt= job.defaultPrompt
-    if(job.name !="")  defaultPrompt= defaultPrompt.replace("chatbotname", job?.name)
-    defaultPrompt= defaultPrompt.replace("universityname", currentUser?.attributes.name)
+    var defaultPrompt = job.defaultPrompt
+    if (job.name != "") defaultPrompt = defaultPrompt.replace("chatbotname", job?.name)
+    defaultPrompt = defaultPrompt.replace("universityname", currentUser?.attributes.name)
     setDefaultPromptWithVariables(defaultPrompt)
     console.log(defaultPrompt)
-   
-    
-    var customPrompt= job.customPrompt
-    if(job.name !="")  customPrompt= customPrompt.replace("chatbotname", job?.name)
-    customPrompt= customPrompt.replace("universityname", currentUser?.attributes.name)
-    
+
+
+    var customPrompt = job.customPrompt
+    if (job.name != "") customPrompt = customPrompt.replace("chatbotname", job?.name)
+    customPrompt = customPrompt.replace("universityname", currentUser?.attributes.name)
+
     setcustomPromptT(customPrompt)
-    if(job.langWeiterMain == undefined || job.langWeiterMain == ""){
-      onjobChange({...job, langWeiterMain:"Weiterer Klärungsbedarf"})
-      }
-      onjobChange({...job, defaultPrompt:'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.',
- })
+    if (job.langWeiterMain == undefined || job.langWeiterMain == "") {
+      onjobChange({ ...job, langWeiterMain: "Weiterer Klärungsbedarf" })
+    }
+    onjobChange({
+      ...job, defaultPrompt: 'You are a helpful AI assistant with the name: "chatbotname", responsible for answering questions about the "universityname". Use the provided context to answer the questions. Your role is to act as a study advisor, assisting students and those interested in study programs with their inquiries. Please use gender-sensitive language (e.g., Studierende, Dozierende).\n\nImportant Guidelines:\n\nAccuracy: If the exact study program mentioned by the student (e.g., architecture, HCI) is not offered by the university, do not state that it is. Instead, mention similar or related programs, if available, and offer to provide more information.\n\nClarification: If you are unsure about the question or if the provided context does not have enough information, do not make assumptions. Ask the user for more specific details to better understand their needs.\n\nSensitive Topics: Do not engage in answering questions related to sensitive topics such as racism or discrimination. Instead, respond with something like,  I\'m sorry to hear that you are experiencing this type of problem. Unfortunately, I cannot help you directly with this kind of problem. Please check "Guideline/Page"\n\nStudy-Related Focus: Answer only questions that are related to study programs, universities, education, or opening hours / holidays of the university. Redirect conversations back to study-related topics if necessary.\n\nData Processing: If a user asks how their data or chat history is processed, provide a brief summary of the data protection policy and refer them to the full policy. Respond with something like What2Study verarbeitet deine personenbezogenen Daten, um dir bei Fragen rund um das Studium zu helfen und unsere Dienstleistungen zu verbessern. Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung: [https://digitaledulab.de/what2study/datasecurity/] \nResponse Structure: Clearly state if a program is not available and suggest similar options. Always ask a follow-up question to ensure the user\'s needs are met.',
+    })
     var token = /token=.*'/g.exec(job.scriptTag)
     if (token) {
       setToken(token[0].slice(6, -1))
@@ -457,10 +457,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
   };
   useEffect(() => {
     onjobChange({ ...job, name: chatbotName })
-    var customPrompt= job.customPrompt
-    if(job.name !="")  customPrompt= customPrompt.replace("chatbotname", chatbotName)
-    customPrompt= customPrompt.replace("universityname", currentUser?.attributes.name)
-    
+    var customPrompt = job.customPrompt
+    if (job.name != "") customPrompt = customPrompt.replace("chatbotname", chatbotName)
+    customPrompt = customPrompt.replace("universityname", currentUser?.attributes.name)
+
     setcustomPromptT(customPrompt)
   }, [chatbotName])
   useEffect(() => {
@@ -601,7 +601,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         onjobChange({ ...job, scriptTag: data.result.scriptTag })
       });
     }
-    
+
   }
   const onUnpublish = () => {
     onjobChange({ ...job, activeChatbot: false })
@@ -697,7 +697,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
-  
+
   function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
   }
@@ -710,18 +710,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span='8'>
             <h3>Status</h3>
             <Space>
-            <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false}  onChange={(e)=>{
-            
-            console.log(e)
-             if(e){
-              onPublish()
-            }
-            else{
-              onUnpublish()
-            }
-          
-          }}
-             />
+              <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false} onChange={(e) => {
+
+                console.log(e)
+                if (e) {
+                  onPublish()
+                }
+                else {
+                  onUnpublish()
+                }
+
+              }}
+              />
               {/* <Tag color={job.activeChatbot ? 'green' : 'blue'}>
                 {job.activeChatbot ? 'Öffentlich' : 'Entwurf'}
               </Tag>
@@ -761,8 +761,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
             </Form.Item>
             <label style={{ fontWeight: "bold", fontSize: "22px" }}> Grundeinstellungen</label> <Tooltip title={"Einstellung der Standardsprache für die Benutzeroberfläche und den Begrüßungstext des Chatbots. Die Nutzer:innen haben zusätzlich die Möglichkeit, die Sprache in ihren Einstellungen zu ändern. Außerdem reagiert der Chatbot automatisch auf die Sprache der Nachrichten und passt seine Antwort entsprechend an."} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+              <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+            </Tooltip>
             <Form.Item label='Sprache des Chatbots' name='chatbotLanguage' style={{ marginTop: "10px" }}>
               <Select
                 style={{ width: "200px" }}
@@ -822,11 +822,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <p>Bearbeiten Sie hier die Eingabeaufforderung (Prompt) für Ihren Chatbot. Ihr Chatbot nutzt diese Aufforderung, um passende Antworten zu erstellen</p>
 
             <Radio.Group onChange={(e) => {
-            console.log("here")
-            console.log(e)
+              console.log("here")
+              console.log(e)
               setPromptValue(e.target.value);
-              onjobChange({...job, promptSelection:e.target.value==1 ? false:true})
-            }} value={job.promptSelection == false? 1 : 2}>
+              onjobChange({ ...job, promptSelection: e.target.value == 1 ? false : true })
+            }} value={job.promptSelection == false ? 1 : 2}>
               <Space direction="vertical" style={{ width: "auto" }}>
                 <Radio value={1} > Default Prompt:
                   <TextArea
@@ -835,7 +835,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
                     key={"defaultPrompt"}
                     id={"defaultPrompt"}
-                    style={{ width: "800px" ,backgroundColor:"whitesmoke"}}
+                    style={{ width: "800px", backgroundColor: "whitesmoke" }}
                     // onChange={(e) => {
                     //   onjobChange({ ...job, customPrompt: e.target.value })
                     // }
@@ -946,8 +946,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Row>
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon</label><Tooltip title={"Wählen Sie ein Icon für den Chatbot aus, das möglichst quadratisch, hochauflösend und mit transparentem Hintergrund ist, um eine optimale Darstellung zu gewährleisten."} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+          <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+        </Tooltip>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
             {selectedBubble ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedBubble} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
@@ -967,9 +967,9 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
             </Form.Item>
           </Col>
-          <h3 style={{ marginLeft:"10px", fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon blinkende Hintergrundfarbe</h3>
-         
-              
+          <h3 style={{ marginLeft: "10px", fontSize: "23px", fontWeight: "bold" }}>Chatbot-Icon: Blinkende Hintergrundfarbe</h3>
+
+
           {/* <Col span={3}>
             <MediaPreview mediaType='Bilder' saveCallback={(url: any, index: any) => {
             
@@ -978,24 +978,24 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           </Col> */}
         </Row>
         <br></br>
-               <Row>
-                 <h3>Hintergrundfarbe</h3>
-                <ColorPicker
-                  size='large'
-                  style={{marginLeft:"10px"}}
-                  defaultValue={job.backgroundColor || "#ECD08C"}
-                  onChange={(e, s) => {
-                    onjobChange({ ...job, backgroundColor: s.toString() })
-                  }}
-                  showText={() => (
-                    <DownOutlined
-                      style={{
-                        color: "rgba(0, 0, 0, 0.25)",
-                      }}
-                    />
-                  )}
-                />
-</Row>
+        <Row>
+          <h3>Hintergrundfarbe</h3>
+          <ColorPicker
+            size='large'
+            style={{ marginLeft: "10px" }}
+            defaultValue={job.backgroundColor || "#ECD08C"}
+            onChange={(e, s) => {
+              onjobChange({ ...job, backgroundColor: s.toString() })
+            }}
+            showText={() => (
+              <DownOutlined
+                style={{
+                  color: "rgba(0, 0, 0, 0.25)",
+                }}
+              />
+            )}
+          />
+        </Row>
       </fieldset>
 
       {/* <fieldset className="fieldsetCustom">
@@ -1333,8 +1333,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         </Row>
         <label style={{ fontSize: "23px", fontWeight: "bold" }}>Chatbot-Profilbild</label><Tooltip title={"Wählen Sie ein Profilbild für den Chatbot aus, das möglichst quadratisch, hochauflösend und mit transparentem Hintergrund ist, um eine optimale Darstellung zu gewährleisten."} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+          <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+        </Tooltip>
         <Row gutter={24} style={{ marginTop: "25px" }}>
           <Col span={2}>
             {selectedProfile ? <Image style={{ height: "60%", width: "60%", borderRadius: "20%", border: "2px solid #00ADDC", padding: "2px" }} src={selectedProfile} /> : <Skeleton.Image style={{ width: "100%", height: "100%", marginTop: "-20px" }} />}
@@ -1345,7 +1345,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
                 <Upload {...propsProfile} maxCount={1} showUploadList={false}>
 
-                  <Button style={{  height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
+                  <Button style={{ height: "78px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '250%', color: "#257dfe" }} />}><br></br><span>Bild hochladen: JPEG/PNG-Datei</span>
 
                   </Button>
                 </Upload>
@@ -1370,13 +1370,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       <fieldset className="fieldsetCustom">
         <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>Zufällige Frage</label><Tooltip title={"Möglichkeit, eine Nachricht festzulegen, die der Chatbot nach [X] Minuten Inaktivität proaktiv an den/die Nutzer:in sendet."} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>Zeitgesteuerte Nachfrage/Information</label><Tooltip title={"Möglichkeit, eine Nachricht festzulegen, die der Chatbot nach [X] Minuten Inaktivität proaktiv an den/die Nutzer:in sendet."} >
+              <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+            </Tooltip>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.randomQuestionEnabled} onChange={(e) => {
               onjobChange({ ...job, randomQuestionEnabled: !job.randomQuestionEnabled })
             }}></Checkbox>
-            <p>Welche Informationen sollen angegeben werden, wenn der Chatbot den Hinweis gibt eine beliebige Frage zu stellen?</p>
+            <p>Der Chatbot sendet nach einer bestimmten Zeit automatisch eine Nachricht. Hier kann festgelegt werden, welche Information bereitgestellt oder welche Frage gestellt werden soll.</p>
             <br></br>
             <TextArea
               defaultValue={job.randomQuestion || "Unsicher, welche Fragen man mir stellen kann? Frag mich doch zu:\n\nWelche Studiengänge bietet die Universität an?\nWie lauten die Zulassungsvoraussetzungen für den Studiengang XYZ?\nWie bewerbe ich mich für ein Studium?"}
@@ -1393,13 +1393,13 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             />
           </Col>
           <Col span={12}>
-            <label style={{ fontWeight: "bold", fontSize: "large" }}>{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} </label><Tooltip title={"Möglichkeit, weitere Informationen (bspw. Öffnungszeiten) anzugeben, die angezeigt werden, wenn der Nutzer den Button '[Weiterer Klärungsbedarf]' anwählt."} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+            <label style={{ fontWeight: "bold", fontSize: "large" }}>{job.langWeiterMain == "" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf" : job.langWeiterMain} </label><Tooltip title={"Möglichkeit, weitere Informationen (bspw. Öffnungszeiten) anzugeben, die angezeigt werden, wenn der Nutzer den Button '[Weiterer Klärungsbedarf]' anwählt."} >
+              <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+            </Tooltip>
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.talkToaHumanEnabled} onChange={(e) => {
               onjobChange({ ...job, talkToaHumanEnabled: !job.talkToaHumanEnabled })
             }}></Checkbox>
-            <p>Welche Informationen sollten bereitgestellt werden bei der Option "{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain}"?</p>
+            <p>Welche Informationen sollten bereitgestellt werden bei der Option "{job.langWeiterMain == "" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf" : job.langWeiterMain}"?</p>
             <br></br>
             <TextArea
               defaultValue={job.talkToaHuman || "Wir freuen uns, dass Sie direkt mit uns in Kontakt treten möchten, gerne können Sie hierzu die angegebenen Optionen nutzen. \n\nBitte beachten Sie unsere Öffnungszeiten und gewähren Sie uns nach Möglichkeit Einblick in Ihren Chatverlauf, damit wir direkt sehen können, um welches Problem es sich handelt. Sollte gerade niemand verfügbar sein können wir uns auch auf Wunsch bei Ihnen melden."}
@@ -1418,21 +1418,22 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
         <Row gutter={24} style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={12}>
-<h3>Stellen Sie den Timer für die Anzeige der Zufallsfrage ein </h3>
-<input
-    type='number'
-    className='form-control'
-    min="1"
-    defaultValue={Number(job.randomQuestionTimer)/60000} onChange={(e)=>{
-    var milliseconds =  Number(e.target.value) * 60000
-    if(Number(e.target.value)<1){
-      milliseconds = 60000
-    }
-  onjobChange({ ...job, randomQuestionTimer: milliseconds+"" })
+            <h3>Zeitverzögerung für die zeitgesteuerte Nachfrage/Information </h3>
+            <input
+              type='number'
+              className='form-control'
+              min="1"
+              style={{width:"57px", borderColor:"beige"}}
+              defaultValue={Number(job.randomQuestionTimer) / 60000} onChange={(e) => {
+                var milliseconds = Number(e.target.value) * 60000
+                if (Number(e.target.value) < 1) {
+                  milliseconds = 60000
+                }
+                onjobChange({ ...job, randomQuestionTimer: milliseconds + "" })
 
-}}/> 
+              }} />
 
-<span>Minuten</span>
+            <span style={{marginLeft:"10px"}}>Minuten</span>
           </Col>
           <Col span={12}>
             <br></br>
@@ -1441,7 +1442,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             <Checkbox style={{ marginLeft: "10PX", fontSize: "large" }} checked={job.matriculationNumber} onChange={(e) => {
               onjobChange({ ...job, matriculationNumber: !job.matriculationNumber })
             }}></Checkbox>
-            <p> Aktivieren Sie diese Option, damit der Benutzer seine Matrikelnummer über die Funktion '{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain}' mitteilen kann.</p>
+            <p> Aktivieren Sie diese Option, damit der Benutzer seine Matrikelnummer über die Funktion '{job.langWeiterMain == "" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf" : job.langWeiterMain}' mitteilen kann.</p>
             <br></br>
 
           </Col>
@@ -1455,8 +1456,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Col span={12}>
             <br></br>
 
-            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[{ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain}]” umbenennen</label>
-            <Input type='text' defaultValue={ job.langWeiterMain=="" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf": job.langWeiterMain} key={"weiterKlarungName"} onChange={(e) => {
+            <label style={{ fontWeight: "bold", fontSize: "large" }}> Button “[{job.langWeiterMain == "" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf" : job.langWeiterMain}]” umbenennen</label>
+            <Input type='text' defaultValue={job.langWeiterMain == "" || job.langWeiterMain == undefined ? "Weiterer Klärungsbedarf" : job.langWeiterMain} key={"weiterKlarungName"} onChange={(e) => {
               onjobChange({ ...job, langWeiterMain: e.target.value })
             }}></Input>
             <br></br>
@@ -1478,11 +1479,11 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             {/* <p>Wird im Intro des Chatbots angezeigt</p> */}
 
             <Upload {...propsMedia} maxCount={1} listType='picture' >
-              <Button style={{ width: "450px", height: "150px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '350%', color: "#257dfe" }} />}><br></br><span>Hochladen: Videos (mp4)</span></Button>
+              <Button style={{ width: "450px", height: "150px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '350%', color: "#257dfe" }} />}><br></br><span>Hochladen: Video (mp4)</span></Button>
 
             </Upload>
 
-          {job.introVideo!="" && job.introVideo!= undefined && <p>1 Videodatei mit URL vorhanden: <a href={job.introVideo} target='_blank'>Einführungsvideo</a> Laden Sie eine neue Videodatei hoch, um die alte zu ersetzen</p>}
+            {job.introVideo != "" && job.introVideo != undefined && <p>1 Videodatei mit URL vorhanden: <a href={job.introVideo} target='_blank'>Einführungsvideo</a> Laden Sie eine neue Videodatei hoch, um die alte zu ersetzen</p>}
           </Col>
 
         </Row>
@@ -1587,19 +1588,19 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             >
               {job.activeChatbot ? 'Zu Entwurf' : 'Veröffentlichen'}
             </Button> */}
-            <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false}  onChange={(e)=>{
-            
-            console.log(e)
-             if(e){
-              onPublish()
-            }
-            else{
-              onUnpublish()
-            }
-          
-          }}
-             />
-    
+            <Switch checkedChildren="Veröffentlichen" unCheckedChildren="Zu Entwurf" defaultChecked={job.activeChatbot ? true : false} onChange={(e) => {
+
+              console.log(e)
+              if (e) {
+                onPublish()
+              }
+              else {
+                onUnpublish()
+              }
+
+            }}
+            />
+
           </Space>
 
         </Col>
@@ -1608,8 +1609,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
           <Button style={{ backgroundColor: "#598c70", color: "white" }} onClick={showModal}>
             Klick mich!
           </Button><Tooltip title={"Code für den Webmaster, um den Chatbot in die Website der Organisation zu integrieren"} >
-        <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-    </Tooltip>
+            <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+          </Tooltip>
 
         </Col>
 
@@ -1631,7 +1632,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         welcomeMsgDE={job.welcomeMsgDE}
         welcomeMsgEN={job.welcomeMsgEN}
         introVideo={job.introVideo}
-        langWeiterMain={(job.langWeiterMain == "" || job.langWeiterMain==undefined) ? "Weiterer Klärungsbedarf" : job.langWeiterMain}
+        iconBackgroundColor={job.backgroundColor}
+        langWeiterMain={(job.langWeiterMain == "" || job.langWeiterMain == undefined) ? "Weiterer Klärungsbedarf" : job.langWeiterMain}
         // accessToken={token}
         // chatbotId={id}
         matriculationNumber={job.matriculationNumber}
@@ -1663,7 +1665,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
             UIGroupB: {
               UIGroupBUIBackground: job.uiBackgroundGroupB,
               UIGroupBUIHighlight: job.uiHighLightGroupB,
-              fontstyle:job.fontstyle
+              fontstyle: job.fontstyle
             },
             chatbotLookName: job.name,
           }}
@@ -1687,8 +1689,8 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <br></br>
         <p>Bitte fügen Sie den folgenden Parameter nach dem Token im obigen Skript hinzu, um den Chatclient mit normalem oder Vollbildmodus einzubetten.</p>
 
-<p>für normal: &windowtype=min</p>
-<p>für Vollbild/Großbild: &windowtype=full</p>
+        <p>für normal: &windowtype=min</p>
+        <p>für Vollbild/Großbild: &windowtype=full</p>
 
       </Modal>
     </Form>

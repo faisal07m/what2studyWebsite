@@ -176,7 +176,7 @@ const EditJobs = () => {
                 allowClear
                 showSearch={false}
                 style={{ width: '100%' }}
-                placeholder="Bitte wählen Sie Chatbot/s aus"
+                placeholder="Bitte wählen Sie einen oder mehrere Chatbots aus"
                 defaultValue={kbs?.chatbots}
                 //   defaultValue={}
                 onChange={async (e) => {
@@ -192,7 +192,7 @@ const EditJobs = () => {
         </Row>
         <Row gutter={24} style={{marginTop:"20px"}}>
           <Col span={8}>
-          <Button type='primary' onClick={onSave}>Namen und Chatbot-Auswahl speichern</Button>
+          <Button type='primary' onClick={onSave}>Name und Datenbankzuweisung speichern</Button>
           </Col>
         </Row>
         </div>

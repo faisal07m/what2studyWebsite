@@ -194,9 +194,9 @@ const { error } = await updateUser({ ...attributes })
 
                     <>
                     {id=="1"?
-                     <> <label>Modelltyp auswählen:</label><span> 
+                     <> <label style={{marginRight:"12px"}}>Modelltyp auswählen:</label><span> 
                       {/* localModelSelection == false ? true: */}
-                      <Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ switchOPT1} onChange={async (e) => {
+                      < Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ switchOPT1} onChange={async (e) => {
                         await setSwitchOPT1(e)
                         await setAttributes({ ...attributes, localModel: switchOPT1})
                        

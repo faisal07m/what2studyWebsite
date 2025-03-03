@@ -103,7 +103,7 @@ const Overview = ({ ...data }) => {
 
   const columns = [
     {
-      title: 'Name des Spezialfall',
+      title: 'Name des Spezialfalls',
       dataIndex: 'name',
       key: 'name',
       render: (text: string) => <b>{text}</b>,
@@ -149,7 +149,7 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='5'
-        title=' Überblick über den Spezialfall'
+        title='Überblick über die Spezialfälle'
       >
         <Button type="primary" onClick={onNewIntent} style={{
           background: "green", border: 'green', position: 'absolute',
@@ -167,7 +167,7 @@ const Overview = ({ ...data }) => {
     return (
       <PageContainer
         pageId='5'
-        title='Überblick über den Spezialfall'
+        title='Überblick über die Spezialfälle'
       >
         <Button type="primary" onClick={onNewIntent} style={{
           background: "green", border: 'green', position: 'absolute',
@@ -185,7 +185,7 @@ const Overview = ({ ...data }) => {
   return (
     <PageContainer
       pageId='5'
-      title='Überblick über den Spezialfall'
+      title='Überblick über die Spezialfälle'
     >
       <Button type="primary" onClick={onNewIntent} style={{
         background: "green", border: 'green', position: 'absolute',

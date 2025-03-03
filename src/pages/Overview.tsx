@@ -77,9 +77,50 @@ const Overview = (kbID:any ) => {
           setMainDiv(false)
         }
       }
+
+
+    //  if(message.attributes.user ==Parse.User.current()?.id )
+    //   {
+    //    if(message.attributes.statusData == 0){
+    //      setMainDiv(true)
+    //       console.log("subscription")
+    //    }
+    //    else{
+    //     setMainDiv(false)
+    //   }
+    //  }
+
     });
   });
+ // Enable subscription to chart name change
+ var knowledgeBase = Parse.Object.extend("knowledgeBase");
+ var q3 = new Parse.Query(knowledgeBase);
+ q3.subscribe().then(async function (sub) {
+   sub.on('update', function (message) {
 
+     if (message.attributes.user == curUser?.id) {
+       if (message.attributes.jobStatus == true) {
+         setCrawlJobControl(true)
+         setLoader(false)
+        
+         // console.log(message)
+         // if(message.attributes.type =="url"){
+         //   console.log("sss")
+         // setTableJSX(<></>)
+         // setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
+
+         // }
+         
+       }
+       else {
+         // setCrawlJobControl(false)
+         setLoader(false)
+
+       }
+     }
+     
+   });
+  });
   
 
   var activeIDset = async () => {
@@ -471,6 +512,7 @@ function isValidURL(string) {
       nestedLinks: [],
       nPlus1: status == 0 ? nPLus1: false,
       jobStatus: false,
+      kbID:kbIDVal
     })
     setTableJSX(<></>)
     setTableJSX(JSXelementTable(localStorage.getItem("tableID")))
@@ -487,7 +529,7 @@ function isValidURL(string) {
     if(status != 401){
     nplus1_= nPLus1
     }
-    let formData = { url: urlCrawler, allowDeepCrawl: nplus1_ ? "1" : "0" ,  userId: curUser?.id, jobId: res, username: crawlURLUsername, password: crawlURLPassword}
+    let formData = { url: urlCrawler, allowDeepCrawl: nplus1_ ? "1" : "0" ,  userId: curUser?.id, jobId: res, username: crawlURLUsername, password: crawlURLPassword,kbId:kbIDVal}
 
 
     const response = fetch(

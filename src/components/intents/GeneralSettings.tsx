@@ -264,7 +264,7 @@ list.push(element.id)
           // style={{width:"320px", marginBlock:"10px", marginLeft:"10px", height:"45px"}}
 
           style={errorsVal.name ? errorCss : errorCssInvert}
-          placeholder='Füge den Namen eines Szenarios hinzu'
+          placeholder='Füge den Namen des Spezialfalls hinzu'
 
           defaultValue={intent.name}
           //value={job.title}
@@ -285,7 +285,7 @@ list.push(element.id)
         </Row>
         <Row gutter={24}>
           <Col span={10}>
-            <h3>Ordnen Sie dieses Spezialfalls der Datenbank zu</h3>
+            <h3>Ordnen Sie den Spezialfall einer Datenbank zu</h3>
             <Space style={{ marginTop: "5px", width: '100%' }} direction="vertical">
 
               <Select
@@ -314,7 +314,7 @@ list.push(element.id)
         </div>
      <br></br>
      <br></br>
-      <h3>Frage-Antwort-Paare hinzufügen. "Klicken Sie auf Hinzufügen, um das Frage-Antwort-Paar zu erstellen"</h3>
+      <h3>Frage-Antwort-Paare hinzufügen. Klicken Sie auf "Hinzufügen", um das Frage-Antwort-Paar zu erstellen</h3>
 
       <Row gutter={26} style={{ marginBottom: '10px', marginLeft: "1px", marginTop: "20px" }}><h4 style={{ marginTop: '5px' }}> </h4>
         <Form.Item label='Frage' name='Frage' >
@@ -361,8 +361,8 @@ list.push(element.id)
       <div style={{border:"outset"}}>
       {intent.scenario && intent.scenario.map((x, i) => {
         return (
-          <Row style={{ marginBottom: '10px', marginLeft: "1px", marginTop: "20px" }}><h4 style={{ marginRight: '5px', marginTop: '8px' }}> <CaretRightFilled />  {i +1}</h4>
-            <Form.Item label='Frage-Antwort-Paare  '   >
+          <Row style={{ marginBottom: '10px', marginLeft: "1px", marginTop: "20px" }}><h4 style={{ marginRight: '5px', marginTop: '8px' }}> <CaretRightFilled />  {i +1}. </h4>
+            <Form.Item label=' Frage-Antwort-Paar  '   >
               <TextArea
                 style={{ width: '500px' }}
                 autoSize={{ minRows: 3, maxRows: 5 }}
@@ -392,7 +392,7 @@ list.push(element.id)
           </Row>
         );
       })}
-      {intent.scenario.length == 0 && <h2 style={{padding:"30px"}}>kein Frage-Antwort-Paar hinzugefügt</h2>}
+      {intent.scenario.length == 0 && <h2 style={{padding:"30px"}}>Bisher kein Frage-Antwort-Paar hinzugefügt</h2>}
 </div>
 
 

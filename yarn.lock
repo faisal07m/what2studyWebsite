@@ -20041,10 +20041,10 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.4.tgz"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
-what2study-chatclient@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.npmjs.org/what2study-chatclient/-/what2study-chatclient-4.4.1.tgz"
-  integrity sha512-+9DoYE7H06dxJnk1m7+RdxtDuP3PwreDwvHmCwL7+vzOTU2sLICufFmUajovaqRE1O4ZhJMvInnuUWAahDrocQ==
+what2study-chatclient@^4.4.8:
+  version "4.4.8"
+  resolved "https://registry.npmjs.org/what2study-chatclient/-/what2study-chatclient-4.4.8.tgz"
+  integrity sha512-RUnqB0EZBC4WdewxldOGDXVXDHbiYfrpMCbed/KYSvxmANVvz+21yssynRRuvjL2ZHse2fZvO2LZi50r6OXOgg==
   dependencies:
     "@testing-library/jest-dom" "^5.16.5"
     "@testing-library/react" "^13.4.0"
