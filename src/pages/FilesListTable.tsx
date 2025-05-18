@@ -1,5 +1,5 @@
 
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { Tag, InputRef, theme, Input, Space, TableProps, Table, Button, Modal, TableColumnType, Image, Row, Form } from 'antd'
 
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
@@ -55,7 +55,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
     const [tableElement, setTableElement] = useState<JSX.Element>()
 
-    const [id, setId] = useState<string>(props.id)
+    const [idProp, setId] = useState<string>(props.id)
 
     const [fileText, setFileText] = useState<string>("")
 
@@ -71,6 +71,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
     const [fileTextJSX, setFileTextJSX] = useState<JSX.Element>(<></>)
     const [knowledgeBase, setKnowledgeBase] = useState<knowledgeBaseBlock[] | any>()
 
+    const { id } = useParams<{ id: string }>()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -210,7 +211,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
             width:"400px",
             key: 'name',
             ...getColumnSearchProps('name'),
-            render: (_, record) => <div style={{width:"400px"}}> {id !="4" ? <p>{record.url_org}</p>:  <a href={record.url_org} target='_blank'> {record.url_org}</a> }{ id !="4" && <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>}</div>,
+            render: (_, record) => <div style={{width:"400px"}}> {idProp !="4" ? <p>{record.url_org}</p>:  <a href={record.url_org} target='_blank'> {record.url_org}</a> }{ idProp !="4" && <a href={record.url} download={record.fileName}>{idProp == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>}</div>,
         },
         // {
         //     title: 'URL',
@@ -270,23 +271,23 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
                      { record.type=="url" && (record.jobStatus ? <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CheckCircleTwoTone style={{marginLeft:"10px"}}  twoToneColor="#52c41a" /></p>: <p style={{marginTop:"13px", fontSize:"Large"}}><span style={{fontSize:"medium" }}>Crawl Job</span><CloseCircleTwoTone style={{marginLeft:"10px"}} twoToneColor="red" /></p>
                     )}
                     {
-                     id!="4" ? <Button type="primary" icon={<EyeOutlined />} onClick={() => {
+                     idProp!="4" ? <Button type="primary" icon={<EyeOutlined />} onClick={() => {
 
-                        if (id == "2") {
+                        if (idProp == "2") {
                             textView(record.url)
                         }
-                        if (id == "1") {
+                        if (idProp == "1") {
                             setUrlViewer(record.url)
                         }
-                        if (id == "3") {
+                        if (idProp == "3") {
                             setMediaUrl(record.url)
                         }
-                        if (id == "4") {
+                        if (idProp == "4") {
                             textView(record.url)
                         }
                         setModal1Open(true)
 
-                    }}>Anzeigen</Button> : <a href={record.url} download={record.fileName}>{id == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>
+                    }}>Anzeigen</Button> : <a href={record.url} download={record.fileName}>{idProp == "4"?"Datei herunterladen":"Datei herunterladen"}  </a>
                 }
                     {record.nPlus1 && record.nestedLinks.length>0 && 
                     
@@ -328,25 +329,26 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
 
 
-    const setTableData = async (id) => {
+    const setTableData = async (id_tb) => {
         let type = ""
-        if (id == "1") {
+        if (id_tb == "1") {
             type = "pdf"
         }
-        else if (id == "2") {
+        else if (id_tb == "2") {
             type = "text"
         }
-        else if (id == "3") {
+        else if (id_tb == "3") {
             type = "media"
         }
-        else if (id == "4") {
+        else if (id_tb == "4") {
             type = "url"
         }
         let data: DataType[] = [];
            
         if (type != "") {
-
-            let KB = await getAllKnowledgeBaseWithType(type);
+            console.log("this never used")
+            console.log(id)
+            let KB = await getAllKnowledgeBaseWithType(type,id );
             if(type=="text"){
                 data.push(
                     {
@@ -407,8 +409,8 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
     }
 
     useEffect(() => {
-        setTableData(id)
-    }, [id]);
+        setTableData(idProp)
+    }, [idProp]);
 
 
     useEffect(() => {
@@ -416,7 +418,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
     useEffect(() => {
         setData(dataNew)
-        setTableData(id)
+        setTableData(idProp)
     }, [dataNew]);
 
 
@@ -445,7 +447,7 @@ const FilesListTable: React.FC<loc> = (props: loc) => {
 
                 }}>
 
-                    {fileText.length > 0 ? fileTextJSX : id == "1" ? <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                    {fileText.length > 0 ? fileTextJSX : idProp == "1" ? <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                         <Viewer fileUrl={urlViewer} />
                     </Worker> : <></>}
                     {mediaUrl != "" && nestedLinksArr.length==0 && (mediaUrl.endsWith("jpg") || mediaUrl.endsWith("png") || mediaUrl.endsWith("jpeg")) ? <>

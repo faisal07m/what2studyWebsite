@@ -40,18 +40,10 @@ const EditJobs = () => {
 
         var chatbotOBJ = Parse.Object.extend("chatbots");
         var queryChatbot = new Parse.Query(chatbotOBJ);
+        queryChatbot.equalTo("objectId",el)
 
-        var kbclass = Parse.Object.extend("kbclass");
-        var kbquery = new Parse.Query(kbclass);
-        kbquery.contains("chatbots",el)
-        kbquery.notEqualTo("objectId", id)
-        var chatbotFound = await kbquery.find()
-        console.log("chatbotFound")
-        console.log(el)
-        console.log(chatbotFound)
-        if(chatbotFound.length==0 )
-
-        {var result = await queryChatbot.get(el)
+        var result = await queryChatbot.first()
+       
 
         if (result) {
           var name = result.attributes.name
@@ -66,7 +58,7 @@ const EditJobs = () => {
             },
           )
           }
-        }
+        
        
 
 
@@ -107,12 +99,14 @@ const EditJobs = () => {
 
   const [parseRef, setParseRef] = useState<Parse.Object>()
   const onSave = async () => {
-   
+    var nm = kbs?.name
+    if(kbname)  nm = kbname
+
     parseRef?.save(
-      ({ ...kbs, name: kbname, chatbots: chatbotslist }))
+      ({ ...kbs, name: nm, chatbots: chatbotslist }))
       showNotification({
         title: 'Erfolgreich gespeichert',
-        message: `${kbname.name} wurde erfolgreich gespeichert`,
+        message: `${nm} wurde erfolgreich gespeichert`,
         type: 'success',
       })
   }
@@ -145,14 +139,15 @@ const EditJobs = () => {
       title={kbs?.name ? '"' + kbs?.name + '" bearbeiten' : ""}
       buttonLoading={pending}
     >
-      <div style={{border:"double", padding:"20px", marginBottom:"20px"}}>
+      <div style={{border:"outset", padding:"20px", marginBottom:"20px"}}>
         <Row gutter={24}>
           <Col span={8}>
-            <Form.Item tooltip="Wie wird Ihr Chatbot genannt? Geben Sie einen Namen für Ihren Chatbot an" style={{ marginTop: "10px", fontWeight: "bold" }}
-              label={<p style={{ fontSize: "22px" }}>Name der Datenbank</p>} name='name'>
+              
+              <h3 style={{ marginTop: "10px", fontWeight: "bold" , marginBottom:"10px"}}>Name der Datenbank</h3>
               <Input
                 placeholder='Name des Datenbank'
                 defaultValue={kbs?.name}
+                style={{marginBottom:"40px", width:"500px", height:"55px"}}
                 //value={job.title}
                 onChange={(e) => {
                   setKbName(e.target.value)
@@ -162,7 +157,6 @@ const EditJobs = () => {
 
               />
 
-            </Form.Item>
           </Col>
 
         </Row>
@@ -176,7 +170,7 @@ const EditJobs = () => {
                 allowClear
                 showSearch={false}
                 style={{ width: '100%' }}
-                placeholder="Bitte wählen Sie einen oder mehrere Chatbots aus"
+                placeholder="Bitte wählen Sie eine oder mehrere Datenbanken aus"
                 defaultValue={kbs?.chatbots}
                 //   defaultValue={}
                 onChange={async (e) => {

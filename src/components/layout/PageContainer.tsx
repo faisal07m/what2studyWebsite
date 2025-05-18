@@ -8,7 +8,7 @@ import FooterBar from './FooterBar'
 import { Button } from 'antd'
 import { useLocation } from 'react-router-dom'
 import Parse from 'parse'
-import { updateUser, curUser } from '../../types/user'
+import { updateUser, curUser, getCurrentUser } from '../../types/user'
 import { showNotification } from '../../helpers/notification'
 const { Header, Sider, Content, Footer } = Layout
 
@@ -91,11 +91,22 @@ const PageContainer = ({
         }
       }
       if (updateFrom == "generalOffersState") {
+        console.log("item here")
+        console.log(localStorage.getItem('updatedObj'))
+       
         if (localStorage.getItem('updatedObj') != null) {
           if (parseRef) {
+            console.log("item here")
+            console.log(localStorage.getItem('updatedObj'))
             var temp = await parseRef.save(JSON.parse(localStorage.getItem('updatedObj') || ""))
             successNotificationFunc()
             handleCancel()
+            var queryDocument = new Parse.Query(curUser);
+            var curuserobj = getCurrentUser()
+            if(curuserobj)
+              {var curUserParseObject = await queryDocument.get(curuserobj?.id )
+              curUserParseObject.addAllUnique('Joblist', temp.id)
+              curUserParseObject.save()}
           }
         }
       }

@@ -57,6 +57,7 @@ const Overview = ({ ...data }) => {
   // User creates a new job
   const onNewIntent = async () => {
     if (!currentUser) return
+
     try {
       const generatedId = await generateIntent({
         name: '',
@@ -79,7 +80,9 @@ const Overview = ({ ...data }) => {
       await jobToDelete?.destroy()
       setIntents(intents ? intents.filter((intents) => intents.id !== id) : null)
       console.log(id)
-      let formData = { url: "", fileName: id+"_intent", user: currentUser.id, nameWOS:  id+"_intent",kbId:kbID }
+      if (kbID.length >0){
+        kbID.forEach(kbid => {
+          let formData = { url: "", fileName: id+"_intent", user: currentUser?.id, nameWOS:  id+"_intent",kbId:kbid }
                 const response = fetch(
                     SERVER_URL_parsefunctions+"/deletePythonFile",
                     {
@@ -92,6 +95,10 @@ const Overview = ({ ...data }) => {
                         body: JSON.stringify(formData),
                     }
                 );
+        });
+      
+                  
+      }
     } catch (error) {
       showNotification({
         title: 'Fehler beim Löschen',

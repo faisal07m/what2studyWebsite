@@ -17,7 +17,9 @@ import {
   Upload,
   Radio,
   Tooltip,
-  Switch
+  Switch,
+  PopconfirmProps,
+  message
 } from 'antd'
 import {
   GlobalOutlined,
@@ -25,7 +27,8 @@ import {
   SoundTwoTone,
   DownOutlined,
   InboxOutlined,
-  InfoCircleOutlined
+  InfoCircleOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons'
 import { JobOfferBlock } from '../../types/JobOffers'
 import { toBase64 } from '../../helpers/toBase64'
@@ -42,6 +45,7 @@ import { getCurrentUser, UserType } from '../../types/user'
 import TextArea from 'antd/es/input/TextArea'
 import ChatClient from "what2study-chatclient";
 import { SERVER_URL_parsefunctions } from '../../config/parse'
+import modal from 'antd/es/modal'
 
 
 library.add(faCaretDown);
@@ -546,60 +550,98 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
       setFilterJSX(obj)
     }
   }, [filterArrChangeCounter]);
-  const onPublish = () => {
-    const {
-      name,
 
-    } = job
-    let errors: string[] = []
-    // if (description.trim() === '') errors.push('Die job muss eine Beschreibung besitzen')
-    if (name != null) {
-      if (name.trim() === '') {
-        errors.push('Die job muss einen Title besitzen')
-        var errorVal = errorsVal
-        errorVal.title = true
-        setErrorsVal(errorVal)
-      }
-    }
+  const [open2, setOpen2] = useState(false);
 
-    // if (!location) errors.push('Die job benötigt einen Standort')
-    if (errors.length !== 0) {
-      setErrorCounter(errorsValChanged + 1)
-      return showNotification({
-        title: 'Fehler. Bitte überprüfen Sie Ihre Angaben',
-        message: `Bitte korrigieren Sie die rot markierten Felder`,
-        // n ${errors.map(
-        //   (e) => '\n- ' + e
-        // )}`,
+  const showModal2 = () => {
+    setOpen2(true);
+  };
 
-        type: 'error',
-        long: true,
-      })
-    }
+  const hideModal2 = () => {
+    onUnpublish()
+    
+    setOpen2(false);
+  };
 
-    if (errors.length === 0) {
-      onjobChange({ ...job, activeChatbot: true })
 
-    }
-    if (job.scriptTag == "" || job.scriptTag == undefined) {
-      let formData = { user: Parse.User.current()?.id, chatbotId: job.id }
-      fetch(
-        SERVER_URL_parsefunctions + "/scriptTag",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Parse-Application-Id": "what2study",
-            "X-Parse-Master-Key": "what2studyMaster",
-          },
-          body: JSON.stringify(formData),
+
+
+  const onPublish = async () => {
+
+    var kbclass = Parse.Object.extend("kbclass");
+    var queryKB = new Parse.Query(kbclass);
+    
+    queryKB.contains("chatbots", id)
+
+    // var intents = Parse.Object.extend("intents");
+    // var intentquery = new Parse.Query(intents);
+    // intentquery.contains("kbs",el)
+    // intentquery.notEqualTo("objectId", id)
+    var chatbotAssigned = await queryKB.first()
+    console.log(chatbotAssigned)
+    if (chatbotAssigned) {
+      const {
+        name,
+
+      } = job
+      let errors: string[] = []
+      // if (description.trim() === '') errors.push('Die job muss eine Beschreibung besitzen')
+      if (name != null) {
+        if (name.trim() === '') {
+          errors.push('Die job muss einen Title besitzen')
+          var errorVal = errorsVal
+          errorVal.title = true
+          setErrorsVal(errorVal)
         }
+      }
 
-      ).then(async (response) => {
-        const data = await response.json();
-        console.log(data.result.scriptTag)
-        onjobChange({ ...job, scriptTag: data.result.scriptTag })
-      });
+      // if (!location) errors.push('Die job benötigt einen Standort')
+      if (errors.length !== 0) {
+        setErrorCounter(errorsValChanged + 1)
+        return showNotification({
+          title: 'Fehler. Bitte überprüfen Sie Ihre Angaben',
+          message: `Bitte korrigieren Sie die rot markierten Felder`,
+          // n ${errors.map(
+          //   (e) => '\n- ' + e
+          // )}`,
+
+          type: 'error',
+          long: true,
+        })
+      }
+
+      if (errors.length === 0) {
+        onjobChange({ ...job, activeChatbot: true })
+
+      }
+      if (job.scriptTag == "" || job.scriptTag == undefined) {
+        let formData = { user: Parse.User.current()?.id, chatbotId: id }
+        fetch(
+          SERVER_URL_parsefunctions + "/scriptTag",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Parse-Application-Id": "what2study",
+              "X-Parse-Master-Key": "what2studyMaster",
+            },
+            body: JSON.stringify(formData),
+          }
+
+        ).then(async (response) => {
+          const data = await response.json();
+          console.log(data.result.scriptTag)
+          onjobChange({ ...job, scriptTag: data.result.scriptTag })
+        });
+
+      }
+     
+    }
+    else {
+
+      onUnpublish()
+      
+      showModal2()
     }
 
   }
@@ -736,13 +778,10 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         </Row><br></br>
         <Row gutter={24}>
           <Col span={10} >
-            <Form.Item tooltip="Wie wird Ihr Chatbot genannt? Geben Sie einen Namen für Ihren Chatbot an" style={{ marginTop: "10px", fontWeight: "bold" }}
-              label={<p style={{ fontSize: "22px" }}>Name des Chatbots</p>} name='name' rules={[
-                {
-                  //  required: true,
-                  //  message: "Dieses Feld ist erforderlich"
-                }
-              ]} >
+                <label style={{ fontWeight: "bold", fontSize: "22px " }}> Name des Chatbots</label> 
+                 <span><Tooltip title={"Wie wird Ihr Chatbot genannt? Geben Sie einen Namen für Ihren Chatbot an."} >
+              <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
+            </Tooltip></span>
               <Input
                 style={errorsVal.title ? errorCss : errorCssInvert}
                 placeholder='Name des Bot'
@@ -759,7 +798,6 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               />
               {requiredField}
 
-            </Form.Item>
             <label style={{ fontWeight: "bold", fontSize: "22px" }}> Grundeinstellungen</label> <Tooltip title={"Einstellung der Standardsprache für die Benutzeroberfläche und den Begrüßungstext des Chatbots. Die Nutzer:innen haben zusätzlich die Möglichkeit, die Sprache in ihren Einstellungen zu ändern. Außerdem reagiert der Chatbot automatisch auf die Sprache der Nachrichten und passt seine Antwort entsprechend an."} >
               <InfoCircleOutlined style={{ marginLeft: "5px", color: "#1477ff" }} />
             </Tooltip>
@@ -1423,7 +1461,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
               type='number'
               className='form-control'
               min="1"
-              style={{width:"57px", borderColor:"beige"}}
+              style={{ width: "57px", borderColor: "beige" }}
               defaultValue={Number(job.randomQuestionTimer) / 60000} onChange={(e) => {
                 var milliseconds = Number(e.target.value) * 60000
                 if (Number(e.target.value) < 1) {
@@ -1433,7 +1471,7 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
 
               }} />
 
-            <span style={{marginLeft:"10px"}}>Minuten</span>
+            <span style={{ marginLeft: "10px" }}>Minuten</span>
           </Col>
           <Col span={12}>
             <br></br>
@@ -1692,6 +1730,18 @@ const GeneralSettings = ({ job, onjobChange, parseRef }: GeneralSettingsProps) =
         <p>für normal: &windowtype=min</p>
         <p>für Vollbild/Großbild: &windowtype=full</p>
 
+      </Modal>
+
+      <Modal
+        title=""
+        open={open2}
+        onOk={hideModal2}
+        onCancel={hideModal2}
+        okText="Okay"
+        cancelText="Schließen"
+      >
+        <h2 style={{marginTop:"30px"}}> Datenbank nicht zugewiesen. Kann noch nicht veröffentlicht werden.</h2>
+        <p>Bitte weisen Sie diesem Chatbot eine oder mehrere Datenbanken zu, bevor Sie ihn veröffentlichen.</p>
       </Modal>
     </Form>
 

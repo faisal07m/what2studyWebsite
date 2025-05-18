@@ -14,7 +14,8 @@ import {
   ApiOutlined,
   WarningOutlined,
   WarningTwoTone,
-  WechatOutlined
+  WechatOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../config/routes'
@@ -128,7 +129,6 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
   },[company])
   const func = async (e) => {
     if (location.state != undefined) {
-
       if (location.state["changedstate"]) {
         if (location.pathname.startsWith("/what2study/home")) {
           // history.push('/updateState')
@@ -136,6 +136,11 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
           localStorage.setItem("updatedObj", JSON.stringify(location.state["unSavedObj"]));
         }
         if (location.pathname.startsWith("/what2study/generalOffersState") && location.state["parseRef"]) {
+          console.log( localStorage.setItem("updated", "generalOffersState"))
+          console.log(localStorage.setItem("updatedObj", JSON.stringify(location.state["unSavedObj"])))
+          console.log(localStorage.setItem("id", location.state["parseRef"].id)
+          )
+          console.log(   localStorage.setItem("className", location.state["parseRef"].className))
           // try {
           localStorage.setItem("updated", "generalOffersState");
           localStorage.setItem("updatedObj", JSON.stringify(location.state["unSavedObj"]));
@@ -177,7 +182,7 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
           <Link to={{ pathname: "/what2study/database", state: { prevPath: location.pathname } }} >Datenbank</Link>
         </Menu.Item> */}
         <Menu.Item key='5' icon={<TagOutlined />}>
-          <Link to={{ pathname: ROUTES.Intents, state: { prevPath: location.pathname } }} >Szenarien</Link>
+          <Link to={{ pathname: ROUTES.Intents, state: { prevPath: location.pathname } }} >Spezialfälle</Link>
         </Menu.Item>
         <Menu.Item key='6' icon={<DashboardOutlined />}>
           <Link to={{ pathname: "/what2study/monitoring", state: { prevPath: location.pathname } }} >Monitoring</Link>
@@ -185,6 +190,9 @@ const MainMenu = ({ activeTab }: MainMenuProps) => {
         <Menu.Item key='7' icon={<WechatOutlined/>}>
           <Link to={{ pathname: "/what2study/chatwindow", state: { prevPath: location.pathname } }} >Chatbot</Link>
         </Menu.Item>
+        {/* <Button style={{left: "0", position: "absolute", marginLeft: "13px", marginTop:"5px", border:"unset"}} onClick={() => {
+          // setModal2Open(true)
+        }}><SettingOutlined style={{ fontSize: "18px" }} /><span>LLM-Modellauswahl</span></Button> */}
        
         <div style={{left: "0", position: "absolute",  bottom: "0", marginBottom: "135px", marginLeft: "35px"}}
        >

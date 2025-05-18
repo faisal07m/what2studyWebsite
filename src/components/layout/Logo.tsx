@@ -3,11 +3,12 @@ import styledComponents from 'styled-components'
 import { curUser, getCurrentUser, logout, updateUser, UserType } from '../../types/user'
 import { useHistory } from 'react-router-dom'
 import Parse from 'parse'
-import { LogoutOutlined, SettingOutlined, AppstoreOutlined, MailOutlined, MailFilled, AccountBookFilled, AppleOutlined, AndroidOutlined, AccountBookOutlined, InfoCircleFilled } from '@ant-design/icons'
+import { LogoutOutlined, SettingOutlined, AppstoreOutlined, MailOutlined, MailFilled, AccountBookFilled, AppleOutlined, AndroidOutlined, AccountBookOutlined, InfoCircleFilled, CheckOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { showNotification } from '../../helpers/notification'
 
 import { SERVER_URL, SERVER_URL_parsefunctions } from '../../config/parse';
+import { getAllKbs, kbobj } from '../../types/KbClass'
 const Initial = styledComponents.h1`
   font-weight: 800;
   color: #fd1f1f;
@@ -22,7 +23,13 @@ const Logo = () => {
   const history = useHistory()
 
   const [modal2Open, setModal2Open] = useState(false);
-
+  const modelsList = [
+    "llama3.3:latest",
+    "deepseek-r1:70b",
+    "mixtral:8x22b",
+    "falcon:180b",
+    "qwen:110b"
+  ]
 
   const company = getCurrentUser()
 
@@ -35,6 +42,22 @@ const Logo = () => {
   const [localModelSelection, setLocalModelSelection] = useState<Boolean>(attributes.localModel);
 
   const [localModalName, setlocalModalName] = useState<string>(attributes.localModalName);
+
+  function getDefValue() {
+
+    var modelID = 1
+    var val = modelsList.map((x, y) => {
+      console.log(x, y)
+      if (localModalName == x) {
+
+        modelID = y + 1
+        return y + 1
+      }
+    }
+    )
+    return modelID
+
+  }
   useEffect(() => {
     setAttributes({ ...attributes, openAIKey: openAIKey })
   }, [openAIKey])
@@ -75,7 +98,7 @@ const Logo = () => {
           <Radio.Button value="b">API mode</Radio.Button>
         </Radio.Group>
         }
-       
+
         <Button style={{ width: "142px", marginRight: "5px" }} onClick={() => {
           setModal2Open(true)
         }}><span>Einstellungen</span><SettingOutlined style={{ fontSize: "18px" }} /></Button>
@@ -92,15 +115,15 @@ const Logo = () => {
           open={modal2Open}
           closeIcon={true}
           maskClosable={false}
-          onCancel={() => { 
-          // showNotification({
-          //   title: 'Informationen',
-          //   message:
-          //     'verändert wurden nicht gespeichert',
-          //   type: 'info',
-          // })
-          setModal2Open(false) 
-          
+          onCancel={() => {
+            // showNotification({
+            //   title: 'Informationen',
+            //   message:
+            //     'verändert wurden nicht gespeichert',
+            //   type: 'info',
+            // })
+            setModal2Open(false)
+
           }}
           cancelButtonProps={{ style: { display: 'none' } }}
           onOk={async () => {
@@ -123,171 +146,192 @@ const Logo = () => {
 
           }}
           footer={[
-            <Button key="submit" type="primary"  
-            onClick={async () => {
-              if(openAIKey=="" && switchOPT1 == true)
-              {showNotification({
-                title: 'Informationen',
-                message:
-                  'Bitte openAI-Schlüssel eingeben',
-                type: 'warning',
-              })}
-              else{
-console.log("reqeust got here")
-console.log(attributes)
-const { error } = await updateUser({ ...attributes })
-              if (error)
-                return showNotification({
-                  title: 'Fehler beim Speichern',
-                  message:
-                    'Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen es später erneut',
-                  type: 'error',
-                })
-  
-              showNotification({
-                type: 'success',
-                title: 'Erfolgreich gespeichert',
-                message: 'Ihre Auswahl wurde erfolgreich gespeichert',
-              })
-              setModal2Open(false)
+            <Button key="submit" type="primary"
+              onClick={async () => {
 
-              let formData = { user: company?.id, kbId:"all"}
-              showNotification({
-                title: 'Training initiiert',
-                message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
-                type: 'info',
-              })
-             
-              const response = fetch(
-                SERVER_URL_parsefunctions + "/startEmbeddingsAll",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-Parse-Application-Id": "what2study",
-                    "X-Parse-Master-Key": "what2studyMaster",
-                  },
-                  body: JSON.stringify(formData),
+                if (openAIKey == "" && switchOPT1 == true) {
+                  showNotification({
+                    title: 'Informationen',
+                    message:
+                      'Bitte openAI-Schlüssel eingeben',
+                    type: 'warning',
+                  })
                 }
-              );
-            }
-  
-            }}
+                else {
+                  console.log("reqeust got here")
+                  console.log(attributes)
+                  const { error } = await updateUser({ ...attributes })
+                  if (error)
+                    return showNotification({
+                      title: 'Fehler beim Speichern',
+                      message:
+                        'Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen es später erneut',
+                      type: 'error',
+                    })
+
+                  showNotification({
+                    type: 'success',
+                    title: 'Erfolgreich gespeichert',
+                    message: 'Ihre Auswahl wurde erfolgreich gespeichert',
+                  })
+                  setModal2Open(false)
+
+
+                  const query = new Parse.Query(kbobj)
+                  const curUser = Parse.User.current()
+                  query.equalTo("user", curUser?.id)
+                  const knowledgeBase = await query.find()
+                  if (knowledgeBase != null && knowledgeBase.length > 0) {
+
+                    let formData = { user: company?.id, kbId: "all" }
+                    showNotification({
+                      title: 'Training initiiert',
+                      message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
+                      type: 'info',
+                    })
+                    const response = fetch(
+                      SERVER_URL_parsefunctions + "/startEmbeddingsAll",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          "X-Parse-Application-Id": "what2study",
+                          "X-Parse-Master-Key": "what2studyMaster",
+                        },
+                        body: JSON.stringify(formData),
+                      }
+                    );
+                  }
+                  else {
+                  }
+
+                }
+
+              }}
             >
               Speichern
             </Button>,
-             ]}
+          ]}
         >
           <fieldset className="fieldsetCustom">
             <legend></legend>
             <Tabs
               defaultActiveKey="1"
               tabPosition="left"
-              items={[AppstoreOutlined, AccountBookOutlined].map((Icon, i) => {
+              items={[AppstoreOutlined].map((Icon, i) => {
                 const id = String(i + 1);
                 return {
-                  
+
                   key: id,
-                  label: <span style={{width:"150px"}}>{id == "1" ? <>Chatbot-Modell</> : id == "2" ? <span style={{ cursor: "not-allowed",
-                    backgroundColor: "rgb(229, 229, 229) !important"}}>Account</span> : <></>}</span>,
+                  label: <span style={{ width: "150px" }}>{id == "1" ? <>Chatbot-Modell</> : <></>}</span>,
                   children:
 
                     <>
-                    {id=="1"?
-                     <> <label style={{marginRight:"12px"}}>Modelltyp auswählen:</label><span> 
-                      {/* localModelSelection == false ? true: */}
-                      < Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={ switchOPT1} onChange={async (e) => {
-                        await setSwitchOPT1(e)
-                        await setAttributes({ ...attributes, localModel: switchOPT1})
-                       
-                        // 
-                        // await setAttributes({ ...attributes, openAIKey: e.target.value })
-                        // await setAttributes({ ...attributes, localModalName: e.target.value })
-                        // setAttributes({ ...attributes, localModel: !e })
-             
-                      }} /></span>
+                      {id == "1" ?
+                        <>
+                          <label style={{ marginRight: "12px" }}>Modelltyp auswählen:</label>
 
-                      {switchOPT1 == true ? <Row gutter={24} style={{ marginTop: '40px' }}>
-                        <Col span={8}>
-                          <Form.Item label={'OpenAI API-Schlüssel'} name='apiKey' rules={[
+                          <span>
+                            {/* localModelSelection == false ? true: */}
+                            < Switch checkedChildren="OpenAI API" unCheckedChildren="Lokales Modell" defaultChecked={switchOPT1} onChange={async (e) => {
+                              await setSwitchOPT1(e)
+                              await setAttributes({ ...attributes, localModel: switchOPT1 })
 
-
-                          ]}>
-                            <Input
-                              // defaultValue={openAIKey}
-                              defaultValue={openAIKey}
-                              placeholder={"********************************"}
-                              style={{ width: "500px" }}
-                              onChange={async (e) => {
-                                await setKey(e.target.value)
-                                await setAttributes({ ...attributes, openAIKey: e.target.value })
-                               
-                                // await setAttributes({ ...attributes, openAIKey: e.target.value })
-                              
-                            }
-                              }
-                            />
-                            {/* <Button style={{ marginTop: "10px" }} type='primary' size='middle'> Aktualisieren / Schlüssel speichern</Button> */}
-                          </Form.Item>
-                        </Col>
-
-                      </Row> : 
-                      <Row style={{ marginTop: "40px" }} gutter={24}>
-                        <Col span={9}>
-                        <h3 ><strong>Chat Model</strong></h3>
-                          <ul>
-                          <p style={{marginTop:"20px"}}>
-                          <Radio.Group
-                              defaultValue={1}
-                              options={[
-                                { value: 1, label: "llama3.3:latest" },
-                                { value: 2, label: "deepseek-r1:70b"},
-                                { value: 3, label: "mixtral:8x22b" },
-                                { value: 4, label: "falcon:180b" },
-                                { value: 5, label: "qwen:110b" },
-                              ]}
-                              onChange={async (e)=>{
-                              console.log(e)
-                              var models = [
-                                "llama3.3:latest" ,
-                                 "deepseek-r1:70b",
-                                 "mixtral:8x22b" ,
-                                 "falcon:180b" ,
-                               "qwen:110b" 
-                              ]
-                              await setlocalModalName(models[e.target.value-1])
-                              await setAttributes({ ...attributes, localModalName:models[e.target.value-1] })
-                               
+                              // 
                               // await setAttributes({ ...attributes, openAIKey: e.target.value })
                               // await setAttributes({ ...attributes, localModalName: e.target.value })
-                              }}
-                            />
-                            
-                            
-                            </p>
-                          <li><p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/library"}>Ollama</a>)</p></li>
-                          <li><p><strong> Datensicherheit:</strong> Modell läuft auf einem lokalen Server</p></li>
-                          </ul>
-                        </Col>
-                        <Col span={12}>
-                        <h3 ><strong>Embeddings Model</strong></h3>
-                        <ul>
-                          <li>
-                           <p style={{marginTop:"20px"}}><strong> Ausgewählt:</strong> <a href={"https://ollama.com/library/nomic-embed-text"}> nomic-embed-text</a></p></li>
-                          <li> <p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/search?c=embedding"}>Ollama</a>)</p></li>
-                          <li> <p><strong> Datensicherheit:</strong>  Datensicherheit: Modell läuft auf einem lokalen Server</p>
-                         </li>
-                          </ul>
-                        </Col>
-                      </Row>}
-                      <p style={{marginTop:"50px"}}><InfoCircleFilled style={{marginRight:"5px"}}></InfoCircleFilled>Eine Änderung der Modellauswahl startet den Lernprozess des Modells, der einige Sekunden bis Minuten dauern kann.</p>
-                     
+                              // setAttributes({ ...attributes, localModel: !e })
 
-                      <p style={{marginTop:"5px"}}><InfoCircleFilled style={{marginRight:"5px"}}></InfoCircleFilled> Wenn Sie OpenAI-Dienste nutzen und personenbezogene Daten verarbeiten, empfehlen wir, ein Data Processing Addendum (DPA) mit OpenAI abzuschließen, um die Datenschutzanforderungen gemäß DSGVO zu erfüllen. Sie können das DPA direkt über diesen Link abschließen: <a href={"https://ironcladapp.com/public-launch/63ffefa2bed6885f4536d0fe"}>[OpenAI DPA] </a>.</p>
-</>
-                      :
-                      <>
-                       {/* <h3>Change Password</h3>
+                            }} /></span>{switchOPT1 == true ? <p style={{ width: "auto", float: "right", marginLeft: "15px", backgroundColor: "rgb(33 38 41 / 13%)", borderRadius: "10px", padding: "9px", color: "#1f1f20" }}><CheckOutlined style={{ fontSize: "18px" }} /> OpenAI-API ausgewählt</p> :
+
+                              <span style={{ width: "auto", float: "right", marginLeft: "15px", backgroundColor: "rgb(33 38 41 / 13%)", borderRadius: "10px", padding: "9px", color: "#1f1f20" }}><CheckOutlined style={{ fontSize: "18px" }} />lokales Modal ausgewählt</span>
+                          }
+
+
+                          {switchOPT1 == true ? <Row gutter={24} style={{ marginTop: '40px' }}>
+                            <Col span={8}>
+                              <Form.Item label={'OpenAI API-Schlüssel'} name='apiKey' rules={[
+
+
+                              ]}>
+                                <Input
+                                  // defaultValue={openAIKey}
+                                  defaultValue={openAIKey}
+                                  placeholder={"********************************"}
+                                  style={{ width: "500px" }}
+                                  onChange={async (e) => {
+                                    await setKey(e.target.value)
+                                    await setAttributes({ ...attributes, openAIKey: e.target.value })
+
+                                    // await setAttributes({ ...attributes, openAIKey: e.target.value })
+
+                                  }
+                                  }
+                                />
+                                {/* <Button style={{ marginTop: "10px" }} type='primary' size='middle'> Aktualisieren / Schlüssel speichern</Button> */}
+                              </Form.Item>
+                            </Col>
+
+                          </Row> :
+                            <Row style={{ marginTop: "40px" }} gutter={24}>
+                              <Col span={9}>
+                                <h3 ><strong>Chat Model</strong></h3>
+                                <ul>
+                                  <p style={{ marginTop: "20px" }}>
+                                    <Radio.Group
+                                      defaultValue={
+
+                                        getDefValue()
+                                      }
+                                      options={[
+                                        { value: 1, label: "llama3.3:latest" },
+                                        { value: 2, label: "deepseek-r1:70b" },
+                                        { value: 3, label: "mixtral:8x22b" },
+                                        { value: 4, label: "falcon:180b" },
+                                        { value: 5, label: "qwen:110b" },
+                                      ]}
+                                      onChange={async (e) => {
+                                        console.log(e)
+                                        var models = [
+                                          "llama3.3:latest",
+                                          "deepseek-r1:70b",
+                                          "mixtral:8x22b",
+                                          "falcon:180b",
+                                          "qwen:110b"
+                                        ]
+                                        await setlocalModalName(models[e.target.value - 1])
+                                        await setAttributes({ ...attributes, localModalName: models[e.target.value - 1] })
+
+                                        // await setAttributes({ ...attributes, openAIKey: e.target.value })
+                                        // await setAttributes({ ...attributes, localModalName: e.target.value })
+                                      }}
+                                    />
+
+
+                                  </p>
+                                  <li><p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/library"}>Ollama</a>)</p></li>
+                                  <li><p><strong> Datensicherheit:</strong> Modell läuft auf einem lokalen Server</p></li>
+                                </ul>
+                              </Col>
+                              <Col span={12}>
+                                <h3 ><strong>Embeddings Model</strong></h3>
+                                <ul>
+                                  <li>
+                                    <p style={{ marginTop: "20px" }}><strong> Ausgewählt:</strong> <a href={"https://ollama.com/library/nomic-embed-text"}> nomic-embed-text</a></p></li>
+                                  <li> <p><strong> Typ: </strong> Lokal (<a href={"https://ollama.com/search?c=embedding"}>Ollama</a>)</p></li>
+                                  <li> <p><strong> Datensicherheit:</strong>  Datensicherheit: Modell läuft auf einem lokalen Server</p>
+                                  </li>
+                                </ul>
+                              </Col>
+                            </Row>}
+                          <p style={{ marginTop: "50px" }}><InfoCircleFilled style={{ marginRight: "5px" }}></InfoCircleFilled>Eine Änderung der Modellauswahl startet den Lernprozess des Modells, der einige Sekunden bis Minuten dauern kann.</p>
+
+
+                          <p style={{ marginTop: "5px" }}><InfoCircleFilled style={{ marginRight: "5px" }}></InfoCircleFilled> Wenn Sie OpenAI-Dienste nutzen und personenbezogene Daten verarbeiten, empfehlen wir, ein Data Processing Addendum (DPA) mit OpenAI abzuschließen, um die Datenschutzanforderungen gemäß DSGVO zu erfüllen. Sie können das DPA direkt über diesen Link abschließen: <a href={"https://ironcladapp.com/public-launch/63ffefa2bed6885f4536d0fe"}>[OpenAI DPA] </a>.</p>
+                        </>
+                        :
+                        <>
+                          {/* <h3>Change Password</h3>
                      
                       <Row style={{marginTop:"40px"}}><Col span={12}>
                           <p ><strong> Username:</strong> lokalAccount</p>
@@ -296,9 +340,9 @@ const { error } = await updateUser({ ...attributes })
                       </Col></Row>
                       <Button style={{ marginTop: "10px" }} type='primary' size='middle'> Update/Save Password</Button>
                         */}
-                      </>
+                        </>
                       }
-                      </>,
+                    </>,
                   icon: <Icon />,
                 };
               })}

@@ -68,7 +68,7 @@ export const register = async (props: RegisterProps) => {
 
 export const login = async (email: string, password: string) => {
   try {
-    await Parse.User.logIn(email.toLowerCase(), password)
+    await Parse.User.logIn(email.toLowerCase().trim(), password)
     //window.location.reload()
     return { error: false }
   } catch (err) {

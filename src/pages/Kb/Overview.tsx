@@ -19,7 +19,7 @@ const Overview = ({ ...data }) => {
 
   var currentUser = Parse.User.current()
 
-  const newFormButtonUI = ()=>{
+  const newFormButtonUI = () => {
     return (
       <Button type="primary" onClick={onNewIntent} style={{
         background: "green", border: 'green', position: 'absolute',
@@ -30,8 +30,8 @@ const Overview = ({ ...data }) => {
       </Button>
     )
   }
- 
- 
+
+
   useEffect(() => {
     if (!currentUser) return
     const getAllIntents = async () => {
@@ -62,7 +62,7 @@ const Overview = ({ ...data }) => {
         name: '',
         user: currentUser.id,
       })
-      history.push(ROUTES.KbState+"/" + generatedId)
+      history.push(ROUTES.KbState + "/" + generatedId)
     } catch (error) {
       // ToDo
     }
@@ -75,22 +75,54 @@ const Overview = ({ ...data }) => {
     query.equalTo('objectId', id)
     try {
       const jobToDelete = await query.first()
+      var assignedChatbots = jobToDelete?.attributes.chatbots
+      if (assignedChatbots) {
+        if (assignedChatbots.length > 0) {
+          assignedChatbots.forEach(async element => {
+            console.log(element)
+
+            const query1 = new Parse.Query(kbobj)
+            query1.contains('chatbots', element)
+            query1.notEqualTo("objectId", id)
+            var resultChatbot = await query1.find()
+            if (resultChatbot) {
+              if (resultChatbot.length > 0) {
+                console.log("resultChatbot exists in other databases")
+                console.log(resultChatbot)
+              }
+              else{
+                var chatbotOBJ = Parse.Object.extend("chatbots");
+                var queryChatbot = new Parse.Query(chatbotOBJ);
+                queryChatbot.equalTo("objectId", element)
+  
+                var result = await queryChatbot.first()
+                if (result) {
+                  result.set("activeChatbot", false)
+                  result.save()
+                }
+              }
+            }
+           
+
+          });
+        }
+      }
       await jobToDelete?.destroy()
       setKbs(kbs ? kbs.filter((intents) => intents.id !== id) : null)
       console.log(id)
-      let formData = { url: "", fileName: id+"_intent", user: currentUser.id, nameWOS:  id+"_intent" }
-                const response = fetch(
-                    SERVER_URL_parsefunctions+"/deletePythonFile",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-Parse-Application-Id": "what2study",
-                            "X-Parse-Master-Key": "what2studyMaster",
-                        },
-                        body: JSON.stringify(formData),
-                    }
-                );
+      let formData = { url: "", fileName: "kbidfolder", user: currentUser.id, nameWOS: "kbidfolder", kbId: id }
+      const response = fetch(
+        SERVER_URL_parsefunctions + "/deletePythonFile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Parse-Application-Id": "what2study",
+            "X-Parse-Master-Key": "what2studyMaster",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
     } catch (error) {
       showNotification({
         title: 'Fehler beim Löschen',
@@ -107,7 +139,7 @@ const Overview = ({ ...data }) => {
       key: 'name',
       render: (text: string) => <b>{text}</b>,
     },
-    
+
     {
       title: 'Aktionen',
       key: 'action',
@@ -115,7 +147,7 @@ const Overview = ({ ...data }) => {
       render: (id: string) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Space>
-            <Link to={ROUTES.KbState+"/" + id}>
+            <Link to={ROUTES.KbState + "/" + id}>
               <Button type='primary'>Bearbeiten</Button>
             </Link>
             <Popconfirm
@@ -195,7 +227,7 @@ const Overview = ({ ...data }) => {
       </Button>
 
 
-      <Table style={{width:"500px", marginLeft:"25%", marginTop:"5%"}} columns={columns} dataSource={kbs} />
+      <Table style={{ width: "500px", marginLeft: "25%", marginTop: "5%" }} columns={columns} dataSource={kbs} />
     </PageContainer>
   )
 }

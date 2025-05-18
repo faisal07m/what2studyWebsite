@@ -36,6 +36,7 @@ import TextArea from 'antd/es/input/TextArea'
 import { useLocation, useParams } from 'react-router-dom'
 import { getAllKbs } from '../../types/KbClass'
 import Parse from 'parse'
+import { curUser } from '../../types/user'
 
 
 type GeneralSettingsProps = {
@@ -52,14 +53,94 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
   const [changecount, setchangecount] = useState<number>(0)
   const location = useLocation()
   const [anzeigname, setAnzeigname] = useState<string>()
-
+  const [profileImages, setProfileImages] = useState<any[] | null>()
   const [clearVal, setClearVal] = useState("")
   const [linkTreeUrl, setlinkTreeUrl] = useState<string>()
 
   const [nameIntent, setNameIntent] = useState<string>(intent.name)
+
+  var currentUser = Parse.User.current()
   const errorCss = { borderColor: "red", width: "500px", height: "55px" }
   const errorCssInvert = { borderColor: "rgb(217 217 217)", width: "500px", height: "55px" }
   const [name, setName] = useState<string>(intent.name)
+  const handleInputChangeEditURL = (e: { target: { name: any; value: any } }, index: number) => {
+    var val: string = e.target.value
+
+
+    if (e.target.value != "") {
+      intent.scenario[index].antwort = val
+      onIntentChange({ ...intent, scenario: intent.scenario })
+    }
+    else {
+      showNotification({
+        type: 'error',
+        title: 'Einträge können nicht bearbeitet werden',
+        message: 'Bitte versuchen Sie es erneut'
+      })
+    }
+  };
+
+  
+  const imageElementProfile = async () => {
+    console.log("intent probs")
+    console.log(intent.scenario)
+    let obj: JSX.Element[] = []
+    if (intent.scenario != undefined) {
+      obj = intent.scenario .map((x, i) => {
+        console.log(x,i)
+        return <Row key={"mainrow"+i} style={{ marginBottom: '10px', marginLeft: "1px", marginTop: "20px" }}><h4 style={{ marginRight: '5px', marginTop: '8px' }}> <CaretRightFilled />  {i +1}. </h4>
+            <Form.Item label=' Frage-Antwort-Paar  '   >
+              <p style={{ width: '400px', borderBottom:"ridge", padding:"10px" }}>{x.anfrag}</p>
+              {/* <TextArea
+                style={{ width: '500px' }}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder='Füge eine Benutzeranfrage hinzu'
+                defaultValue={x.anfrag}
+                disabled={false}
+                onBlur={e => {
+                  handleInputChangeEditAnzeiganame(e, 0)
+                }}
+              /> */}
+              </Form.Item>
+            <Form.Item style={{ marginLeft: "20px" }} label='' name='Antwort'  >
+            <p style={{ width: '400px', borderBottom:"ridge", padding:"10px"  }}>{x.antwort}</p>
+             
+              {/* <TextArea
+                style={{ width: '500px' }}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder='Füge eine Antwort hinzu'
+                defaultValue={x.antwort}
+                disabled={false}
+                onBlur={e => {
+                  handleInputChangeEditURL(e, 0)
+                }}
+              /> */}
+              
+              </Form.Item>
+            <Col style={{ marginLeft: "2px", marginTop: "1px" }}>
+              {/* <MinusCircleFilled style={{ marginLeft: '5px', fontSize: '25px', color: '#08c' }} onClick={() => handleRemoveClick(i)} className="mr10" /> */}
+              <Button danger style={{ marginLeft: '8px' }} icon={<MinusCircleFilled />} onClick={() => handleRemoveClick(i)}>
+                Löschen </Button>
+            </Col>
+          </Row>
+      })
+    }
+    // onIntentChange({ ...intent })
+    setProfileImages(obj)
+  }
+  //handle click event of the hashtag Remove button
+  const handleRemoveClick = (index: number) => {
+    console.log("index")
+    console.log(index)
+    if (intent.scenario) {
+     { onIntentChange({ ...intent, scenario: intent.scenario.splice(index, 1) })
+     
+      imageElementProfile()
+    }
+    }
+  };
+
+
   const handleAnzeigename = (e: { target: { name: any; value: any } }, index: number) => {
     setAnzeigname(e.target.value)
   };
@@ -106,6 +187,7 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
     if (anzeigname && linkTreeUrl) {
       if (intent.scenario == undefined) {
         onIntentChange({ ...intent, scenario: [{ 'anfrag': anzeigname, 'antwort': linkTreeUrl }] })
+        imageElementProfile()
       }
       else {
         if (intent.scenario.filter(e => e.anfrag === anzeigname || e.antwort === linkTreeUrl).length > 0) {
@@ -119,6 +201,7 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
         intent.scenario.push({ 'anfrag': anzeigname, 'antwort': linkTreeUrl })
         //job.hashtags.push({'hashtag':hashtag})
         onIntentChange({ ...intent, scenario: intent.scenario })
+        imageElementProfile()
       }
 
 
@@ -142,36 +225,12 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
     }
   };
 
-  const handleInputChangeEditURL = (e: { target: { name: any; value: any } }, index: number) => {
-    var val: string = e.target.value
-
-
-    if (e.target.value != "") {
-      intent.scenario[index].antwort = val
-      onIntentChange({ ...intent, scenario: intent.scenario })
-    }
-    else {
-      showNotification({
-        type: 'error',
-        title: 'Einträge können nicht bearbeitet werden',
-        message: 'Bitte versuchen Sie es erneut'
-      })
-    }
-  };
-
-  //handle click event of the hashtag Remove button
-  const handleRemoveClick = (index: number) => {
-    if (intent.scenario) {
-      let arr = intent.scenario
-      arr.splice(index, 1)
-      onIntentChange({ ...intent, scenario: arr })
-    }
-  };
+ 
 
 
   const [chatbotslist, setChatselectedlist] = useState<any>()
   const [optionsSelect, setoptionsSelect] = useState<any>()
-  var currentUser = Parse.User.current()
+  
   const [chatbots, setChatbots] = useState<string[]>()
   const setSelectionOptions = async (chatbots) => {
     let KB = chatbots
@@ -185,15 +244,10 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
 
         var kbclass = Parse.Object.extend("kbclass");
         var queryChatbot = new Parse.Query(kbclass);
+        queryChatbot.equalTo("objectId",el)
 
-        var intents = Parse.Object.extend("intents");
-        var kbquery = new Parse.Query(intents);
-        kbquery.contains("kbs",el)
-        kbquery.notEqualTo("objectId", id)
-        var chatbotFound = await kbquery.find()
-        if(chatbotFound.length==0 )
-
-        {var result = await queryChatbot.get(el)
+        var result = await queryChatbot.first()
+         
 
         if (result) {
           var name = result.attributes.name
@@ -208,7 +262,7 @@ const GeneralSettings = ({ intent, onIntentChange, parseRef }: GeneralSettingsPr
             },
           )
           }
-        }
+        
        
 
 
@@ -247,6 +301,11 @@ list.push(element.id)
     activeKBSet()
    
   }, [chatbots])
+
+  useEffect(()=>{
+  
+    imageElementProfile()
+  },[currentUser])
   return (
     <div style={{ backgroundColor: "white", height: "2000px", paddingBlock: "10px", padding: "50px" }}>
 
@@ -255,10 +314,10 @@ list.push(element.id)
         <Row gutter={24}>
           <Col span={8} style={{ marginLeft: "1px", marginTop: "15px" }}>    
      
-          <h3>Name des Speziallfalls:</h3> <Tooltip title={"Falls ein Spezialfall eintritt (z. B. Streik des ÖPNVs) können Sie hier eine vorgefertigte Antwort festlegen, die der Chatbot ausgibt."} >
+          <h3>Name des Speziallfalls</h3> <span><Tooltip title={"Falls ein Spezialfall eintritt (z. B. Streik des ÖPNVs) können Sie hier eine vorgefertigte Antwort festlegen, die der Chatbot ausgibt."} >
                               <InfoCircleOutlined style={{marginLeft:"8px",color:"#1477ff"}}/>
                           </Tooltip>
-
+                          </span>
           
         <Input
           // style={{width:"320px", marginBlock:"10px", marginLeft:"10px", height:"45px"}}
@@ -289,11 +348,11 @@ list.push(element.id)
             <Space style={{ marginTop: "5px", width: '100%' }} direction="vertical">
 
               <Select
-                // mode=""
+                mode="multiple"
                 allowClear
                 showSearch={false}
                 style={{ width: '100%' }}
-                placeholder="Bitte wählen Sie Chatbot/s aus"
+                placeholder="Bitte wählen Sie eine Datenbank aus"
                 defaultValue={intent?.kbs}
                 //   defaultValue={}
                 onChange={async (e) => {
@@ -359,7 +418,8 @@ list.push(element.id)
       <br></br>
       <br></br>
       <div style={{border:"outset"}}>
-      {intent.scenario && intent.scenario.map((x, i) => {
+        {profileImages}
+      {/* {intent.scenario && intent.scenario.map((x, i) => {
         return (
           <Row style={{ marginBottom: '10px', marginLeft: "1px", marginTop: "20px" }}><h4 style={{ marginRight: '5px', marginTop: '8px' }}> <CaretRightFilled />  {i +1}. </h4>
             <Form.Item label=' Frage-Antwort-Paar  '   >
@@ -386,12 +446,13 @@ list.push(element.id)
               /></Form.Item>
             <Col style={{ marginLeft: "2px", marginTop: "1px" }}>
               {/* <MinusCircleFilled style={{ marginLeft: '5px', fontSize: '25px', color: '#08c' }} onClick={() => handleRemoveClick(i)} className="mr10" /> */}
-              <Button danger style={{ marginLeft: '8px' }} icon={<MinusCircleFilled />} onClick={() => handleRemoveClick(i)}>
+              {/* <Button danger style={{ marginLeft: '8px' }} icon={<MinusCircleFilled />} onClick={() => handleRemoveClick(i)}>
                 Löschen </Button>
             </Col>
           </Row>
         );
-      })}
+      })} */}
+     
       {intent.scenario.length == 0 && <h2 style={{padding:"30px"}}>Bisher kein Frage-Antwort-Paar hinzugefügt</h2>}
 </div>
 

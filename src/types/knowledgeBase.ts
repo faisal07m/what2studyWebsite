@@ -52,11 +52,14 @@ export const generateKnowledge = async (
         return 'error'
     }
 }
-export const getAllKnowledgeBaseWithType = async (type: string) => {
+export const getAllKnowledgeBaseWithType = async (type: string, kbId:string) => {
     const query = new Parse.Query(knowledgeBase)
     const curUser = Parse.User.current()
     query.equalTo("type", type)
     query.equalTo("user", curUser?.id)
+    if(kbId != "all") { query.equalTo("kbID", kbId)}
+    console.log("trying kbid")
+    console.log(kbId)
     try {
         const knowledgeBase = await query.find()
         if(knowledgeBase!=null){

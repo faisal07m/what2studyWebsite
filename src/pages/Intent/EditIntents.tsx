@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { IntentClass, Intents } from '../../types/IntentClass'
 import { SERVER_URL_parsefunctions } from '../../config/parse'
 import { toBase64 } from '../../helpers/toBase64'
+import { curUser, getCurrentUser } from '../../types/user'
 const { TabPane } = Tabs
 
 const EditJobs = () => {
@@ -51,8 +52,6 @@ const EditJobs = () => {
       let propertyName = "text"
       const parseFile = new Parse.File(fileObjName, { base64: base64 as string });
       parseFile.save().then(async (responseFile) => {
-        console.log("file saved")
-        console.log(responseFile)
         const Gallery = Parse.Object.extend(className);
         const gallery = new Gallery();
         gallery.set(propertyName, responseFile);
@@ -67,9 +66,9 @@ const EditJobs = () => {
           url = url.replace("https:", "http:")
         }
         setUrl(url)
-        
-       
-          let formData = { url: url, fileName:filename , user: currentUser?.id, indexFile: "", type: "text",transcript:"" ,kbId:kbs}
+        if(kbs && kbs.length >0)
+        {kbs.forEach(kb => {
+          let formData = { url: url, fileName:filename , user: currentUser?.id, indexFile: "", type: "text",transcript:"" ,kbId:kb}
 
 
          fetch(
@@ -84,35 +83,104 @@ const EditJobs = () => {
               body: JSON.stringify(formData),
             }
           );
+      
+      
+        let formData2 = { user: currentUser?.id,kbId:kb }
+        showNotification({
+          title: 'Training initiiert',
+          message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
+          type: 'info',
+        })
+    
+        const response2 = fetch(
+          SERVER_URL_parsefunctions + "/startEmbeddings",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Parse-Application-Id": "what2study",
+              "X-Parse-Master-Key": "what2studyMaster",
+            },
+            body: JSON.stringify(formData2),
+          }
+        );
+        console.log("embed success")
+       
+      });
+      }
+
+       
+          
          
 
-          let formData2 = { user: currentUser?.id,kbId:kbs }
-          showNotification({
-            title: 'Training initiiert',
-            message: 'Der Chatbot wird auf Basis der Wissensdatenbank trainiert',
-            type: 'info',
-          })
-      
-          const response2 = fetch(
-            SERVER_URL_parsefunctions + "/startEmbeddings",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-Parse-Application-Id": "what2study",
-                "X-Parse-Master-Key": "what2studyMaster",
-              },
-              body: JSON.stringify(formData2),
-            }
-          );
         })
           
       }
   }
 
+    const findMissingItems = (list1, list2) => {
+      return list1.filter(item => !list2.includes(item));
+    };
   
   const onSave = async () => {
+    
+
       if (intent && parseRef) {
+        console.log("before save")
+        const query = new Parse.Query(Intents)
+        var cu = getCurrentUser()
+        var oldKbsList = []
+        if(cu)
+        {
+        console.log(cu.id)
+        query.equalTo('user', cu.id)
+        query.equalTo('objectId', id)
+        var res = await query.first()
+        oldKbsList= res?.attributes.kbs
+      }
+      
+        var newKbsList =[]= intent.kbs
+
+        console.log(oldKbsList)
+        console.log(newKbsList)
+       console.log( findMissingItems(oldKbsList,newKbsList))
+       var kbidListToRemove = findMissingItems(oldKbsList,newKbsList)
+       if (kbidListToRemove && kbidListToRemove.length >0){
+        kbidListToRemove.forEach(kbid => {
+          let formData = { url: "", fileName: id+"_intent", user: cu?.id, nameWOS:  id+"_intent",kbId:kbid }
+                const response = fetch(
+                    SERVER_URL_parsefunctions+"/deletePythonFile",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Parse-Application-Id": "what2study",
+                            "X-Parse-Master-Key": "what2studyMaster",
+                        },
+                        body: JSON.stringify(formData),
+                    }
+                );
+                let formData2 = { user: cu?.id,kbId:kbid }
+              
+            
+                const response2 = fetch(
+                  SERVER_URL_parsefunctions + "/startEmbeddings",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "X-Parse-Application-Id": "what2study",
+                      "X-Parse-Master-Key": "what2studyMaster",
+                    },
+                    body: JSON.stringify(formData2),
+                  }
+                );
+                console.log("embed success")
+        });
+      
+                  
+      }
+    
         setPending(true)
         try {
           var temp =  parseRef.save(intent).then(async (obj)=>{

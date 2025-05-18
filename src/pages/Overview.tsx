@@ -127,7 +127,7 @@ const Overview = (kbID:any ) => {
     let res = await getActiveChatbotID()
     setActiveChatID(res)
 
-    getAllKnowledgeBaseWithType("url").then(function(KB){
+    getAllKnowledgeBaseWithType("url","all" ).then(function(KB){
       if (KB != undefined && KB != null && Array.isArray(KB)) {
         var count = 1
         var foundFalse=false
@@ -647,7 +647,7 @@ function isValidURL(string) {
                               <Button style={{ width: "450px", height: "150px", backgroundColor: "#fafafa", border: "dashed 0.3px" }} icon={<InboxOutlined style={{ fontSize: '350%', color: "#257dfe" }} />}><br></br><span>Hochladen: Nur PDF-Dateien</span></Button>
                             </Upload>
                           </Col>
-                          <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                          {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                             <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                               <Select
@@ -668,8 +668,8 @@ function isValidURL(string) {
                               </Select>
 
                             </Form.Item>
-                          </Col>
-                          <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                          </Col> */}
+                          {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                             <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
@@ -684,7 +684,7 @@ function isValidURL(string) {
 
                             </Form.Item>
 
-                          </Col>
+                          </Col> */}
                           {/* <Col span={2} >
                             <Form.Item name='' style={{ marginTop: "10px" }}>
 
@@ -700,7 +700,7 @@ function isValidURL(string) {
                           </Col> */}
                         </Row>
                         <Row style={{ marginTop: "70px" }}>
-                      {tagsContainer()}
+                      {/* {tagsContainer()} */}
                         </Row>
                         <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                             <Form.Item name='' style={{ marginTop: "10px" }}>
@@ -735,7 +735,7 @@ function isValidURL(string) {
 
                               </Upload>
                             </Col>
-                            <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                            {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                               <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                 <Select
@@ -758,8 +758,8 @@ function isValidURL(string) {
                                 </Select>
 
                               </Form.Item>
-                            </Col>
-                            <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                            </Col> */}
+                            {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                               <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
@@ -771,7 +771,7 @@ function isValidURL(string) {
 
                               </Form.Item>
 
-                            </Col>
+                            </Col> */}
                             {/* <Col span={2} >
                               <Form.Item name='' style={{ marginTop: "10px" }}>
 
@@ -788,9 +788,9 @@ function isValidURL(string) {
                           </Row>
                           <Row style={{ marginTop: "70px" }}>
 
-                            <TagComponent saveCallback={(tagsArr) => {
+                            {/* <TagComponent saveCallback={(tagsArr) => {
                               setTagsArray(tagsArr)
-                            }}  />
+                            }}  /> */}
                           </Row>
                           <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                             <Form.Item name='' style={{ marginTop: "10px" }}>
@@ -823,7 +823,7 @@ function isValidURL(string) {
 
                                 </Upload>
                               </Col>
-                              <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                              {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                                 <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                   <Select
@@ -845,8 +845,8 @@ function isValidURL(string) {
                                   </Select>
 
                                 </Form.Item>
-                              </Col>
-                              <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                              </Col> */}
+                              {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                                 <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
@@ -858,7 +858,7 @@ function isValidURL(string) {
 
                                 </Form.Item>
 
-                              </Col>
+                              </Col> */}
                               {/* <Col span={2} >
                                 <Form.Item name='' style={{ marginTop: "10px" }}>
 
@@ -886,9 +886,9 @@ function isValidURL(string) {
 
                             </Row>
                             <Row style={{ marginTop: "70px" }}>
-                              <TagComponent saveCallback={(tagsArr) => {
+                              {/* <TagComponent saveCallback={(tagsArr) => {
                                 setTagsArray(tagsArr)
-                              }}  />
+                              }}  /> */}
                             </Row>
                             <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                             <Form.Item name='' style={{ marginTop: "10px" }}>
@@ -916,7 +916,7 @@ function isValidURL(string) {
                               <Col span={14} style={{ marginTop: "20px" }}>
 
                               </Col>
-                              <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                              {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                                 <Form.Item label='Priorität' name='chatbotLanguage' style={{ marginTop: "10px" }}>
                                   <Select
@@ -939,8 +939,8 @@ function isValidURL(string) {
                                   </Select>
 
                                 </Form.Item>
-                              </Col>
-                              <Col span={5} style={{display:"flex", justifyContent:"end"}} >
+                              </Col> */}
+                              {/* <Col span={5} style={{display:"flex", justifyContent:"end"}} >
 
                                 <Form.Item label='Gültigkeit bis' name='chatbotLanguage' style={{ marginTop: "10px" }}>
 
@@ -952,7 +952,7 @@ function isValidURL(string) {
 
                                 </Form.Item>
 
-                              </Col>
+                              </Col> */}
                               {/* <Col span={2} >
                                 <Form.Item name='' style={{ marginTop: "10px" }}>
 
@@ -1072,11 +1072,11 @@ function isValidURL(string) {
                             <p style={{fontWeight:"50", color:"orange", marginTop:"-20px"}}>Deep Crawl wird für passwortgeschützte URLs automatisch deaktiviert.</p>
                           
                             <Row style={{ marginTop: "70px" }}>
-                              <TagComponent saveCallback={(tagsArr) => {
+                              {/* <TagComponent saveCallback={(tagsArr) => {
                                 setTagsArray(tagsArr)
                               }} />  <Tooltip title={"Mit den Tags können Sie die Dateien und URLs mit Schlagworten versehen. Wenn das Schlagwort im Chat genutzt wird, greift der Chatbot auf die Datei/URL zu, die mit diesem Tag versehen wurde."} >
                               <InfoCircleOutlined style={{marginLeft:"5px",color:"#1477ff"}}/>
-                          </Tooltip>
+                          </Tooltip> */}
                             </Row>
                             <Row gutter={24} style={{justifyContent:"end", bottom:"0", position:"absolute", right:"0", marginRight:"25px"}}>
                                 <Form.Item name='' style={{ marginTop: "10px" }}>
